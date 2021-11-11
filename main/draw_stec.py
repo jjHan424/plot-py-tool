@@ -1,7 +1,7 @@
 '''
 Author: HanJunjie
 Date: 2021-11-10 15:26:45
-LastEditTime: 2021-11-11 21:50:34
+LastEditTime: 2021-11-11 22:02:30
 LastEditors: Please set LastEditors
 FilePath: /plot-toolkit-master/jjHan_py_plot/main/draw_stec.py
 '''
@@ -15,7 +15,7 @@ mpl.use("TkAgg")
 import matplotlib.pyplot as plt
 import dataprocess as dp
 import draw as dr
-
+I=1
 IPP_file1 = '/Users/hjj/Documents/HJJ/Master_1/ionofile_test/IPP2/gop60010.20IPP'
 IPP_file2 = '/Users/hjj/Documents/HJJ/Master_1/ionofile_test/IPP2/gop70010.20IPP'
 IPP_data1 = rf.open_ipp_file(IPP_file1)
