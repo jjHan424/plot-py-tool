@@ -109,3 +109,8 @@ def ymd2gpst(year,month,day,hour,minute,second):
     w = floor((JD-2444244.5)/7)
     sow = ((JD - 2444244.5)*3600*24 - w * 3600 * 24 * 7)
     return (w,sow)
+    
+def mjd2gpst(day,sec):
+    w = floor((day - 44244) / 7)
+    sow = sec + ((day - 44244) / 7 - w) * 86400
+    return(w,sow)

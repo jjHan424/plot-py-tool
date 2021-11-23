@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2021-11-10 16:16:36
+LastEditTime: 2021-11-23 21:05:05
 Description: read data file
 '''
 import numpy as np
@@ -99,3 +99,35 @@ def open_ipp_file(filename):
                 all_data[soweek][sat]['MPF']=float(value[5])
                 all_data[soweek][sat]['TEC']=float(value[6])
     return all_data
+
+def open_upd_nl_file(filename_list,sys="G"):
+    all_data = {} 
+    for index in filename_list:
+        filename = filename_list[index]
+        w_last = 0
+        with open(filename,'rt') as f:
+            for line in f:
+                value = line.split()
+                if value[0] == '%':
+                    if value[4] != 'upd_NL':
+                        return 0
+                    continue
+                if value[0]=='EPOCH-TIME':
+                    day = (float(value[1]))
+                    sec = (float(value[2]))
+                    [w,soweek] = tr.mjd2gpst(day,sec)
+                    if (w_last==0):
+                        w_last = w
+                    soweek = soweek + (w-w_last)*604800
+                    if soweek not in all_data.keys():
+                        all_data[soweek]={}
+                    w_last = w
+                    continue
+                if value[0] == 'EOF':
+                    break
+                sat = value[0]
+                if 'x' not in sat and sat not in all_data[soweek].keys():
+                    all_data[soweek][sat] = (float(value[1]))
+                    continue
+    return all_data
+             
