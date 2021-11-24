@@ -130,4 +130,21 @@ def open_upd_nl_file(filename_list,sys="G"):
                     all_data[soweek][sat] = (float(value[1]))
                     continue
     return all_data
-             
+
+def open_upd_wl_onedayfile(filename_list):
+    all_data = {} 
+    for index in filename_list:
+        filename = filename_list[index]
+        w_last = 0
+        with open(filename,'rt') as f:
+            for line in f:
+                value = line.split()
+                if value[0] == '%':
+                    continue
+                if value[0] == "EOF":
+                    break
+                sat = value[0]
+                if sat not in all_data.keys():
+                    all_data[sat] = float(value[1])
+                    continue
+    return all_data

@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2021-11-23 21:57:44
+LastEditTime: 2021-11-24 14:27:42
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -15,6 +15,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from numpy.core.fromnumeric import shape, size
 import dataprocess as dp
+import matplotlib.colors as colors
+import seaborn as sns
 font = {'family' : 'Arial',
 		'weight' : 500,
 		'size'   : 20,
@@ -677,17 +679,21 @@ def plot_upd_nl_GEC(all_data={},savedir='save_fig_path',mode = 'upd_nl',show = F
     data_G = [[] for i in range(60)]
     data_E = [[] for i in range(60)]
     data_C = [[] for i in range(60)]
-
+    std_G,std_E,std_C = [],[],[]
     G_L,E_L,C_L = [],[],[]
+    
     figP,axP = plt.subplots(3,1,figsize=(25,10),sharey=False,sharex=True)
     
-    axP[2].set_xlabel('Time:hour of GPS week(hour)')
+    axP[2].set_xlabel('Time:Hour of GPS Week(hour)')
     axP[0].set_ylabel(mode+'(Cycles)')
     axP[1].set_ylabel(mode+'(Cycles)')
     axP[2].set_ylabel(mode+'(Cycles)')
-    axP[0].set_title('G')
-    axP[1].set_title('E')
-    axP[2].set_title('C') 
+    axP[0].set_title('G-NL')
+    axP[1].set_title('E-NL')
+    axP[2].set_title('C-NL')
+    axP[0].set_ylim(0.0,1) 
+    axP[1].set_ylim(0.0,1) 
+    axP[2].set_ylim(0.0,1) 
 
     for time in all_data:
         for sat in all_data[time]:
@@ -704,32 +710,42 @@ def plot_upd_nl_GEC(all_data={},savedir='save_fig_path',mode = 'upd_nl',show = F
                 time_C[prn-1].append(time / 3600)
                 data_C[prn-1].append(all_data[time][sat])
                 continue
-    
+    colormap = sns.color_palette("colorblind",40)
+    G_j,E_j,C_j = 0,0,0
     for i in range(60):
         G,R,E,C = True,True,True,True
         num = len(time_G[i])
         if num < 1:
             G = False
+        else:
+            G_j = G_j+1
         num = len(time_E[i])
         if num < 1:
             E = False
+        else:
+            E_j = E_j+1
         num = len(time_C[i])
         if num < 1:
             C = False
-
+        else:
+            C_j = C_j+1
+        
         if G:
-            axP[0].scatter(time_G[i],data_G[i],s=2,marker='D')
+            axP[0].scatter(time_G[i],data_G[i],s=2,marker='D',c = colormap[G_j])
+            std_G.append(np.std(data_G[i]))
             prn = '%02d' % (i + 1)
             G_L.append('G'+prn)
 
         if E:
-            axP[1].scatter(time_E[i],data_E[i],s=2,marker='D')
+            axP[1].scatter(time_E[i],data_E[i],s=2,marker='D',c = colormap[E_j])
             prn = '%02d' % (i + 1)
+            std_E.append(np.std(data_E[i]))
             E_L.append('E'+prn)
 
         if C:
-            axP[2].scatter(time_C[i],data_C[i],s=2,marker='D')
+            axP[2].scatter(time_C[i],data_C[i],s=2,marker='D',c = colormap[C_j])
             prn = '%02d' % (i + 1)
+            std_C.append(np.std(data_C[i]))
             C_L.append('C'+prn)
 
     font2 = {"size":7}
@@ -742,7 +758,65 @@ def plot_upd_nl_GEC(all_data={},savedir='save_fig_path',mode = 'upd_nl',show = F
     axP[2].legend(C_L,prop=font2,
         framealpha=1,facecolor='w',ncol=3,numpoints=5, markerscale=2, 
         bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0) 
-    savedir = savedir + mode + ".png" 
-    plt.savefig(savedir)  
+    axP[0].grid()
+    axP[1].grid()
+    axP[2].grid()
+
+    savedir1 = savedir + mode + ".png" 
+    plt.savefig(savedir1)
+    figS,axS = plt.subplots(3,1,figsize=(20,15),sharey=True,sharex=False)
+    axS[0].set_ylabel('UPD STD(Cycles)')
+    axS[1].set_ylabel('UPD STD(Cycles)')
+    axS[2].set_ylabel('UPD STD(Cycles)')
+    axS[0].set_title('G-STD-NL')
+    axS[1].set_title('E-STD-NL')
+    axS[2].set_title('C-STD-NL')
+    axS[0].set_ylim(0,0.1)
+    axS[0].bar(range(len(std_G)),std_G,tick_label=G_L)
+    axS[1].bar(range(len(std_E)),std_E,tick_label=E_L)
+    axS[2].bar(range(len(std_C)),std_C,tick_label=C_L)
+    axS[0].grid(axis = "y")
+    axS[1].grid(axis = "y")
+    axS[2].grid(axis = "y")
+    axS[0].set_axisbelow(True)
+    axS[1].set_axisbelow(True)
+    axS[2].set_axisbelow(True)
+    savedir2 = savedir + mode + "std.png" 
+    plt.savefig(savedir2)
+    if show:
+        plt.show()
+
+def plot_upd_wl_oneday_GEC(all_data={},savedir='save_fig_path',mode = 'upd_wl',show = False):
+    figS,axS = plt.subplots(3,1,figsize=(20,15),sharey=True,sharex=False)
+    axS[0].set_ylabel('UPD WL(Cycles)')
+    axS[1].set_ylabel('UPD WL(Cycles)')
+    axS[2].set_ylabel('UPD WL(Cycles)')
+    axS[0].set_title('G-WL')
+    axS[1].set_title('E-WL')
+    axS[2].set_title('C-WL')
+    GL,EL,CL = [],[],[]
+    G_j,E_j,C_j = -1,-1,-1
+    for sat in all_data:
+        if 'G' in sat:
+            G_j = G_j + 1
+            GL.append(sat)
+            axS[0].bar(G_j,all_data[sat])
+        if 'E' in sat:
+            E_j = E_j + 1
+            EL.append(sat)
+            axS[1].bar(E_j,all_data[sat])
+        if 'C' in sat:
+            C_j = C_j + 1
+            CL.append(sat)
+            axS[2].bar(C_j,all_data[sat])
+    
+    axS[0].set_xticks(range(G_j+1))
+    axS[0].set_xticklabels(GL)
+    axS[1].set_xticks(range(E_j+1))
+    axS[1].set_xticklabels(EL)
+    axS[2].set_xticks(range(C_j+1))
+    axS[2].set_xticklabels(CL)
+    savedir = savedir + mode + '.png'
+    plt.savefig(savedir)
     if show:
         plt.show()
