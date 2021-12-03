@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2021-11-24 14:27:42
+LastEditTime: 2021-12-03 17:33:06
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -368,6 +368,152 @@ def plot_tec_GREC(all_data = {},savedir='save_fig_path',station = 'hjj',show = F
     if show:
         plt.show()
 
+def plot_tec_GREC_delta(all_data = {},savedir='save_fig_path',station = 'hjj',show = False):
+    RMS_G,MEAN_G,STD_G = [[],[]],[[],[]],[[],[]]
+    RMS_E,MEAN_E,STD_E = [[],[]],[[],[]],[[],[]]
+    RMS_C,MEAN_C,STD_C = [[],[]],[[],[]],[[],[]]
+    RMS_R,MEAN_R,STD_R = [[],[]],[[],[]],[[],[]]
+    G_L,E_L,C_L,R_L = [],[],[],[]
+    figP,axP = plt.subplots(2,2,figsize=(20,10),sharey=False,sharex=True)
+    axP[1][0].set_xlabel('Time:UT(h)')
+    axP[1][1].set_xlabel('Time:UT(h)')
+    axP[0][0].set_ylabel(station+'(TECU)')
+    axP[0][1].set_ylabel(station+'(TECU)')
+    axP[1][0].set_ylabel(station+'(TECU)')
+    axP[1][1].set_ylabel(station+'(TECU)')
+    axP[0][0].set_title('G')
+    axP[0][1].set_title('R')
+    axP[1][0].set_title('E')
+    axP[1][1].set_title('C')
+    time_G = [[] for i in range(60)]
+    time_R = [[] for i in range(60)]
+    time_E = [[] for i in range(60)]
+    time_C = [[] for i in range(60)]
+
+    data_G = [[] for i in range(60)]
+    data_R = [[] for i in range(60)]
+    data_E = [[] for i in range(60)]
+    data_C = [[] for i in range(60)]
+
+    for time in all_data:
+        G_data,R_data,E_data,C_data = 0.0,0.0,0.0,0.0
+        for sat in all_data[time]:
+            prn = int(sat[1:3])
+            if (sat[0]=='G'):
+                if G_data == 0.0:
+                    G_data = all_data[time][sat]['TEC']
+                else:
+                    time_G[prn-1].append(time)
+                    data_G[prn-1].append(all_data[time][sat]['TEC'] - G_data)
+            if (sat[0]=='R'):
+                if R_data == 0.0:
+                    R_data = all_data[time][sat]['TEC']
+                else:
+                    time_R[prn-1].append(time)
+                    data_R[prn-1].append(all_data[time][sat]['TEC'] - R_data)
+            if (sat[0]=='E'):
+                if E_data == 0.0:
+                    E_data = all_data[time][sat]['TEC']
+                else:
+                    time_E[prn-1].append(time)
+                    data_E[prn-1].append(all_data[time][sat]['TEC'] - E_data)
+            if (sat[0]=='C'):
+                if C_data == 0.0:
+                    C_data = all_data[time][sat]['TEC']
+                else:
+                    time_C[prn-1].append(time)
+                    data_C[prn-1].append(all_data[time][sat]['TEC'] - C_data)
+    
+    for i in range(33):
+        G,R,E,C = True,True,True,True
+        num = len(time_G[i])
+        if num < 1:
+            G = False
+        num = len(time_E[i])
+        if num < 1:
+            E = False
+        num = len(time_C[i])
+        if num < 1:
+            C = False
+        num = len(time_R[i])
+        if num < 1:
+            R = False
+
+        if G:
+            axP[0][0].scatter(time_G[i],data_G[i],s=1)
+            prn = '%02d' % (i + 1)
+            G_L.append('G'+prn)
+            temp = dp.rms(data_G[i])
+            RMS_G[0].append(temp)
+            temp = np.std(data_G[i])
+            STD_G[0].append(temp)
+            temp = np.mean(data_G[i])
+            MEAN_G[0].append(temp)
+        if R:
+            axP[0][1].scatter(time_R[i],data_R[i],s=1)
+            prn = '%02d' % (i + 1)
+            R_L.append('R'+prn)
+            temp = dp.rms(data_R[i])
+            RMS_R[0].append(temp)
+            temp = np.std(data_R[i])
+            STD_R[0].append(temp)
+            temp = np.mean(data_R[i])
+            MEAN_R[0].append(temp)
+        if E:
+            axP[1][0].scatter(time_E[i],data_E[i],s=1)
+            prn = '%02d' % (i + 1)
+            E_L.append('E'+prn)
+            temp = dp.rms(data_E[i])
+            RMS_E[0].append(temp)
+            temp = np.std(data_E[i])
+            STD_E[0].append(temp)
+            temp = np.mean(data_E[i])
+            MEAN_E[0].append(temp)
+        if C:
+            axP[1][1].scatter(time_C[i],data_C[i],s=1)
+            prn = '%02d' % (i + 1)
+            C_L.append('C'+prn)
+            temp = dp.rms(data_C[i])
+            RMS_C[0].append(temp)
+            temp = np.std(data_C[i])
+            STD_C[0].append(temp)
+            temp = np.mean(data_C[i])
+            MEAN_C[0].append(temp)
+
+
+    font2 = {"size":7}
+    ax_range = axP[0][0].get_position()
+    axP[0][0].set_position([ax_range.x0, ax_range.y0, ax_range.width*0.8, ax_range.height])
+    ax_range = axP[0][1].get_position()
+    axP[0][1].set_position([ax_range.x0, ax_range.y0, ax_range.width*0.8, ax_range.height])
+    ax_range = axP[1][0].get_position()
+    axP[1][0].set_position([ax_range.x0, ax_range.y0, ax_range.width*0.8, ax_range.height])
+    ax_range = axP[1][1].get_position()
+    axP[1][1].set_position([ax_range.x0, ax_range.y0, ax_range.width*0.8, ax_range.height])
+    axP[0][0].legend(G_L,prop=font2,
+        framealpha=1,facecolor='w',ncol=3,numpoints=5, markerscale=2, 
+        bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
+    axP[0][1].legend(R_L,prop=font2,
+        framealpha=1,facecolor='w',ncol=3,numpoints=5, markerscale=2, 
+        bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
+    axP[1][0].legend(E_L,prop=font2,
+        framealpha=1,facecolor='w',ncol=3,numpoints=5, markerscale=2, 
+        bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
+    axP[1][1].legend(C_L,prop=font2,
+        framealpha=1,facecolor='w',ncol=3,numpoints=5, markerscale=2, 
+        bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
+    #axP[0][0].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_G[0])*100, np.mean(RMS_G[0])*100, np.mean(STD_G[0])*100))
+    axP[0][0].grid()
+    axP[0][1].grid()
+    axP[1][0].grid()
+    axP[1][1].grid()
+    axP[0][0].set_ylim(-0.5,0.6)
+    axP[0][1].set_ylim(-4,4)
+    axP[1][0].set_ylim(-0.4,0.4)
+    axP[1][1].set_ylim(-2,2)
+    plt.savefig(savedir)
+    if show:
+        plt.show()
 
 def plot_tec_MIX(all_data = {},savedir='save_fig_path',station = 'hjj',Gsys = 'GREC',show = False):
     RMS_G,MEAN_G,STD_G = [[],[]],[[],[]],[[],[]]
@@ -469,7 +615,7 @@ def plot_tec_MIX(all_data = {},savedir='save_fig_path',station = 'hjj',Gsys = 'G
     axP.legend(G_L,prop=font2,
         framealpha=1,facecolor='w',ncol=3,numpoints=5, markerscale=2, 
         bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
-    axP.set_ylim(12,21)
+    #axP.set_ylim(12,21)
     #axP[0][0].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_G[0])*100, np.mean(RMS_G[0])*100, np.mean(STD_G[0])*100))
     axP.grid()
     plt.savefig(savedir)
@@ -682,7 +828,7 @@ def plot_upd_nl_GEC(all_data={},savedir='save_fig_path',mode = 'upd_nl',show = F
     std_G,std_E,std_C = [],[],[]
     G_L,E_L,C_L = [],[],[]
     
-    figP,axP = plt.subplots(3,1,figsize=(25,10),sharey=False,sharex=True)
+    figP,axP = plt.subplots(3,1,figsize=(23,15),sharey=False,sharex=True)
     
     axP[2].set_xlabel('Time:Hour of GPS Week(hour)')
     axP[0].set_ylabel(mode+'(Cycles)')
@@ -712,7 +858,7 @@ def plot_upd_nl_GEC(all_data={},savedir='save_fig_path',mode = 'upd_nl',show = F
                 continue
     colormap = sns.color_palette("colorblind",40)
     G_j,E_j,C_j = 0,0,0
-    for i in range(60):
+    for i in range(40):
         G,R,E,C = True,True,True,True
         num = len(time_G[i])
         if num < 1:

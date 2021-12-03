@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2021-11-23 21:05:05
+LastEditTime: 2021-11-29 21:44:08
 Description: read data file
 '''
 import numpy as np
@@ -147,4 +147,46 @@ def open_upd_wl_onedayfile(filename_list):
                 if sat not in all_data.keys():
                     all_data[sat] = float(value[1])
                     continue
+    return all_data
+
+def open_flt_ppplsq_file(filename):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if line[0] == '%':
+                head_end = True
+                continue
+            if head_end:
+                ymd = value[1]
+                hms = value[2]
+                year = float(ymd[0:4])
+                month = float(ymd[5:7])
+                day = float(ymd[8:10])
+                hour = float(hms[0:2])
+                minute = float(hms[3:5])
+                second = float(hms[6:12])
+                [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+                if (w_last==0):
+                    w_last = w
+                soweek = soweek + (w-w_last)*604800
+                #soweek = hour + minute/60.0 + second/3600.0
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+                all_data[soweek]['X'] = float(value[5])
+                all_data[soweek]['Y'] = float(value[6])
+                all_data[soweek]['Z'] = float(value[7])
+                all_data[soweek]['CLK'] = float(value[11])
+                all_data[soweek]['NSAT'] = float(value[13])
+                all_data[soweek]['GDOP'] = float(value[15])
+                all_data[soweek]['PDOP'] = float(value[16])
+                if value[17] == 'Fixed':
+                    all_data[soweek]['AMB'] = 1
+                else:
+                    all_data[soweek]['AMB'] = 2
+                
     return all_data

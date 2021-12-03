@@ -108,6 +108,9 @@ def ymd2gpst(year,month,day,hour,minute,second):
         (hour + minute/60 + second/3600) / 24 + 1720981.5
     w = floor((JD-2444244.5)/7)
     sow = ((JD - 2444244.5)*3600*24 - w * 3600 * 24 * 7)
+    
+    if abs(sow - round(sow)) < 1e-2:
+        sow = round(sow)
     return (w,sow)
     
 def mjd2gpst(day,sec):
