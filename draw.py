@@ -245,6 +245,7 @@ def plot_tec_GREC(all_data = {},savedir='save_fig_path',station = 'hjj',show = F
     RMS_R,MEAN_R,STD_R = [[],[]],[[],[]],[[],[]]
     G_L,E_L,C_L,R_L = [],[],[],[]
     figP,axP = plt.subplots(2,2,figsize=(20,10),sharey=False,sharex=True)
+    figX,axX = plt.subplots(2,2,figsize=(20,10),sharey=False,sharex=True)
     axP[1][0].set_xlabel('Time:UT(h)')
     axP[1][1].set_xlabel('Time:UT(h)')
     axP[0][0].set_ylabel(station+'(TECU)')
@@ -375,6 +376,7 @@ def plot_tec_GREC_delta(all_data = {},savedir='save_fig_path',station = 'hjj',sh
     RMS_R,MEAN_R,STD_R = [[],[]],[[],[]],[[],[]]
     G_L,E_L,C_L,R_L = [],[],[],[]
     figP,axP = plt.subplots(2,2,figsize=(20,10),sharey=False,sharex=True)
+    figX,axX = plt.subplots(2,2,figsize=(20,10),sharey=False,sharex=True)
     axP[1][0].set_xlabel('Time:UT(h)')
     axP[1][1].set_xlabel('Time:UT(h)')
     axP[0][0].set_ylabel(station+'(TECU)')
@@ -507,10 +509,10 @@ def plot_tec_GREC_delta(all_data = {},savedir='save_fig_path',station = 'hjj',sh
     axP[0][1].grid()
     axP[1][0].grid()
     axP[1][1].grid()
-    axP[0][0].set_ylim(-0.5,0.6)
-    axP[0][1].set_ylim(-4,4)
-    axP[1][0].set_ylim(-0.4,0.4)
-    axP[1][1].set_ylim(-2,2)
+    #axP[0][0].set_ylim(-0.5,0.6)
+    #axP[0][1].set_ylim(-4,4)
+    #axP[1][0].set_ylim(-0.4,0.4)
+    #axP[1][1].set_ylim(-2,2)
     plt.savefig(savedir)
     if show:
         plt.show()
@@ -522,6 +524,7 @@ def plot_tec_MIX(all_data = {},savedir='save_fig_path',station = 'hjj',Gsys = 'G
     RMS_R,MEAN_R,STD_R = [[],[]],[[],[]],[[],[]]
     G_L,E_L,C_L,R_L = [],[],[],[]
     figP,axP = plt.subplots(figsize=(20,10),sharey=False,sharex=True)
+    
     axP.set_xlabel('Time:UT(h)',fontsize = 20)
     axP.set_ylabel(station+'(TECU)',fontsize = 20)
     axP.tick_params(labelsize=15)
