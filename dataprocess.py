@@ -1,7 +1,7 @@
 '''
 Author: 韩俊杰
 Date: 2021-09-15 14:13:07
-LastEditTime: 2021-11-10 17:24:43
+LastEditTime: 2021-12-18 16:09:34
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/dataprocess.py
@@ -115,6 +115,31 @@ def rms(data = []):
         sum = sum + data[i] * data[i]
     return math.sqrt(sum / size)
     
+def std_stec(IPP_data1 = {},IPP_data2 = {}):
+    predata = pre_tec(IPP_data1,IPP_data2)
+
+    data_G = []
+    data_R = []
+    data_E = []
+    data_C = []
+    std = {}
+    for time in predata:
+        for sat in predata[time]:
+            prn = int(sat[1:3])
+            if (sat[0]=='G' and predata[time][sat]['TEC'] != 0):
+                data_G.append(predata[time][sat]['TEC'])
+            if (sat[0]=='R' and predata[time][sat]['TEC'] != 0):
+                data_R.append(predata[time][sat]['TEC'])
+            if (sat[0]=='E' and predata[time][sat]['TEC'] != 0):
+                data_E.append(predata[time][sat]['TEC'])
+            if (sat[0]=='C' and predata[time][sat]['TEC'] != 0):
+                data_C.append(predata[time][sat]['TEC'])
+    std["G"] = np.std(data_G)
+    std["R"] = np.std(data_R)
+    std["E"] = np.std(data_E)
+    std["C"] = np.std(data_C)
+
+    return std
 
 def pre_tec(IPP_data1={},IPP_data2={}):
     all_data={}
@@ -126,3 +151,37 @@ def pre_tec(IPP_data1={},IPP_data2={}):
                     all_data[sod][sat]={}
                     all_data[sod][sat]['TEC'] = IPP_data1[sod][sat]['TEC'] - IPP_data2[sod][sat]['TEC']
     return all_data
+
+def pre_tec_PPPAR(IPP_data1={},IPP_data2={}):
+    all_data={}
+    for sod in IPP_data1:
+        if sod in IPP_data2.keys():
+            all_data[sod]={}
+            for sat in IPP_data1[sod].keys():
+                if sat in IPP_data2[sod].keys():
+                    all_data[sod][sat]={}
+                    all_data[sod][sat]['TEC'] = IPP_data1[sod][sat]['TEC'] - IPP_data2[sod][sat]['TEC']
+    all_data1={}
+    for sod in all_data:
+        G_sat,E_sat,R_sat,C_sat = "","","",""
+        all_data1[sod]={}
+        for sat in all_data[sod].keys():
+            all_data1[sod][sat]={}
+            if G_sat == "" and 'G' in sat:
+                G_sat = sat
+            if R_sat == "" and 'R' in sat:
+                R_sat = sat
+            if E_sat == "" and 'E' in sat:
+                E_sat = sat
+            if C_sat == "" and 'C' in sat:
+                C_sat = sat
+            if 'G' in sat:
+                all_data1[sod][sat]['TEC'] = all_data[sod][sat]['TEC'] - all_data[sod][G_sat]['TEC']
+            if 'R' in sat:
+                all_data1[sod][sat]['TEC'] = all_data[sod][sat]['TEC'] - all_data[sod][R_sat]['TEC']
+            if 'E' in sat:
+                all_data1[sod][sat]['TEC'] = all_data[sod][sat]['TEC'] - all_data[sod][E_sat]['TEC']
+            if 'C' in sat:
+                all_data1[sod][sat]['TEC'] = all_data[sod][sat]['TEC'] - all_data[sod][C_sat]['TEC']
+
+    return all_data1

@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2021-12-03 17:33:06
+LastEditTime: 2021-12-18 17:02:10
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -296,7 +296,7 @@ def plot_tec_GREC(all_data = {},savedir='save_fig_path',station = 'hjj',show = F
         num = len(time_R[i])
         if num < 1:
             R = False
-
+        R = False
         if G:
             axP[0][0].scatter(time_G[i],data_G[i],s=1)
             prn = '%02d' % (i + 1)
@@ -365,6 +365,11 @@ def plot_tec_GREC(all_data = {},savedir='save_fig_path',station = 'hjj',show = F
     axP[0][1].grid()
     axP[1][0].grid()
     axP[1][1].grid()
+
+    axP[0][0].set_ylim(-11,-5)
+    axP[0][1].set_ylim(-33,-16)
+    axP[1][0].set_ylim(-22,-10)
+    axP[1][1].set_ylim(-24,-8)
     plt.savefig(savedir)
     if show:
         plt.show()
@@ -524,7 +529,7 @@ def plot_tec_MIX(all_data = {},savedir='save_fig_path',station = 'hjj',Gsys = 'G
     RMS_R,MEAN_R,STD_R = [[],[]],[[],[]],[[],[]]
     G_L,E_L,C_L,R_L = [],[],[],[]
     figP,axP = plt.subplots(figsize=(20,10),sharey=False,sharex=True)
-    
+    figX,axX = plt.subplots(2,2,figsize=(20,10),sharey=False,sharex=True)
     axP.set_xlabel('Time:UT(h)',fontsize = 20)
     axP.set_ylabel(station+'(TECU)',fontsize = 20)
     axP.tick_params(labelsize=15)
@@ -541,16 +546,16 @@ def plot_tec_MIX(all_data = {},savedir='save_fig_path',station = 'hjj',Gsys = 'G
     for time in all_data:
         for sat in all_data[time]:
             prn = int(sat[1:3])
-            if (sat[0]=='G'):
+            if (sat[0]=='G' and all_data[time][sat]['TEC'] != 0):
                 time_G[prn-1].append(time)
                 data_G[prn-1].append(all_data[time][sat]['TEC'])
-            if (sat[0]=='R'):
+            if (sat[0]=='R' and all_data[time][sat]['TEC'] != 0):
                 time_R[prn-1].append(time)
                 data_R[prn-1].append(all_data[time][sat]['TEC'])
-            if (sat[0]=='E'):
+            if (sat[0]=='E' and all_data[time][sat]['TEC'] != 0):
                 time_E[prn-1].append(time)
                 data_E[prn-1].append(all_data[time][sat]['TEC'])
-            if (sat[0]=='C'):
+            if (sat[0]=='C' and all_data[time][sat]['TEC'] != 0):
                 time_C[prn-1].append(time)
                 data_C[prn-1].append(all_data[time][sat]['TEC'])
     
@@ -568,7 +573,8 @@ def plot_tec_MIX(all_data = {},savedir='save_fig_path',station = 'hjj',Gsys = 'G
         num = len(time_R[i])
         if (num < 1 or 'R' not in Gsys):
             R = False
-
+        # if i != 26:
+        #     G = False
         if G:
             axP.scatter(time_G[i],data_G[i],s=1)
             prn = '%02d' % (i + 1)
@@ -618,7 +624,7 @@ def plot_tec_MIX(all_data = {},savedir='save_fig_path',station = 'hjj',Gsys = 'G
     axP.legend(G_L,prop=font2,
         framealpha=1,facecolor='w',ncol=3,numpoints=5, markerscale=2, 
         bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
-    #axP.set_ylim(12,21)
+    #axP.set_ylim(8.3,8.7)
     #axP[0][0].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_G[0])*100, np.mean(RMS_G[0])*100, np.mean(STD_G[0])*100))
     axP.grid()
     plt.savefig(savedir)

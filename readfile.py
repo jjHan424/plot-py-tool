@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2021-11-29 21:44:08
+LastEditTime: 2021-12-18 16:23:49
 Description: read data file
 '''
 import numpy as np
@@ -67,6 +67,9 @@ def open_ipp_file(filename):
     w_last = 0
     head_end = False
     epoch_flag = True
+    num_sat = 0
+    last_day = 0
+    day=0
     with open(filename,'rt') as f:
         for line in f:
             value = line.split()
@@ -80,15 +83,18 @@ def open_ipp_file(filename):
                 hour=(float(value[3]))
                 minute=(float(value[4]))
                 second=(float(value[5]))
+                num_sat = (float(value[6]))
                 [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
                 if (w_last==0):
                     w_last = w
+                if (last_day == 0):
+                    last_day = day
                 #soweek = soweek + (w-w_last)*604800
-                soweek = hour + minute/60.0 + second/3600.0
+                soweek = (day - last_day)*24 + hour + minute/60.0 + second/3600.0
                 w_last=w
                 if soweek not in all_data.keys():
                     all_data[soweek]={}
-            if(head_end and (line[0] == 'G' or line[0] == 'R' or line[0] == 'E' or line[0] == 'C')):
+            if(num_sat >= 6 and head_end and (line[0] == 'G' or line[0] == 'R' or line[0] == 'E' or line[0] == 'C') and num_sat >= 6):
                 sat = value[0]
                 if sat not in all_data[soweek].keys():
                     all_data[soweek][sat]={}
