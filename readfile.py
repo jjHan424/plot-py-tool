@@ -1,12 +1,13 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2021-12-19 15:13:11
+LastEditTime: 2021-12-22 20:34:45
 Description: read data file
 '''
 import numpy as np
 import math
 import trans as tr
+import os
 
 def open_aug_file(filename,sys="G"):
     week,sow=[[] for i in range(33)],[[] for i in range(33)]
@@ -70,6 +71,10 @@ def open_ipp_file(filename,Nsat = 0,hour_in = 24):
     num_sat = 0
     last_day = 0
     day=0
+    
+    file_exist = os.path.exists(filename)
+    if (not file_exist):
+        return all_data
     with open(filename,'rt') as f:
         for line in f:
             value = line.split()
@@ -84,23 +89,24 @@ def open_ipp_file(filename,Nsat = 0,hour_in = 24):
                 minute=(float(value[4]))
                 second=(float(value[5]))
                 num_sat = (float(value[6]))
-                
                 [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
                 if (w_last==0):
                     w_last = w
                 if (last_day == 0):
                     last_day = day
                 #soweek = soweek + (w-w_last)*604800
+                soweek = (day - last_day)*24 + hour + minute/60.0 + second/3600.0
                 if (hour_in == 24):
                     soweek = (day - last_day)*24 + hour + minute/60.0 + second/3600.0
                 else:
-                    soweek = hour + minute/60.0 + second/3600.0
+                     if (hour_in < 24 and (hour < (24 - hour_in) / 2)):
+                        num_sat = -1
                 w_last=w
                 if (hour_in > 24 and (day - last_day) != 1):
                     num_sat = -1
-                if soweek not in all_data.keys():
+                if soweek not in all_data.keys() and num_sat!=-1:
                     all_data[soweek]={}
-            if(num_sat >= 6 and head_end and (line[0] == 'G' or line[0] == 'R' or line[0] == 'E' or line[0] == 'C') and num_sat >= Nsat):
+            if(head_end and (line[0] == 'G' or line[0] == 'R' or line[0] == 'E' or line[0] == 'C') and num_sat >= Nsat):
                 sat = value[0]
                 if sat not in all_data[soweek].keys():
                     all_data[soweek][sat]={}

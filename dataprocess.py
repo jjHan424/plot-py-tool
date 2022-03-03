@@ -1,7 +1,7 @@
 '''
 Author: 韩俊杰
 Date: 2021-09-15 14:13:07
-LastEditTime: 2021-12-18 16:09:34
+LastEditTime: 2021-12-22 21:06:14
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/dataprocess.py
@@ -10,6 +10,7 @@ import sys
 import numpy as np
 import math
 from numpy.core.fromnumeric import shape
+from numpy.core.numeric import NaN
 
 from numpy.lib.function_base import append
 
@@ -138,6 +139,41 @@ def std_stec(IPP_data1 = {},IPP_data2 = {}):
     std["R"] = np.std(data_R)
     std["E"] = np.std(data_E)
     std["C"] = np.std(data_C)
+
+    return std
+
+def max_stec(IPP_data1 = {},IPP_data2 = {}):
+    predata = pre_tec_PPPAR(IPP_data1,IPP_data2)
+
+    data_G = []
+    data_R = []
+    data_E = []
+    data_C = []
+    std = {}
+    for time in predata:
+        for sat in predata[time]:
+            prn = int(sat[1:3])
+            if (sat[0]=='G' and predata[time][sat]['TEC'] != 0):
+                data_G.append(np.abs(predata[time][sat]['TEC']))
+            if (sat[0]=='R' and predata[time][sat]['TEC'] != 0):
+                data_R.append(np.abs(predata[time][sat]['TEC']))
+            if (sat[0]=='E' and predata[time][sat]['TEC'] != 0):
+                data_E.append(np.abs(predata[time][sat]['TEC']))
+            if (sat[0]=='C' and predata[time][sat]['TEC'] != 0):
+                data_C.append(np.abs(predata[time][sat]['TEC']))
+    
+    std["G"] = NaN
+    std["R"] = NaN
+    std["E"] = NaN
+    std["C"] = NaN
+    if (len(data_G) != 0):
+        std["G"] = np.max(data_G)
+    if (len(data_R) != 0):
+        std["R"] = np.max(data_R)
+    if (len(data_E) != 0):
+        std["E"] = np.max(data_E)
+    if (len(data_C) != 0):
+        std["C"] = np.max(data_C)
 
     return std
 
