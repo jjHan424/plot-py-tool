@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2021-12-22 20:34:45
+LastEditTime: 2022-03-27 15:47:39
 Description: read data file
 '''
 import numpy as np
@@ -10,9 +10,9 @@ import trans as tr
 import os
 
 def open_aug_file(filename,sys="G"):
-    week,sow=[[] for i in range(33)],[[] for i in range(33)]
-    P1,P2,L1,L2 = [[] for i in range(33)],[[] for i in range(33)],[[] for i in range(33)],[[] for i in range(33)]
-    ion1,ion2,trp = [[] for i in range(33)],[[] for i in range(33)],[[] for i in range(33)]
+    week,sow=[[] for i in range(60)],[[] for i in range(60)]
+    P1,P2,L1,L2 = [[] for i in range(60)],[[] for i in range(60)],[[] for i in range(60)],[[] for i in range(60)]
+    ion1,ion2,trp = [[] for i in range(60)],[[] for i in range(60)],[[] for i in range(60)]
     ref = []
     ref_w,ref_sow = [],[]
     epoch_flag = False
@@ -39,6 +39,8 @@ def open_aug_file(filename,sys="G"):
             if epoch_flag:             
                 if line[0] == sys:
                     value=line.split()
+                    if len(value) <= 5:
+                        continue
                     prn = int(value[0][1:3])
                     week[prn-1].append(w)
                     sow[prn-1].append(soweek)
@@ -50,17 +52,80 @@ def open_aug_file(filename,sys="G"):
                     if len(value) > 5:
                         ion1[prn-1].append(float(value[5]))
                         ion2[prn-1].append(float(value[6]))
-                        trp[prn-1].append(float(value[7]))
+                        #trp[prn-1].append(float(value[7]))
                 else:
                     prn=0
                     continue
     if (line_num > 5):
-        aug = np.array([P1,P2,L1,L2,ion1,ion2,trp]).T
+        aug = np.array([P1,P2,L1,L2,ion1,ion2]).T
     else:
         aug = np.array([P1,P2,L1,L2]).T   
     S_time = np.array([week,sow]).T
     all_time = np.array([ref_w,ref_sow]).T
     return (S_time,aug,all_time)
+
+def open_aug_file_new(filename):
+    all_data={}
+    head_info={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = False
+    num_sat = 0
+    last_day = 0
+    day=0
+    file_exist = os.path.exists(filename)
+    if (not file_exist):
+        return all_data
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if "SYS / # / AUG TYPES" in line:
+                head_end = True
+                head_index = 1
+                for cur_value in value:
+                    if (cur_value == "SYS"):
+                        break
+                    if (len(cur_value) != 1):
+                        if line[0] not in head_info.keys():
+                            head_info[line[0]]={}
+                        head_info[line[0]][cur_value] = head_index
+                        head_index = head_index + 1                   
+            if ">" in line:
+                value=line.split()
+                year=(float(value[1]))
+                month=(float(value[2]))
+                day=(float(value[3]))
+                hour=(float(value[4]))
+                minute=(float(value[5]))
+                second=(float(value[6]))
+                [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+                if (not epoch_flag):
+                    min_sow = soweek
+                if (soweek < min_sow):
+                    soweek = soweek + 604800
+                epoch_flag = True
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+            if ((line[0] == "C" or line[0] == "E" or line[0] == "G") and epoch_flag):
+                if (len(line) <= 4):
+                    continue
+                sat = value[0]
+                if (sat not in all_data[soweek].keys()):
+                    all_data[soweek][sat] = {}
+                i = 1
+                for type in head_info[sat[0]].keys():
+                    if 12*i-9 > len(line) - 1 or 12*i+3 > len(line) - 1:
+                        break
+                    cur_value = line[12*i-9:12*i+3].strip()
+                    if (len(cur_value) > 1):
+                        all_data[soweek][sat][type] = float(cur_value)
+                    i = i+1
+
+
+    return (head_info,all_data)
+
+
 
 def open_ipp_file(filename,Nsat = 0,hour_in = 24):
     all_data={}

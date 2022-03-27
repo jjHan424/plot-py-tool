@@ -1,7 +1,7 @@
 '''
 Author: HanJunjie
 Date: 2021-11-10 15:26:45
-LastEditTime: 2022-03-03 16:36:59
+LastEditTime: 2022-03-04 10:29:46
 LastEditors: Please set LastEditors
 FilePath: /plot-toolkit-master/jjHan_py_plot/main/draw_stec.py
 '''
@@ -17,8 +17,9 @@ import dataprocess as dp
 import draw as dr
 
 
-IPP_file1 = '/Users/hjj/Documents/HJJ/Master_1/IonoTest2.0to2.1/GREAT_IonoPre_v2.1_相位平滑伪距提取STEC/InitialProject/IPP_PL/yar30100.20IPP'
-IPP_file2 = '/Users/hjj/Documents/HJJ/Master_1/IonoTest2.0to2.1/GREAT_IonoPre_v2.1_相位平滑伪距提取STEC/InitialProject/IPP_PL/yarr0100.20IPP'
+
+IPP_file1 = '/Users/hjj/Documents/HJJ/Master_1/IonoTest2.0to2.1/GREAT_IonoPre_v2.1_PPP固定解提取STEC/ResultProject/IPP_PPP/yar30100_Fixed_GEC.20IPP'
+IPP_file2 = '/Users/hjj/Documents/HJJ/Master_1/IonoTest2.0to2.1/GREAT_IonoPre_v2.1_PPP固定解提取STEC/ResultProject/IPP_PPP/yarr0100_Fixed_GEC.20IPP'
 # IPP_file1 = '/Users/hjj/Documents/HJJ/Master_1/IonoTest2.0to2.1/2.0/IPP_PPP/yar30100_Fixed_GEC.20IPP'
 # IPP_file2 = '/Users/hjj/Documents/HJJ/Master_1/IonoTest2.0to2.1/2.0/IPP_PPP/yarr0100_Fixed_GEC.20IPP'
 

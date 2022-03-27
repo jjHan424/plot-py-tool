@@ -1,7 +1,7 @@
 '''
 Author: 韩俊杰
 Date: 2021-09-15 14:13:07
-LastEditTime: 2021-12-22 21:06:14
+LastEditTime: 2022-03-26 21:28:13
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/dataprocess.py
@@ -16,9 +16,9 @@ from numpy.lib.function_base import append
 
 
 def pre_aug(Self_time = [], Self_aug = [], Inte_time = [], Inte_aug = [], ref = []):
-    P1,P2,L1,L2 = [[] for i in range(33)],[[] for i in range(33)],[[] for i in range(33)],[[] for i in range(33)]
-    ion1,ion2,trp = [[] for i in range(33)],[[] for i in range(33)],[[] for i in range(33)]
-    time = [[] for i in range(33)]
+    P1,P2,L1,L2 = [[] for i in range(60)],[[] for i in range(60)],[[] for i in range(60)],[[] for i in range(60)]
+    ion1,ion2,trp = [[] for i in range(60)],[[] for i in range(60)],[[] for i in range(60)]
+    time = [[] for i in range(60)]
     for ref_time in ref:
         I_prn_index = find_sat_index(Inte_time,ref_time)
         S_prn_index = find_sat_index(Self_time,ref_time)
@@ -34,7 +34,7 @@ def pre_aug(Self_time = [], Self_aug = [], Inte_time = [], Inte_aug = [], ref = 
             if shape(Self_aug[0])[0] > 4:
                 ref_ion1 = Self_aug[ref_sat[0]-1][4][ref_sat[2]] - Inte_aug[ref_sat[0]-1][4][ref_sat[1]]
                 ref_ion2 = Self_aug[ref_sat[0]-1][5][ref_sat[2]] - Inte_aug[ref_sat[0]-1][5][ref_sat[1]]
-                ref_trp = Self_aug[ref_sat[0]-1][6][ref_sat[2]] - Inte_aug[ref_sat[0]-1][6][ref_sat[1]]
+                #ref_trp = Self_aug[ref_sat[0]-1][6][ref_sat[2]] - Inte_aug[ref_sat[0]-1][6][ref_sat[1]]
             
             for sat in commont_sat:
                 if sat[0] == ref_sat[0]:
@@ -63,13 +63,46 @@ def pre_aug(Self_time = [], Self_aug = [], Inte_time = [], Inte_aug = [], ref = 
                     temp = Self_aug[sat[0]-1][5][sat[2]] - Inte_aug[sat[0]-1][5][sat[1]]
                     ion2[sat[0]-1].append(temp - ref_ion2)
 
-                    temp = Self_aug[sat[0]-1][6][sat[2]] - Inte_aug[sat[0]-1][6][sat[1]]
-                    trp[sat[0]-1].append(temp)
+                    # temp = Self_aug[sat[0]-1][6][sat[2]] - Inte_aug[sat[0]-1][6][sat[1]]
+                    # trp[sat[0]-1].append(temp)
+    if shape(Self_aug)[0] <= 0:
+        aug = np.array([P1,P2,L1,L2]).T 
+        return (time,aug)
     if shape(Self_aug[0])[0] > 4:
-        aug = np.array([P1,P2,L1,L2,ion1,ion2,trp]).T
+        aug = np.array([P1,P2,L1,L2,ion1,ion2]).T
     else:
         aug = np.array([P1,P2,L1,L2]).T 
     return (time,aug)        
+
+def pre_aug_new(head_I = {}, data_I = {}, data_S = {}):
+    head_info = {}
+    all_data = {}
+    ref_data = {}
+    for time in data_I.keys():
+        if time not in data_S.keys():
+            continue
+        if time not in all_data.keys():
+            all_data[time] = {}
+            ref_data[time] = {}
+        for sat in data_I[time].keys():
+            if sat not in data_S[time].keys():
+                continue
+            if sat not in all_data[time].keys() and sat[0] in ref_data[time].keys():
+                all_data[time][sat] = {}
+            for type in data_I[time][sat].keys():
+                sys_type = sat[0] + "_" + type
+                if type not in data_S[time][sat].keys():
+                    continue               
+                if sys_type not in ref_data[time]:   
+                    ref_data[time][sat[0]] = 0                
+                    ref_data[time][sys_type] = data_I[time][sat][type] - data_S[time][sat][type]
+                else:
+                    if type == "TRP1":
+                        all_data[time][sat][type] = (data_I[time][sat][type] - data_S[time][sat][type])
+                    else:
+                        all_data[time][sat][type] = (data_I[time][sat][type] - data_S[time][sat][type]) - ref_data[time][sys_type]
+    return all_data
+        
 
 def find_common_sat(I_prn_index = [],S_prn_index = []):
     common_sat = []
