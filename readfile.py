@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-03-27 15:47:39
+LastEditTime: 2022-03-27 20:12:33
 Description: read data file
 '''
 import numpy as np
@@ -270,6 +270,36 @@ def open_flt_ppplsq_file(filename):
                 if value[17] == 'Fixed':
                     all_data[soweek]['AMB'] = 1
                 else:
-                    all_data[soweek]['AMB'] = 2
+                    all_data[soweek]['AMB'] = 0
+                
+    return all_data
+
+def open_flt_pvtflt_file(filename):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if line[0] == " ":
+                soweek = float(value[0])
+                if (soweek < soweek_last):
+                    w_last = w_last + 1
+                soweek = soweek + w_last*604800
+                soweek_last = soweek
+                #soweek = hour + minute/60.0 + second/3600.0
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+                all_data[soweek]['X'] = float(value[1])
+                all_data[soweek]['Y'] = float(value[2])
+                all_data[soweek]['Z'] = float(value[3])
+                all_data[soweek]['NSAT'] = float(value[13])
+                all_data[soweek]['PDOP'] = float(value[14])
+                if value[16] == 'Fixed':
+                    all_data[soweek]['AMB'] = 1
+                else:
+                    all_data[soweek]['AMB'] = 0
                 
     return all_data

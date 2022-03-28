@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2021-11-12 09:38:43
-LastEditTime: 2022-03-27 17:01:36
+LastEditTime: 2022-03-28 16:36:54
 LastEditors: Please set LastEditors
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_aug.py
@@ -87,12 +87,12 @@ import draw as dr
 # dr.plot_aug_GEC(time_G,aug_G,time_E,aug_E,time_C,aug_C,'ion',save_fig_path)
 # dr.plot_aug_GEC(time_G,aug_G,time_E,aug_E,time_C,aug_C,'trp',save_fig_path)
 
-path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKTK-GEC-I-ion.aug"
+path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKSC-GEC-I-ion.aug"
 path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/server_ion/HKSC-GEC-S.aug"
 [head_I,data_I] = rf.open_aug_file_new(path_I)
 [head_S,data_S] = rf.open_aug_file_new(path_S)
 data = dp.pre_aug_new(head_I,data_I,data_S)
-dr.plot_aug_GEC_new(data,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC+8",show = True,deltaT=2,ylim=0.5)
+dr.plot_aug_GEC_new(data,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC+8",show = True,deltaT=2,ylim=0.1)
 
 
 

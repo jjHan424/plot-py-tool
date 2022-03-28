@@ -1,7 +1,7 @@
 '''
 Author: 韩俊杰
 Date: 2021-09-15 14:13:07
-LastEditTime: 2022-03-26 21:28:13
+LastEditTime: 2022-03-27 20:28:40
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/dataprocess.py
@@ -13,7 +13,7 @@ from numpy.core.fromnumeric import shape
 from numpy.core.numeric import NaN
 
 from numpy.lib.function_base import append
-
+import trans as tr
 
 def pre_aug(Self_time = [], Self_aug = [], Inte_time = [], Inte_aug = [], ref = []):
     P1,P2,L1,L2 = [[] for i in range(60)],[[] for i in range(60)],[[] for i in range(60)],[[] for i in range(60)]
@@ -254,3 +254,29 @@ def pre_tec_PPPAR(IPP_data1={},IPP_data2={}):
                 all_data1[sod][sat]['TEC'] = all_data[sod][sat]['TEC'] - all_data[sod][C_sat]['TEC']
 
     return all_data1
+
+def XYZ2ENU_const(XYZ = {},REF_XYZ = {},site = "HKLM"):
+    all_data = {}
+    xyz = []
+    ref_xyz = []
+    if site not in REF_XYZ.keys():
+        return all_data
+    else:
+        ref_xyz = REF_XYZ[site]
+
+    for time in XYZ.keys():
+        if time not in all_data:
+            all_data[time] = {}
+        for data_type in XYZ[time].keys():
+            xyz.append(XYZ[time]["X"])
+            xyz.append(XYZ[time]["Y"])
+            xyz.append(XYZ[time]["Z"])
+            enu = tr.xyz2enu(xyz,ref_xyz)
+            xyz.clear()
+            all_data[time]["E"] = enu[0]
+            all_data[time]["N"] = enu[1]
+            all_data[time]["U"] = enu[2]
+            all_data[time]["NSAT"] = XYZ[time]["NSAT"]
+            all_data[time]["PDOP"] = XYZ[time]["PDOP"]
+            all_data[time]["AMB"] = XYZ[time]["AMB"]
+    return all_data
