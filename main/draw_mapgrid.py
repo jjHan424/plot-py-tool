@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2022-03-07 10:03:20
-LastEditTime: 2022-03-25 14:10:10
+LastEditTime: 2022-03-28 19:26:32
 LastEditors: Please set LastEditors
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_mapgrid.py
@@ -126,7 +126,13 @@ for site in mark_point_xyz.keys():
     if blh[1] > maxLon:
         maxLon = blh[1]
     mark_point_blh[site]=[blh[0],blh[1],blh[2]]
-    folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='black'),tooltip="click").add_to(m)
+    if (site == "HKSC"):
+        folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='red'),tooltip="click").add_to(m)
+    if (site == "HKTK"):
+        folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
+    if (site == "HKLM"):
+        folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='green'),tooltip="click").add_to(m)
+
 # minLat = int(minLat)
 # minLon = int(minLon)
 # maxLat = ceil(maxLat)
@@ -233,5 +239,5 @@ while cur_Lat < maxLat:
     cur_Lat = cur_Lat + space
 # text ref
 folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space),show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
-m.save('/Users/hjj/Desktop/HongKongGrid.html')
+m.save('/Users/hjj/Desktop/PPT.html')
 webbrowser.open('/Users/hjj/Desktop/HongKongGridS.html')

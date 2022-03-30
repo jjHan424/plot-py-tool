@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-03-28 14:07:33
+LastEditTime: 2022-03-30 10:14:55
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -239,7 +239,7 @@ def plot_aug_GEC(time_G = [], aug_G = [], time_E = [], aug_E = [], time_C = [], 
     if show:
         plt.show()
 
-def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime = 0,deltaT = 2,time = "UTC",save='',show = False):
+def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime = 0,deltaT = 2,begT = 0,LastT=24,time = "UTC",save='',show = False):
     sys_type = {}
     RMS_G,MEAN_G,STD_G = [[],[]],[[],[]],[[],[]]
     RMS_E,MEAN_E,STD_E = [[],[]],[[],[]],[[],[]]
@@ -248,7 +248,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     if type == 'P':
         f1=0
         f2=1
-        figP,axP = plt.subplots(3,2,figsize=(20,10),sharey=True,sharex=True)
+        figP,axP = plt.subplots(3,2,figsize=(15,10),sharey=True,sharex=True)
         ymin = -ylim
         ymax = ylim
         col = 2
@@ -344,12 +344,11 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     for time in data.keys():
         cov_Time = time - delta_Time * 3600
         break
-    for time in data.keys():
-        end_Time = (time - cov_Time) / 3600
-    delta_X = math.ceil((end_Time - delta_Time)/deltaT)
+    end_Time = begT + LastT
+    delta_X = math.ceil((LastT)/deltaT)
     XLabel = []
     XTick = []
-    starttime = delta_Time - deltaT
+    starttime = begT - deltaT
     for i in range(delta_X):
         starttime = starttime + deltaT
         cur_Str_X = '%02d' % (starttime % 24) + ":00"
@@ -365,25 +364,28 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     if type == "ION":
         for time in data.keys():
             plot_time = (time - cov_Time) / 3600
-            for sat in data[time].keys():
-                prn = int(sat[1:3])
-                if sat[0] == "C" and sys_type[sat[0]] in data[time][sat].keys():
-                    data_C[prn-1].append(data[time][sat][sys_type[sat[0]]])
-                    time_C[prn-1].append(plot_time)
-                if sat[0] == "G" and sys_type[sat[0]] in data[time][sat].keys():
-                    data_G[prn-1].append(data[time][sat][sys_type[sat[0]]])
-                    time_G[prn-1].append(plot_time)
-                if sat[0] == "E" and sys_type[sat[0]] in data[time][sat].keys():
-                    data_E[prn-1].append(data[time][sat][sys_type[sat[0]]])
-                    time_E[prn-1].append(plot_time)
+            if (plot_time > begT and plot_time < begT + LastT):
+                for sat in data[time].keys():
+                    prn = int(sat[1:3])
+                    if abs(data[time][sat][sys_type[sat[0]]]) < 3:
+                        if sat[0] == "C" and sys_type[sat[0]] in data[time][sat].keys():
+                            data_C[prn-1].append(data[time][sat][sys_type[sat[0]]])
+                            time_C[prn-1].append(plot_time)
+                        if sat[0] == "G" and sys_type[sat[0]] in data[time][sat].keys():
+                            data_G[prn-1].append(data[time][sat][sys_type[sat[0]]])
+                            time_G[prn-1].append(plot_time)
+                        if sat[0] == "E" and sys_type[sat[0]] in data[time][sat].keys():
+                            data_E[prn-1].append(data[time][sat][sys_type[sat[0]]])
+                            time_E[prn-1].append(plot_time)
     if type == "TRP":
         for time in data.keys():
             plot_time = (time - cov_Time) / 3600
-            for sat in data[time].keys():
-                prn = int(sat[1:3])
-                data_TRP.append(data[time][sat][sys_type[sat[0]]])
-                time_TRP.append(plot_time)
-                break
+            if (plot_time > begT and plot_time < begT + LastT):
+                for sat in data[time].keys():
+                    prn = int(sat[1:3])
+                    data_TRP.append(data[time][sat][sys_type[sat[0]]])
+                    time_TRP.append(plot_time)
+                    break
 
     if type == "ION":
         for i in range(100):
@@ -427,21 +429,24 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
                     STD_C[0].append(temp)
                     temp = np.mean(data_C[i])
                     MEAN_C[0].append(temp)
-            
+        font_text = {'family' : 'Arial',
+		'weight' : 500,
+		'size'   : 15,
+                }
         font2 = {"size":7}
         ax_range = axP[0].axis()
         axP[0].legend(G_L,prop=font2,
-            framealpha=1,facecolor='w',ncol=3,numpoints=5, markerscale=2, 
+            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=2, 
             bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
-        axP[0].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_G[0])*100, np.mean(RMS_G[0])*100, np.mean(STD_G[0])*100))
+        axP[0].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_G[0])*100, np.mean(RMS_G[0])*100, np.mean(STD_G[0])*100),font_text)
         axP[1].legend(E_L,prop=font2,
-            framealpha=1,facecolor='w',ncol=3,numpoints=5, markerscale=2, 
+            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=2, 
             bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
-        axP[1].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_E[0])*100, np.mean(RMS_E[0])*100, np.mean(STD_E[0])*100))
+        axP[1].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_E[0])*100, np.mean(RMS_E[0])*100, np.mean(STD_E[0])*100),font_text)
         axP[2].legend(C_L,prop=font2,
-            framealpha=1,facecolor='w',ncol=3,numpoints=5, markerscale=2, 
+            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=2, 
             bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
-        axP[2].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_C[0])*100, np.mean(RMS_C[0])*100, np.mean(STD_C[0])*100))
+        axP[2].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_C[0])*100, np.mean(RMS_C[0])*100, np.mean(STD_C[0])*100),font_text)
         axP[2].set_xticks(XTick)
         axP[2].set_xticklabels(XLabel)
     
@@ -1228,7 +1233,7 @@ def plot_enu(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttim
             axP[i].set_title("Number of Satellite",font)
         if type[i] == "ION":
             axP[i].set_title("Difference of Ionosphere Delay correction/m",font)
-            axP[i].set_ylim(ymin / 2,ymax / 2)
+            # axP[i].set_ylim(-0.5,0.5)
         if type[i] == "TRP":
             axP[i].set_title("Difference of Tropsphere Delay correction/m",font)
             axP[i].set_ylim(ymin,ymax)
@@ -1377,7 +1382,7 @@ def plot_enu(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttim
         RMS_str = "RMS:"
         for j in range(N_mode):
             if cur_type == "E" or cur_type == "N" or cur_type == "U":
-                RMS_str = RMS_str +'{:.4f}cm, '.format(RMS_enu[cur_type][j])
+                RMS_str = RMS_str +'{:.4f}m, '.format(RMS_enu[cur_type][j])
         if cur_type == "E" or cur_type == "N" or cur_type == "U":
             ax_range = axP[i].axis()
             axP[i].text(ax_range[0],ax_range[3],RMS_str[0:8*N_mode+8],font_text)
