@@ -1,7 +1,7 @@
 '''
 Author: HanJunjie
 Date: 2021-11-29 21:26:38
-LastEditTime: 2022-04-04 15:17:57
+LastEditTime: 2022-04-08 10:42:37
 LastEditors: Please set LastEditors
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_flt.py
@@ -19,7 +19,7 @@ import draw as dr
 import seaborn as sns
 import trans as tr
 
-REF_XYZ = {"F034":[-2686347.4877,5087702.2490,2744828.4117],
+REF_XYZ = {"F034":[ -2686347.4938,5087702.2177,2744828.3915],
            "HKSC":[-2414267.6255,5386768.7774,2407459.7930],
            "HKTK":[-2418093.0695,5374658.0963,2430428.9388]}
 ENU_ALL = {}
@@ -42,5 +42,5 @@ for i in range(len(mode_list)):
     ENU_ALL[mode_list[i]] = data_ENU
 
 
-dr.plot_enu(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 1,starttime=0,begT=0,LastT=24,deltaT=2,time = "UTC",Fixed=True,delta_data = 1)
+dr.plot_enu(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 2,starttime=0,begT=0,LastT=24,deltaT=2,time = "UTC",Fixed=False,delta_data = 1)
 

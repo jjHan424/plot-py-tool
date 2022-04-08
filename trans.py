@@ -37,11 +37,11 @@ def xyz2blh(X,Y,Z):
         phiOld = B
         H = ss/cos(B)-nn
         B = atan(zps/(1.0-glv.e2*nn/(nn+H)))
-        if abs(phiOld-B) <= 1.0e-11 and abs(hOld-H) <= 1.0e-5:
+        if abs(phiOld-B) <= 1.0e-8 and abs(hOld-H) <= 1.0e-3:
             # always convert longitude to 0-360
             if L < 0.0 :
                 L += 2 * pi
-                break
+            break
 
         i+=1
 
