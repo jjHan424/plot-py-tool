@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2021-11-12 09:38:43
-LastEditTime: 2022-03-30 10:18:41
+LastEditTime: 2022-04-13 15:42:32
 LastEditors: Please set LastEditors
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_aug.py
@@ -87,17 +87,17 @@ import draw as dr
 # dr.plot_aug_GEC(time_G,aug_G,time_E,aug_E,time_C,aug_C,'ion',save_fig_path)
 # dr.plot_aug_GEC(time_G,aug_G,time_E,aug_E,time_C,aug_C,'trp',save_fig_path)
 
-# path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKSC-GEC-I-ion.aug"
-# path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/server_ion/HKSC-GEC-S.aug"
+path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientGrid/HKST-HKSC-GEC-I.aug"
+path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/const_server_ion/HKSC-GEC-S.aug"
 
-path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKLM/5-MW.aug"
-#path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKLM-GEC-I-ion.aug"
-path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/server_ion/HKLM-GEC-S.aug"
+# path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKLM/5-MW.aug"
+# #path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKLM-GEC-I-ion.aug"
+# path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/server_ion/HKLM-GEC-S.aug"
 
 [head_I,data_I] = rf.open_aug_file_new(path_I)
 [head_S,data_S] = rf.open_aug_file_new(path_S)
 data = dp.pre_aug_new(head_I,data_I,data_S)
-dr.plot_aug_GEC_new(data,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC+8",show = True,deltaT=2,ylim=0.1,begT=15,LastT=2)
+dr.plot_aug_GEC_new(data,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC+8",show = True,deltaT=2,ylim=0.1,begT=10,LastT=10)
 dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 2,time = "UTC+8",show = True,deltaT=2,ylim=0.1)
 
 

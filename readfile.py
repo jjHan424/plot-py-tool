@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-04-04 15:08:13
+LastEditTime: 2022-04-13 22:00:01
 Description: read data file
 '''
 import numpy as np
@@ -107,7 +107,7 @@ def open_aug_file_new(filename):
                 epoch_flag = True
                 if soweek not in all_data.keys():
                     all_data[soweek]={}
-            if ((line[0] == "C" or line[0] == "E" or line[0] == "G") and epoch_flag):
+            if ((value[0][0] == "C" or value[0][0] == "E" or value[0][0] == "G") and epoch_flag):
                 if (len(line) <= 4):
                     continue
                 sat = value[0]
@@ -117,7 +117,8 @@ def open_aug_file_new(filename):
                 for type in head_info[sat[0]].keys():
                     if 12*i-9 > len(line) - 1 or 12*i+3 > len(line) - 1:
                         break
-                    cur_value = line[12*i-9:12*i+3].strip()
+                    # cur_value = line[12*i-9:12*i+3].strip()
+                    cur_value = line[12*i-8:12*i+4].strip()
                     if (len(cur_value) > 1):
                         all_data[soweek][sat][type] = float(cur_value)
                     i = i+1
@@ -334,3 +335,54 @@ def open_flt_pos_rtpppfile(filename):
                     all_data[soweek]['AMB'] = 0
                 
     return all_data
+
+def open_bias_file_grid(filename):
+    all_data={}
+    head_info={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = False
+    num_sat = 0
+    last_day = 0
+    day=0
+    file_exist = os.path.exists(filename)
+    if (not file_exist):
+        return all_data
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()                
+            if ">" in line:
+                value=line.split()
+                year=(float(value[1]))
+                month=(float(value[2]))
+                day=(float(value[3]))
+                hour=(float(value[4]))
+                minute=(float(value[5]))
+                second=(float(value[6]))
+                [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+                if (not epoch_flag):
+                    min_sow = soweek
+                if (soweek < min_sow):
+                    soweek = soweek + 604800
+                epoch_flag = True
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+                    all_data[soweek]["G"] = {}
+                    all_data[soweek]["E"] = {}
+                    all_data[soweek]["C"] = {}
+                continue
+            if (epoch_flag):
+                if (len(line) <= 4):
+                    continue
+                site = value[0]
+                i = 1
+                for type in  all_data[soweek].keys():
+                    if 18*i-1 > len(line) - 1 or 18*i+6 > len(line) - 1:
+                        break
+                    # cur_value = line[12*i-9:12*i+3].strip()
+                    cur_value = line[18*i-1:18*i+6].strip()
+                    if (len(cur_value) > 1):
+                        all_data[soweek][type][site] = float(cur_value)
+                    i = i+1
+    return (all_data)
