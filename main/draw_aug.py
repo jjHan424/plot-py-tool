@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2021-11-12 09:38:43
-LastEditTime: 2022-04-13 15:42:32
+LastEditTime: 2022-04-13 22:39:33
 LastEditors: Please set LastEditors
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_aug.py
@@ -97,6 +97,13 @@ path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/const_server_ion/HK
 [head_I,data_I] = rf.open_aug_file_new(path_I)
 [head_S,data_S] = rf.open_aug_file_new(path_S)
 data = dp.pre_aug_new(head_I,data_I,data_S)
+#starttime 数据在UTC下的开始时间
+#begT 画图起始时间，在time的设置下
+#LastT 需要画图的数据长度（小时）
+#deltaT 坐标刻度距离
+#如下
+#starttime = 2,time = "UTC+8",begT=10,LastT=10
+#数据在UTC的开始时间为02:00，画图的横坐标时间系统为UTC+8，在UTC+8下从10:00开始画10小时的数据，统计结果为画图的结果
 dr.plot_aug_GEC_new(data,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC+8",show = True,deltaT=2,ylim=0.1,begT=10,LastT=10)
 dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 2,time = "UTC+8",show = True,deltaT=2,ylim=0.1)
 
