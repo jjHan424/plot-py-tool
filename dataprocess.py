@@ -1,7 +1,7 @@
 '''
 Author: 韩俊杰
 Date: 2021-09-15 14:13:07
-LastEditTime: 2022-03-27 20:28:40
+LastEditTime: 2022-04-14 20:51:31
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/dataprocess.py
@@ -102,7 +102,38 @@ def pre_aug_new(head_I = {}, data_I = {}, data_S = {}):
                     else:
                         all_data[time][sat][type] = (data_I[time][sat][type] - data_S[time][sat][type]) - ref_data[time][sys_type]
     return all_data
-        
+
+def pre_Bias(data = {},INT = 30):
+    all_data  = {}
+
+    for soweek in data.keys():
+        ref_G,ref_E,ref_C = "NONE","NONE","NONE"
+        nextsec = soweek + INT
+        while (nextsec not in data.keys()):
+            nextsec = nextsec + INT
+            if (nextsec >= 2*7*24*3600):
+                break
+        if (nextsec >= 2*7*24*3600):
+                break
+        if soweek not in all_data.keys():
+            all_data[soweek]={}
+            all_data[soweek]["G"] = {}
+            all_data[soweek]["E"] = {}
+            all_data[soweek]["C"] = {}
+        for sys in data[soweek].keys():
+            ref_G = "NONE"
+            for site in data[soweek][sys].keys():
+                if (site not in data[nextsec][sys].keys()):
+                    continue
+                if ref_G == "NONE":
+                    ref_G = site
+                    ref = data[nextsec][sys][site] - data[soweek][sys][site]
+                    continue
+                else:
+                    all_data[soweek][sys][site] = data[nextsec][sys][site] - data[soweek][sys][site] - ref
+    
+    return all_data
+
 
 def find_common_sat(I_prn_index = [],S_prn_index = []):
     common_sat = []

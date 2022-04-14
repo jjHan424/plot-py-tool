@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2022-03-07 10:03:20
-LastEditTime: 2022-03-28 19:26:32
+LastEditTime: 2022-04-07 21:50:52
 LastEditors: Please set LastEditors
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_mapgrid.py
@@ -106,7 +106,29 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 #               'HKST':[-2417142.8718,5382345.4730,2415036.9459],
 #               'T430':[-2411015.2264,5380265.7133,2425132.7008]
 #                 }
-m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11, tiles='Stamen Terrain')
+
+#hb Lyu
+mark_point_xyz = {#'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
+              #'HKFN':[-2411012.8949,5380268.2632,2425129.0941],
+              #'HKKS':[-2429525.8966,5377816.6360,2412152.7354],
+              'HKKT':[-2405143.8990,5385195.2549,2420032.5440],
+              #'HKLM':[-2414045.9447,5391602.3519,2396878.8893],
+              #'HKLT':[-2399062.7358,5389237.8430,2417327.0568],
+              #'HKMW':[-2402484.1093,5395262.4383,2400726.9555],
+              #'HKNP':[-2392360.2537,5400226.2534,2400094.4576],
+              'HKOH':[-2423816.8997,5386057.0931,2399883.3709],
+              #'HKPC':[-2405183.0015,5392541.8294,2403645.7303],
+              'HKQT':[-2421567.8916,5384910.5631,2404264.3943],
+              'HKSC':[-2414266.9197,5386768.9868,2407460.0314],
+              'HKSL':[-2393382.4157,5393861.1745,2412592.4105],
+              #'HKSS':[-2424425.1013,5377188.1768,2418617.7454],
+              'HKST':[-2417142.8718,5382345.4730,2415036.9459],
+              'HKTK':[-2418092.3728,5374658.3417,2430429.1904],
+              #'HKWS':[-2430579.0108,5374285.6738,2418956.3331],
+              #'KYC1':[-2408855.2574,5391043.2386,2403591.1306],
+              'T430':[-2411015.2264,5380265.7133,2425132.7008]
+                }
+m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11.2, tiles='Stamen Terrain')
 mark_point_blh={}
 minLat = 90
 minLon = 180
@@ -126,12 +148,11 @@ for site in mark_point_xyz.keys():
     if blh[1] > maxLon:
         maxLon = blh[1]
     mark_point_blh[site]=[blh[0],blh[1],blh[2]]
-    if (site == "HKSC"):
+    if (site == "HKTK" or site == "HKSL" or site == "HKOH"):
         folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='red'),tooltip="click").add_to(m)
-    if (site == "HKTK"):
+    if (site == "HKKT" or site == "T430" or site == "HKST" or site == "HKSC" or site == "HKQT"):
         folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
-    if (site == "HKLM"):
-        folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='green'),tooltip="click").add_to(m)
+
 
 # minLat = int(minLat)
 # minLon = int(minLon)
@@ -147,7 +168,7 @@ if delta>2.5:
     space = delta/5
     count = 5
 else:
-    space = 0.1
+    space = 0.05
     count = 0
 if count==0:
     maxLat = maxLat + space/2
@@ -164,18 +185,18 @@ while cur_Lon < maxLon:
     if abs(cur_Lon - maxLon) < 1e-8:
         break
     cur_Lon = cur_Lon + space 
-    folium.PolyLine(locations=[[maxLat,cur_Lon],[minLat,cur_Lon]],color='black',dash_array='20',weight = 2).add_to(m)    
+    folium.PolyLine(locations=[[maxLat,cur_Lon],[minLat,cur_Lon]],color='black',weight = 0.5).add_to(m)    
 maxLon = cur_Lon
 while cur_Lat > minLat:
     if abs(cur_Lat - minLat) < 1e-8:
         break
     cur_Lat = cur_Lat - space
-    folium.PolyLine(locations=[[cur_Lat,minLon],[cur_Lat,maxLon]],color='black',dash_array='20',weight=2).add_to(m)
+    folium.PolyLine(locations=[[cur_Lat,minLon],[cur_Lat,maxLon]],color='black',weight=1).add_to(m)
 minLat = cur_Lat
 cur_Lon = minLon
 while cur_Lon < maxLon:
     cur_Lon = cur_Lon + space
-    folium.PolyLine(locations=[[maxLat,cur_Lon],[minLat,cur_Lon]],color='black',dash_array='20',weight=2).add_to(m)
+    folium.PolyLine(locations=[[maxLat,cur_Lon],[minLat,cur_Lon]],color='black',weight=1).add_to(m)
 #plot bound
 cur_Lat = maxLat + space
 cur_Lon = minLon - space
@@ -190,7 +211,7 @@ while cur_Lon < maxLon - space:
     else:
         c = 'black'
         i=0
-    folium.PolyLine(locations=[[maxLat,cur_Lon],[maxLat,cur_Lon + space]],color=c,weight=5).add_to(m)
+    folium.PolyLine(locations=[[maxLat,cur_Lon],[maxLat,cur_Lon + space]],color=c,weight=3).add_to(m)
 #---
 #   |
 #   |
@@ -203,7 +224,7 @@ while cur_Lat > minLat + space:
     else:
         c = 'black'
         i=0
-    folium.PolyLine(locations=[[cur_Lat,maxLon],[cur_Lat - space,maxLon]],color=c,weight=5).add_to(m)
+    folium.PolyLine(locations=[[cur_Lat,maxLon],[cur_Lat - space,maxLon]],color=c,weight=3).add_to(m)
 #---
 #   |
 #   |
@@ -219,7 +240,7 @@ while cur_Lon > minLon:
     else:
         c = 'black'
         i=0
-    folium.PolyLine(locations=[[minLat,cur_Lon-space],[minLat,cur_Lon]],color=c,weight=5).add_to(m)
+    folium.PolyLine(locations=[[minLat,cur_Lon-space],[minLat,cur_Lon]],color=c,weight=3).add_to(m)
     cur_Lon = cur_Lon - space
 # ---
 #|   |
@@ -235,9 +256,9 @@ while cur_Lat < maxLat:
         i=0
     if cur_Lat + space > maxLat:
         break
-    folium.PolyLine(locations=[[cur_Lat,minLon],[cur_Lat + space,minLon]],color=c,weight=5).add_to(m)
+    folium.PolyLine(locations=[[cur_Lat,minLon],[cur_Lat + space,minLon]],color=c,weight=3).add_to(m)
     cur_Lat = cur_Lat + space
 # text ref
-folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space),show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
-m.save('/Users/hjj/Desktop/PPT.html')
+#folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space),show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
+m.save('/Users/hjj/Desktop/hb_lyu.html')
 webbrowser.open('/Users/hjj/Desktop/HongKongGridS.html')

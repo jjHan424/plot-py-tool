@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-04-13 22:31:45
+LastEditTime: 2022-04-14 22:23:10
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -299,7 +299,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP[2].set_title('C')
         for i in range(3):
                 axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-                axP[i].set_ylim(ymin,ymax)
+                # axP[i].set_ylim(ymin,ymax)
                 box = axP[i].get_position()
                 axP[i].set_position([box.x0, box.y0, box.width*0.99, box.height])
         if freq==1:
@@ -367,7 +367,9 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
             if (plot_time > begT and plot_time < begT + LastT):
                 for sat in data[time].keys():
                     prn = int(sat[1:3])
-                    if abs(data[time][sat][sys_type[sat[0]]]) < 3:
+                    if sys_type[sat[0]] not in data[time][sat].keys():
+                        continue
+                    if abs(data[time][sat][sys_type[sat[0]]]) < 5:
                         if sat[0] == "C" and sys_type[sat[0]] in data[time][sat].keys():
                             data_C[prn-1].append(data[time][sat][sys_type[sat[0]]])
                             time_C[prn-1].append(plot_time)
@@ -448,6 +450,8 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
             bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
         axP[2].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_C[0])*100, np.mean(RMS_C[0])*100, np.mean(STD_C[0])*100),font_text)
         axP[2].set_xticks(XTick)
+        axP[1].set_xticks(XTick)
+        axP[0].set_xticks(XTick)
         axP[2].set_xticklabels(XLabel)
     
     if type == "TRP":
@@ -1401,12 +1405,15 @@ def plot_enu(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttim
                 print(mode[j] + ":")
                 print('RMS={:.4f}cm,MEAN={:.4f}cm,STD={:.4f}cm'.format(RMS_enu[cur_type][j]*100,MEAN_enu[cur_type][j]*100,STD_enu[cur_type][j]*100))
     
-    print("固定率:")
+    print("固定率(Fixed/Fixed+Float):")
     for i in range(N_mode):
         print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (Fixed_NUM[i] + Float_NUM[i]) * 100))
     print("完整率:")
     for i in range(N_mode):
         print(mode[i] + ':{:.2f}%'.format((Fixed_NUM[i] + Float_NUM[i]) / ALL_NUM[i] * 100))
+    print("固定率(Fixed/ALL):")
+    for i in range(N_mode):
+        print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (ALL_NUM[i]) * 100))
 
     plt.show()
 
@@ -1416,8 +1423,11 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
     f1=5
     ymin = -ylim
     ymax = ylim
-    figP,axP = plt.subplots(N_plot,1,figsize=(20,10),sharey=False,sharex=True)
-    axP[N_plot-1].set_xlabel('Time' + '(' + time + ')')
+    figP,axP = plt.subplots(N_plot,1,figsize=(20,10),sharey=False,sharex=False)
+    if (N_plot>3):
+        axP[N_plot-2].set_xlabel('Time' + '(' + time + ')')
+    else:
+        axP[N_plot-1].set_xlabel('Time' + '(' + time + ')')
     font2 = {'family' : 'Arial',
 		'weight' : 500,
 		'size'   : 13,
@@ -1428,10 +1438,12 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
         # if type[i] == "G" or type[i] == "E" or type[i] == "C":
         #     axP[i].set_ylim(ymin,ymax)
         if type[i] == "G":
-            axP[i].set_title("Bias(m)",font)
+            axP[i].set_title("Difference of Bias(m)",font)
         box = axP[i].get_position()
         if type[i] == "G" or type[i] == "E" or type[i] == "C":
-            axP[i].set_position([box.x0, box.y0*1.04, box.width, box.height])
+            axP[i].set_position([box.x0, box.y0, box.width*0.9, box.height])
+        if type[i] == "RMS" or type[i] == "STD":
+            axP[i].set_position([box.x0, box.y0*0.9, box.width, box.height])
     
     if "+" in time:
         end_time = len(time)
@@ -1527,11 +1539,16 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
     time_plot["E"] = time_E
     time_plot["C"] = time_C
 
+    site_ploted={}
+    site_ploted["G"] = []
+    site_ploted["E"] = []
+    site_ploted["C"] = []
+
     for i in range(N_plot):
         cur_type = type[i]
-        RMS_enu[cur_type] = []
-        STD_enu[cur_type] = []
-        MEAN_enu[cur_type] = []
+        RMS_enu[cur_type] = {}
+        STD_enu[cur_type] = {}
+        MEAN_enu[cur_type] = {}
         if (cur_type != "ION"):
             for j in range(N_mode):
                 if cur_type == "TRP":
@@ -1543,13 +1560,18 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
                     temp = np.mean(data_plot[cur_type])
                     MEAN_enu[cur_type].append(temp)
                 else:
-                    axP[i].scatter(time_plot[cur_type][j],data_plot[cur_type][j],s=1)
-                    temp = dp.rms(data_plot[cur_type][j])
-                    RMS_enu[cur_type].append(temp)
-                    temp = np.std(data_plot[cur_type][j])
-                    STD_enu[cur_type].append(temp)
-                    temp = np.mean(data_plot[cur_type][j])
-                    MEAN_enu[cur_type].append(temp)
+                    if (cur_type != "RMS" and cur_type != "STD"):
+                        if (len(time_plot[cur_type][j]) > 0):
+                            axP[i].scatter(time_plot[cur_type][j],data_plot[cur_type][j],s=1)
+                            temp = dp.rms(data_plot[cur_type][j])
+                            RMS_enu[cur_type][mode[j]] = (temp)
+                            temp = np.std(data_plot[cur_type][j])
+                            STD_enu[cur_type][mode[j]] = (temp)
+                            temp = np.mean(data_plot[cur_type][j])
+                            MEAN_enu[cur_type][mode[j]] = (temp)
+                            if mode[j] not in site_ploted[cur_type]:
+                                site_ploted[cur_type].append(mode[j])
+
         if (cur_type == "ION"):
             for sat_i in range(100):
                 G,E,C = True,True,True
@@ -1572,30 +1594,54 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
 		'weight' : 500,
 		'size'   : 15,
                 }
+    
+    
     for i in range(N_plot):
         cur_type = type[i]
-        RMS_str = "RMS:"
-        for j in range(N_mode):
-            if cur_type == "E" or cur_type == "N" or cur_type == "U":
-                RMS_str = RMS_str +'{:.4f}m, '.format(RMS_enu[cur_type][j])
-        if cur_type == "E" or cur_type == "N" or cur_type == "U":
-            ax_range = axP[i].axis()
-            axP[i].text(ax_range[0],ax_range[3],RMS_str[0:8*N_mode+8],font_text)
-
-
-    axP[N_plot-1].set_xticks(XTick)
-    axP[N_plot-1].set_xticklabels(XLabel)
-    axP[0].legend(mode,prop=font2,
-            framealpha=1,facecolor='w',ncol=1,numpoints=5, markerscale=5, 
-            bbox_to_anchor=(1,1),loc=0,borderaxespad=0) 
-    for i in range(N_plot):
-        cur_type=type[i]
-        if cur_type == "E" or cur_type == "N" or cur_type == "U":
-            print("\n"+cur_type)
-            for j in range(N_mode):
-                print(mode[j] + ":")
-                print('RMS={:.4f}cm,MEAN={:.4f}cm,STD={:.4f}cm'.format(RMS_enu[cur_type][j]*100,MEAN_enu[cur_type][j]*100,STD_enu[cur_type][j]*100))
+        if (cur_type != "RMS" and cur_type != "STD"):
+            axP[i].set_xticks(XTick)
+            axP[i].set_xticklabels(XLabel)
+            axP[i].legend(site_ploted[cur_type],prop=font2,
+                    framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=5, 
+                    bbox_to_anchor=(1,1),loc=0,borderaxespad=0) 
+    if ("RMS" in type):
+        last_plot = RMS_enu
+    elif("STD" in type):
+        last_plot = STD_enu
+    W = 0.25
     
+    for i in range(N_plot):
+        cur_type = type[i]
+        if (cur_type == "RMS" or cur_type == "STD"):  
+            isys=-1         
+            for sys in last_plot.keys():
+                barplot_data = []
+                barplot_name = []
+                for site in last_plot[sys].keys():
+                    barplot_data.append(last_plot[sys][site])
+                    barplot_name.append(site)
+                x = list(range(len(barplot_name)))
+
+                for j in range(len(x)):
+                    x[j] = x[j] + W*isys
+                
+                p1 = axP[i].bar(x,barplot_data,width = W)
+                isys=isys+1
+
+      
+    for sys in last_plot.keys():
+        barplot_data = []
+        barplot_name = []
+        for site in last_plot[sys].keys():
+            barplot_name.append(site)
+        break
+    sys = ["G","E","C"]
+    if ('RMS' in type or 'STD' in type):
+        x = list(range(len(barplot_name)))
+        axP[3].set_xticks(x)
+        axP[3].set_xticklabels(barplot_name)
+        axP[3].legend(sys)
+
     # print("固定率:")
     # for i in range(N_mode):
     #     print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (Fixed_NUM[i] + Float_NUM[i]) * 100))

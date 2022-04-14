@@ -375,7 +375,7 @@ def open_bias_file_grid(filename):
             if (epoch_flag):
                 if (len(line) <= 4):
                     continue
-                site = value[0]
+                site = value[0][0:4]
                 i = 1
                 for type in  all_data[soweek].keys():
                     if 18*i-1 > len(line) - 1 or 18*i+6 > len(line) - 1:
