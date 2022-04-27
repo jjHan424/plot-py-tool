@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-04-20 14:17:46
+LastEditTime: 2022-04-27 12:36:46
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -13,9 +13,11 @@ import matplotlib as mpl
 mpl.use("TkAgg")
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+plt.style.use('science')
 from numpy.core.fromnumeric import shape, size
 import dataprocess as dp
 import matplotlib.colors as colors
+from matplotlib.pyplot import MultipleLocator
 #import seaborn as sns
 import math
 font = {'family' : 'Arial',
@@ -1215,24 +1217,251 @@ def plot_upd_wl_oneday_GEC(all_data={},savedir='save_fig_path',mode = 'upd_wl',s
         plt.show()
 
 def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,begT = 0,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30):
-    N_plot = len(type)
+    #with plt.style.context("science","grid"):
+        N_plot = len(type)
+        N_mode = len(mode)
+        f1=5
+        ymin = -ylim
+        ymax = ylim
+        
+        figP,axP = plt.subplots(N_plot,1,figsize=(12,10),sharey=False,sharex=True)
+        axP[N_plot-1].set_xlabel('Time' + '(' + time + ')')
+        font2 = {'family' : 'Times new roman',
+            'weight' : 600,
+            'size'   : 15,
+                }
+        for i in range(N_plot):
+            axP[i].set_ylabel(type[i],font2)
+            #axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
+            if type[i] == "E" or type[i] == "N" or type[i] == "U":
+                axP[i].set_ylim(ymin,ymax)
+            if type[i] == "E":
+                axP[i].set_title("Positioning Errors(m)",font)
+            if type[i] == "NSAT":
+                axP[i].set_title("Number of Satellite",font)
+            if type[i] == "ION":
+                axP[i].set_title("Difference of Ionosphere Delay correction/m",font)
+                #axP[i].set_ylim(-0.5,0.5)
+            if type[i] == "TRP":
+                axP[i].set_title("Difference of Tropsphere Delay correction/m",font)
+                axP[i].set_ylim(ymin,ymax)
+            box = axP[i].get_position()
+            if type[i] == "NSAT" or type[i] == "ION" or type[i] == "TRP":
+                axP[i].set_position([box.x0, box.y0*1.04, box.width, box.height])
+        
+        if "+" in time:
+            end_time = len(time)
+            delta_Time = int(time[3:end_time]) + starttime
+        else:
+            delta_Time = starttime
+        for time in data[mode[0]].keys():
+            cov_Time = time - delta_Time * 3600
+            break
+        end_Time = begT + LastT
+        delta_X = math.ceil((LastT)/deltaT)
+        XLabel = []
+        XTick = []
+        starttime = begT - deltaT
+        for i in range(delta_X):
+            starttime = starttime + deltaT
+            cur_Str_X = '%02d' % (starttime % 24) + ":00"
+            XLabel.append(cur_Str_X)
+            XTick.append(starttime)       
+        if starttime < end_Time:
+            starttime = starttime + deltaT
+            cur_Str_X = '%02d' % (starttime % 24) + ":00"
+            XLabel.append(cur_Str_X)
+            XTick.append(starttime)
+
+
+        time = [[] for i in range(N_mode)]
+        data_plot = {}
+        data_E = [[] for i in range(N_mode)]
+        data_N = [[] for i in range(N_mode)]
+        data_U = [[] for i in range(N_mode)]
+        data_S = [[] for i in range(N_mode)]
+        Fixed_NUM = [[] for i in range(N_mode)]
+        Float_NUM = [[] for i in range(N_mode)]
+        ALL_NUM = [[] for i in range(N_mode)]
+
+        for i in range(N_mode):
+            Fixed_NUM[i] = 0
+            Float_NUM[i] = 0
+            ALL_NUM[i] = (LastT*3600) / delta_data + 1
+
+        RMS_enu,STD_enu,MEAN_enu = {},{},{}
+        
+        time_sG = [[] for i in range(100)]
+        time_sE = [[] for i in range(100)]
+        time_sC = [[] for i in range(100)]
+        time_TRP = []
+        data_sG = [[] for i in range(100)]
+        data_sE = [[] for i in range(100)]
+        data_sC = [[] for i in range(100)]
+        data_TRP = []
+
+        for i in range(N_mode):
+            for cur_time in data[mode[i]].keys():
+                plot_time = (cur_time-cov_Time) / 3600
+                if (plot_time >= begT and plot_time <= (begT + LastT)):
+                    if data[mode[i]][cur_time]["AMB"] == 0:
+                        Float_NUM[i] = Float_NUM[i] + 1
+                    elif data[mode[i]][cur_time]["AMB"] == 1:
+                        Fixed_NUM[i] = Fixed_NUM[i] + 1
+                    if (Fixed and data[mode[i]][cur_time]["AMB"] == 0):
+                        continue
+                    time[i].append(plot_time)
+                    data_E[i].append(data[mode[i]][cur_time]["E"])
+                    data_N[i].append(data[mode[i]][cur_time]["N"])
+                    data_U[i].append(data[mode[i]][cur_time]["U"])
+                    data_S[i].append(data[mode[i]][cur_time]["NSAT"])
+                    if "ION" in type and cur_time in data["ION"].keys():
+                        for sat in data["ION"][cur_time].keys():
+                            prn = int(sat[1:3])
+                            if sat[0] == "C":
+                                data_sC[prn-1].append(data["ION"][cur_time][sat]["ION2"])
+                                time_sC[prn-1].append(plot_time)
+                            if sat[0] == "G":
+                                data_sG[prn-1].append(data["ION"][cur_time][sat]["ION1"])
+                                time_sG[prn-1].append(plot_time)
+                            if sat[0] == "E":
+                                data_sE[prn-1].append(data["ION"][cur_time][sat]["ION1"])
+                                time_sE[prn-1].append(plot_time)
+                    if "TRP" in type and cur_time in data["ION"].keys():
+                        for sat in data["ION"][cur_time].keys():
+                            prn = int(sat[1:3])
+                            data_TRP.append(data["ION"][cur_time][sat]["TRP1"])
+                            time_TRP.append(plot_time)
+                            break
+
+        data_plot["E"] = data_E
+        data_plot["N"] = data_N
+        data_plot["U"] = data_U
+        data_plot["NSAT"] = data_S
+        data_plot["TRP"] = data_TRP
+
+        for i in range(N_plot):
+            cur_type = type[i]
+            RMS_enu[cur_type] = []
+            STD_enu[cur_type] = []
+            MEAN_enu[cur_type] = []
+            if (cur_type != "ION"):
+                for j in range(N_mode):
+                    if cur_type == "TRP":
+                        axP[i].scatter(time_TRP,data_plot[cur_type])
+                        temp = dp.rms(data_plot[cur_type])
+                        RMS_enu[cur_type].append(temp)
+                        temp = np.std(data_plot[cur_type])
+                        STD_enu[cur_type].append(temp)
+                        temp = np.mean(data_plot[cur_type])
+                        MEAN_enu[cur_type].append(temp)
+                    else:
+                        temp = np.mean(data_plot[cur_type][j])
+                        MEAN_enu[cur_type].append(temp)
+                        #data_plot[cur_type][j] = data_plot[cur_type][j]-temp
+                        axP[i].scatter(time[j],data_plot[cur_type][j])
+                        temp = dp.rms(data_plot[cur_type][j])
+                        RMS_enu[cur_type].append(temp)
+                        temp = np.std(data_plot[cur_type][j])
+                        STD_enu[cur_type].append(temp)
+                        
+            if (cur_type == "ION"):
+                for sat_i in range(100):
+                    G,E,C = True,True,True
+                    num = len(time_sG[sat_i])
+                    if num < 1:
+                        G = False
+                    num = len(time_sE[sat_i])
+                    if num < 1:
+                        E = False
+                    num = len(time_sC[sat_i])
+                    if num < 1:
+                        C = False
+                    if G:
+                        axP[i].scatter(time_sG[sat_i],data_sG[sat_i])
+                    if E:
+                        axP[i].scatter(time_sE[sat_i],data_sE[sat_i])
+                    if C:
+                        axP[i].scatter(time_sC[sat_i],data_sC[sat_i])
+        font_text = {'family' : 'Times new roman',
+            'weight' : 600,
+            'size'   : 15,
+                    }
+        for i in range(N_plot):
+            cur_type = type[i]
+            RMS_str = "RMS:"
+            for j in range(N_mode):
+                if cur_type == "E" or cur_type == "N" or cur_type == "U":
+                    RMS_str = RMS_str +'{:.4f}m, '.format(RMS_enu[cur_type][j])
+            if cur_type == "E" or cur_type == "N" or cur_type == "U":
+                ax_range = axP[i].axis()
+                #print(len(RMS_str))
+                #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
+                axP[i].text(ax_range[0],ax_range[3]+ylim/15,RMS_str[0:9*N_mode+2],font_text)
+
+
+        axP[N_plot-1].set_xticks(XTick)
+        axP[N_plot-1].set_xticklabels(XLabel)
+        # axP[0].legend(mode,
+        #         framealpha=1,facecolor='w',ncol=1,numpoints=5, markerscale=5, 
+        #         bbox_to_anchor=(1,1),loc=0,borderaxespad=0) 
+        
+            
+        for i in range(N_plot):
+            cur_type=type[i]
+            axP[i].set_xticks(XTick)
+            ax_range = axP[i].axis()
+            axP[i].legend(mode,prop=font_text,
+            framealpha=1,facecolor='none',ncol=3,numpoints=5, markerscale=1.3, 
+            borderaxespad=0,bbox_to_anchor=(1,1.13),loc=1) 
+            #axP[i].autoscale(tight=True)
+            if cur_type == "E" or cur_type == "N" or cur_type == "U":
+                print("\n"+cur_type)
+                for j in range(N_mode):
+                    print(mode[j] + ":")
+                    print('RMS={:.4f}cm,MEAN={:.4f}cm,STD={:.4f}cm'.format(RMS_enu[cur_type][j]*100,MEAN_enu[cur_type][j]*100,STD_enu[cur_type][j]*100))
+        
+        print("固定率(Fixed/Fixed+Float):")
+        for i in range(N_mode):
+            if ((Fixed_NUM[i]) == 0):
+                print(mode[i] + ':{:.2f}%'.format(0))
+            else:
+                print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (Fixed_NUM[i] + Float_NUM[i]) * 100))
+        print("完整率:")
+        for i in range(N_mode):
+            print(mode[i] + ':{:.2f}%'.format((Fixed_NUM[i] + Float_NUM[i]) / ALL_NUM[i] * 100))
+        print("固定率(Fixed/ALL):")
+        for i in range(N_mode):
+            print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (ALL_NUM[i]) * 100))
+
+        plt.show()
+
+def plot_enu(data = {},type = ["ENU"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,begT = 0,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30):
+    N_plot = len(mode)
     N_mode = len(mode)
     f1=5
     ymin = -ylim
     ymax = ylim
-    figP,axP = plt.subplots(N_plot,1,figsize=(20,10),sharey=False,sharex=True)
-    axP[N_plot-1].set_xlabel('Time' + '(' + time + ')')
-    font2 = {'family' : 'Arial',
-		'weight' : 500,
-		'size'   : 13,
+    figP,axP = plt.subplots(N_plot,1,figsize=(20,10),sharey=False,sharex=False)
+    
+    font2 = {'family' : 'Times new roman',
+		'weight' : 600,
+		'size'   : 15,
             }
+    axP[N_plot-1].set_xlabel("GPS Time(Hours)",font2)
     for i in range(N_plot):
-        axP[i].set_ylabel(type[i],font2)
-        axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-        if type[i] == "E" or type[i] == "N" or type[i] == "U":
+        axP[i].set_ylabel("Positioning Errors(m)",font2)
+        # axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
+        axP[i].set_ylim(ymin,ymax)
+        axP[i].set_yticks([-1,-0.5,0,0.5,1])
+        x_major_locator = MultipleLocator(0.01)
+        #ax = plt.gca()
+        axP[0].xaxis.set_major_locator(x_major_locator)
+        x_major_locator = MultipleLocator(0.02)
+        #ax = plt.gca()
+        axP[1].xaxis.set_major_locator(x_major_locator)
+        if type[i] == "ENU":
             axP[i].set_ylim(ymin,ymax)
-        if type[i] == "E":
-            axP[i].set_title("Positioning Errors(m)",font)
         if type[i] == "NSAT":
             axP[i].set_title("Number of Satellite",font)
         if type[i] == "ION":
@@ -1295,11 +1524,16 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
     data_sE = [[] for i in range(100)]
     data_sC = [[] for i in range(100)]
     data_TRP = []
+    time_cov=[]
+    for i in range(N_mode):
+        for cur_time in data[mode[i]].keys():
+            time_cov.append(cur_time)
+            break
 
     for i in range(N_mode):
         for cur_time in data[mode[i]].keys():
-            plot_time = (cur_time-cov_Time) / 3600
-            if (plot_time >= begT and plot_time <= (begT + LastT)):
+            plot_time =(cur_time-time_cov[i]) / 3600
+            if (1):
                 if data[mode[i]][cur_time]["AMB"] == 0:
                     Float_NUM[i] = Float_NUM[i] + 1
                 elif data[mode[i]][cur_time]["AMB"] == 1:
@@ -1336,69 +1570,60 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
     data_plot["NSAT"] = data_S
     data_plot["TRP"] = data_TRP
 
+    RMS_enu["E"] = []
+    RMS_enu["N"] = []
+    RMS_enu["U"] = []
+    STD_enu["E"] = []
+    STD_enu["N"] = []
+    STD_enu["U"] = []
+    MEAN_enu["E"] = []
+    MEAN_enu["N"] = []
+    MEAN_enu["U"] = []
+    font2 = {'family' : 'Times new roman',
+		'weight' : 600,
+		'size'   : 15,
+            }
     for i in range(N_plot):
-        cur_type = type[i]
-        RMS_enu[cur_type] = []
-        STD_enu[cur_type] = []
-        MEAN_enu[cur_type] = []
-        if (cur_type != "ION"):
-            for j in range(N_mode):
-                if cur_type == "TRP":
-                    axP[i].scatter(time_TRP,data_plot[cur_type],s=1)
-                    temp = dp.rms(data_plot[cur_type])
-                    RMS_enu[cur_type].append(temp)
-                    temp = np.std(data_plot[cur_type])
-                    STD_enu[cur_type].append(temp)
-                    temp = np.mean(data_plot[cur_type])
-                    MEAN_enu[cur_type].append(temp)
-                else:
-                    axP[i].scatter(time[j],data_plot[cur_type][j],s=1)
-                    temp = dp.rms(data_plot[cur_type][j])
-                    RMS_enu[cur_type].append(temp)
-                    temp = np.std(data_plot[cur_type][j])
-                    STD_enu[cur_type].append(temp)
-                    temp = np.mean(data_plot[cur_type][j])
-                    MEAN_enu[cur_type].append(temp)
-        if (cur_type == "ION"):
-            for sat_i in range(100):
-                G,E,C = True,True,True
-                num = len(time_sG[sat_i])
-                if num < 1:
-                    G = False
-                num = len(time_sE[sat_i])
-                if num < 1:
-                    E = False
-                num = len(time_sC[sat_i])
-                if num < 1:
-                    C = False
-                if G:
-                    axP[i].scatter(time_sG[sat_i],data_sG[sat_i],s=1)
-                if E:
-                    axP[i].scatter(time_sE[sat_i],data_sE[sat_i],s=1)
-                if C:
-                    axP[i].scatter(time_sC[sat_i],data_sC[sat_i],s=1)
-    font_text = {'family' : 'Arial',
-		'weight' : 500,
+        cur_mode = mode[i]
+        for j in range(len(type)):
+            cur_type = type[j]
+            axP[i].scatter(time[i],data_plot[cur_type][i],s=5)
+            temp = dp.rms(data_plot[cur_type][i])
+            RMS_enu[cur_type].append(temp)
+            temp = np.std(data_plot[cur_type][i])
+            STD_enu[cur_type].append(temp)
+            temp = np.mean(data_plot[cur_type][i])
+            MEAN_enu[cur_type].append(temp)
+        axP[i].legend(["East","North","Up"],prop=font2,
+            framealpha=1,facecolor='none',ncol=3,numpoints=5, markerscale=3, 
+            bbox_to_anchor=(1,1.11),loc=1,borderaxespad=0) 
+
+    font_text = {'family' : 'Times new roman',
+		'weight' : 600,
 		'size'   : 15,
                 }
     for i in range(N_plot):
         cur_type = type[i]
-        RMS_str = "RMS:"
-        for j in range(N_mode):
-            if cur_type == "E" or cur_type == "N" or cur_type == "U":
-                RMS_str = RMS_str +'{:.4f}m, '.format(RMS_enu[cur_type][j])
-        if cur_type == "E" or cur_type == "N" or cur_type == "U":
-            ax_range = axP[i].axis()
-            axP[i].text(ax_range[0],ax_range[3],RMS_str[0:8*N_mode+8],font_text)
+        RMS_str = "RMS:("
+        for j in range(len(type)):
+            cur_type = type[j]
+            if cur_type == "E" or cur_type == "N":
+                RMS_str = RMS_str +'{:.4f},'.format(RMS_enu[cur_type][i])
+            if cur_type == "U":
+                RMS_str = RMS_str +'{:.4f}'.format(RMS_enu[cur_type][i])
+        RMS_str = RMS_str + ")m"
+        ax_range = axP[i].axis()
+        axP[i].text(ax_range[0],ax_range[3]+0.08,RMS_str,font_text,bbox=dict(facecolor='none', alpha=0.1,boxstyle="round"))
+        
 
 
-    axP[N_plot-1].set_xticks(XTick)
-    axP[N_plot-1].set_xticklabels(XLabel)
-    axP[0].legend(mode,prop=font2,
-            framealpha=1,facecolor='w',ncol=1,numpoints=5, markerscale=5, 
-            bbox_to_anchor=(1,1),loc=0,borderaxespad=0) 
+    # axP[N_plot-1].set_xticks(XTick)
+    # axP[N_plot-1].set_xticklabels(XLabel)
+
+    
     for i in range(N_plot):
         cur_type=type[i]
+        # axP[i].set_xticks(XTick)
         if cur_type == "E" or cur_type == "N" or cur_type == "U":
             print("\n"+cur_type)
             for j in range(N_mode):

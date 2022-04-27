@@ -1,7 +1,7 @@
 '''
 Author: 韩俊杰
 Date: 2021-09-15 14:13:07
-LastEditTime: 2022-04-14 20:51:31
+LastEditTime: 2022-04-20 14:37:54
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/dataprocess.py
@@ -298,12 +298,37 @@ def XYZ2ENU_const(XYZ = {},REF_XYZ = {},site = "HKLM"):
     for time in XYZ.keys():
         if time not in all_data:
             all_data[time] = {}
-        for data_type in XYZ[time].keys():
             xyz.append(XYZ[time]["X"])
             xyz.append(XYZ[time]["Y"])
             xyz.append(XYZ[time]["Z"])
             enu = tr.xyz2enu(xyz,ref_xyz)
             xyz.clear()
+            all_data[time]["E"] = enu[0]
+            all_data[time]["N"] = enu[1]
+            all_data[time]["U"] = enu[2]
+            all_data[time]["NSAT"] = XYZ[time]["NSAT"]
+            all_data[time]["PDOP"] = XYZ[time]["PDOP"]
+            all_data[time]["AMB"] = XYZ[time]["AMB"]
+    return all_data
+
+def XYZ2ENU_dynamic(XYZ = {},REF_XYZ = {}):
+    all_data = {}
+    xyz = []
+    ref_xyz = []
+    
+
+    for time in XYZ.keys():
+        if time not in all_data and time in REF_XYZ.keys():
+            all_data[time] = {}
+            xyz.append(XYZ[time]["X"])
+            xyz.append(XYZ[time]["Y"])
+            xyz.append(XYZ[time]["Z"])
+            ref_xyz.append(REF_XYZ[time]["X"])
+            ref_xyz.append(REF_XYZ[time]["Y"])
+            ref_xyz.append(REF_XYZ[time]["Z"])
+            enu = tr.xyz2enu(xyz,ref_xyz)
+            xyz.clear()
+            ref_xyz.clear()
             all_data[time]["E"] = enu[0]
             all_data[time]["N"] = enu[1]
             all_data[time]["U"] = enu[2]

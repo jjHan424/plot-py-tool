@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-04-13 22:00:01
+LastEditTime: 2022-04-20 14:32:43
 Description: read data file
 '''
 import numpy as np
@@ -386,3 +386,34 @@ def open_bias_file_grid(filename):
                         all_data[soweek][type][site] = float(cur_value)
                     i = i+1
     return (all_data)
+
+def open_pos_ref(filename):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if line[0] != "%":
+                soweek = float(value[1])
+                if (soweek < soweek_last):
+                    w_last = w_last + 1
+                soweek = soweek + w_last*604800
+                soweek_last = soweek
+                #soweek = hour + minute/60.0 + second/3600.0
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+                all_data[soweek]['X'] = float(value[2])
+                all_data[soweek]['Y'] = float(value[3])
+                all_data[soweek]['Z'] = float(value[4])
+                all_data[soweek]['Q'] = float(value[5])
+                all_data[soweek]['NSAT'] = float(value[5])
+                all_data[soweek]['PDOP'] = float(value[5])
+                if value[27] == 'Fixed':
+                    all_data[soweek]['AMB'] = 1
+                else:
+                    all_data[soweek]['AMB'] = 0
+                
+    return all_data
