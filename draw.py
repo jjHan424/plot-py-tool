@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-04-27 12:36:46
+LastEditTime: 2022-04-29 20:31:02
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -1236,7 +1236,10 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
             if type[i] == "E" or type[i] == "N" or type[i] == "U":
                 axP[i].set_ylim(ymin,ymax)
             if type[i] == "E":
-                axP[i].set_title("Positioning Errors(m)",font)
+                if N_plot==3:
+                    axP[i].set_title("Positioning Errors(m)",font,y=1.1)
+                else:
+                    axP[i].set_title("Positioning Errors(m)",font)
             if type[i] == "NSAT":
                 axP[i].set_title("Number of Satellite",font)
             if type[i] == "ION":
@@ -1412,7 +1415,7 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
             axP[i].set_xticks(XTick)
             ax_range = axP[i].axis()
             axP[i].legend(mode,prop=font_text,
-            framealpha=1,facecolor='none',ncol=3,numpoints=5, markerscale=1.3, 
+            framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3, 
             borderaxespad=0,bbox_to_anchor=(1,1.13),loc=1) 
             #axP[i].autoscale(tight=True)
             if cur_type == "E" or cur_type == "N" or cur_type == "U":
@@ -1910,4 +1913,5 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
     # for i in range(N_mode):
     #     print(mode[i] + ':{:.2f}%'.format((Fixed_NUM[i] + Float_NUM[i]) / ALL_NUM[i] * 100))
 
-    plt.show()
+    #plt.show()
+    plt.savefig("/Users/hjj/Desktop/test.svg")
