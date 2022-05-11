@@ -1,8 +1,8 @@
 '''
 Author: HanJunjie
 Date: 2021-11-29 21:26:38
-LastEditTime: 2022-04-08 10:42:37
-LastEditors: Please set LastEditors
+LastEditTime: 2022-05-10 15:02:34
+LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_flt.py
 '''
@@ -16,20 +16,25 @@ mpl.use("TkAgg")
 import matplotlib.pyplot as plt
 import dataprocess as dp
 import draw as dr
-import seaborn as sns
+
 import trans as tr
 
-REF_XYZ = {"F034":[ -2686347.4938,5087702.2177,2744828.3915],
-           "HKSC":[-2414267.6255,5386768.7774,2407459.7930],
-           "HKTK":[-2418093.0695,5374658.0963,2430428.9388]}
+# REF_XYZ = {"F034":[ -2686347.4938,5087702.2177,2744828.3915],
+#            "HKSC":[-2414267.6255,5386768.7774,2407459.7930],
+#            "HKTK":[-2418093.0695,5374658.0963,2430428.9388]}
+
+REF_XYZ = {"A010":[ -2175297.0269,4330326.0624,4133584.2257 ],
+           "A024":[-2160908.9756,4384024.5574,4084144.5058],
+           "A025":[-2178638.9718,4379452.1998,4079581.9556]}
+
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
-mode_list = ["F034"]
+mode_list = ["A010","A024","A025"]
 #site_list = ["HKLM","HKSC","HKTK"]
-site_list = ["F034","HKSC","HKLM"]
-filename_list = ["/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/sixtens/Wuhan-AUG/综合改正数/终端/20220318/F034_20220318_SSRA02SIX0_K_GEC.pppar.pos",
-                 "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKSC-GEC-ion.flt",
-                 "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKLM-GEC-ion.flt"]
+site_list = ["A010","A024","A025"]
+filename_list = ["/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/sixtens/TEST-0425/grid_G1G2E1E7B1B3_user/20220425/A010_20220425_SSRA02SIX0_K_GEC.pppar.pos",
+                 "/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/sixtens/TEST-0425/grid_G1G2E1E7B1B3_user/20220425/A024_20220425_SSRA02SIX0_K_GEC.pppar.pos",
+                 "/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/sixtens/TEST-0425/grid_G1G2E1E7B1B3_user/20220425/A025_20220425_SSRA02SIX0_K_GEC.pppar.pos"]
                  
 # filename_list = [
 #                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKTK/5.flt",
@@ -42,5 +47,5 @@ for i in range(len(mode_list)):
     ENU_ALL[mode_list[i]] = data_ENU
 
 
-dr.plot_enu(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 2,starttime=0,begT=0,LastT=24,deltaT=2,time = "UTC",Fixed=False,delta_data = 1)
+dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 2,starttime=0,begT=0,LastT=1,deltaT=1,time = "UTC",Fixed=False,delta_data = 1)
 

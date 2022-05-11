@@ -1,8 +1,8 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-04-29 20:31:02
-LastEditors: Please set LastEditors
+LastEditTime: 2022-05-04 10:48:39
+LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
 '''
@@ -13,7 +13,7 @@ import matplotlib as mpl
 mpl.use("TkAgg")
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-plt.style.use('science')
+#plt.style.use('science')
 from numpy.core.fromnumeric import shape, size
 import dataprocess as dp
 import matplotlib.colors as colors
@@ -250,7 +250,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     if type == 'P':
         f1=0
         f2=1
-        figP,axP = plt.subplots(3,2,figsize=(15,10),sharey=True,sharex=True)
+        figP,axP = plt.subplots(3,2,figsize=(12,10),sharey=True,sharex=True)
         ymin = -ylim
         ymax = ylim
         col = 2
@@ -271,7 +271,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     elif type == 'L':
         f1=2
         f2=3
-        figP,axP = plt.subplots(3,2,figsize=(20,10),sharey=True,sharex=True)
+        figP,axP = plt.subplots(3,2,figsize=(12,10),sharey=True,sharex=True)
         ymin = -ylim
         ymax = ylim
         col = 2
@@ -293,7 +293,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         ymin = -ylim
         ymax = ylim
         col = 1
-        figP,axP = plt.subplots(3,1,figsize=(20,10),sharey=True,sharex=True)
+        figP,axP = plt.subplots(3,1,figsize=(12,10),sharey=True,sharex=True)
         axP[2].set_xlabel('Time' + '(' + time + ')')
         axP[1].set_ylabel('Difference of Ionosphere Delay correction/m',font)
         axP[0].set_title('G')
@@ -301,7 +301,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP[2].set_title('C')
         for i in range(3):
                 axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-                # axP[i].set_ylim(ymin,ymax)
+                axP[i].set_ylim(ymin,ymax)
                 box = axP[i].get_position()
                 axP[i].set_position([box.x0, box.y0, box.width*0.99, box.height])
         if freq==1:
@@ -1393,14 +1393,22 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
         for i in range(N_plot):
             cur_type = type[i]
             RMS_str = "RMS:"
+            MEAN_str = "MEAN:"
             for j in range(N_mode):
                 if cur_type == "E" or cur_type == "N" or cur_type == "U":
                     RMS_str = RMS_str +'{:.4f}m, '.format(RMS_enu[cur_type][j])
+                if cur_type == "NSAT":
+                    MEAN_str = MEAN_str +'{:.4f}, '.format(MEAN_enu[cur_type][j])
             if cur_type == "E" or cur_type == "N" or cur_type == "U":
                 ax_range = axP[i].axis()
                 #print(len(RMS_str))
                 #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
                 axP[i].text(ax_range[0],ax_range[3]+ylim/15,RMS_str[0:9*N_mode+2],font_text)
+            if cur_type == "NSAT":
+                ax_range = axP[i].axis()
+                #print(len(RMS_str))
+                #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
+                axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:8*N_mode+2],font_text)
 
 
         axP[N_plot-1].set_xticks(XTick)
@@ -1414,9 +1422,14 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
             cur_type=type[i]
             axP[i].set_xticks(XTick)
             ax_range = axP[i].axis()
-            axP[i].legend(mode,prop=font_text,
-            framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3, 
-            borderaxespad=0,bbox_to_anchor=(1,1.13),loc=1) 
+            if (N_plot==3):
+                axP[i].legend(mode,prop=font_text,
+                framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3, 
+                borderaxespad=0,bbox_to_anchor=(1,1.13),loc=1) 
+            if (N_plot==4):
+                axP[i].legend(mode,prop=font_text,
+                framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3, 
+                borderaxespad=0,bbox_to_anchor=(1,1.16),loc=1) 
             #axP[i].autoscale(tight=True)
             if cur_type == "E" or cur_type == "N" or cur_type == "U":
                 print("\n"+cur_type)
@@ -1913,5 +1926,5 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
     # for i in range(N_mode):
     #     print(mode[i] + ':{:.2f}%'.format((Fixed_NUM[i] + Float_NUM[i]) / ALL_NUM[i] * 100))
 
-    #plt.show()
-    plt.savefig("/Users/hjj/Desktop/test.svg")
+    plt.show()
+    #plt.savefig("/Users/hjj/Desktop/test.svg")

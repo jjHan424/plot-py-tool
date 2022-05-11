@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-04-20 14:32:43
+LastEditTime: 2022-05-10 15:12:56
 Description: read data file
 '''
 import numpy as np
@@ -415,5 +415,27 @@ def open_pos_ref(filename):
                     all_data[soweek]['AMB'] = 1
                 else:
                     all_data[soweek]['AMB'] = 0
+                
+    return all_data
+
+
+def open_crd_grid(filename):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            
+            head_end = True
+            if head_end:
+                site = value[0]
+                if site not in all_data.keys():
+                    all_data[site]=[]
+                all_data[site].append(float(value[1]))
+                all_data[site].append(float(value[2]))
+                all_data[site].append(float(value[3]))
                 
     return all_data

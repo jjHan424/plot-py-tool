@@ -1,8 +1,8 @@
 '''
 Author: HanJunjie
 Date: 2021-11-29 21:26:38
-LastEditTime: 2022-04-29 20:30:20
-LastEditors: Please set LastEditors
+LastEditTime: 2022-05-04 10:46:46
+LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_flt.py
 '''
@@ -25,7 +25,7 @@ REF_XYZ = {"HKLM":[-2414046.6433,5391602.1169,2396878.6436],
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
 #mode_list = ["GEC","G","E","C","GE"]#,"4 Sites Grid","3 Sites MLCM"]
-mode_list = ["9-Grid","MIN","Omc","Rank"]#,"Omc","Rank"]
+mode_list = ["Bias-Sat","ALL-Sat"]#,"Omc","Rank"]
 #site_list = ["HKLM","HKSC","HKTK"]
 #site_list = ["HKSC","HKSC","HKLM"]
 site_list = "HKSC"
@@ -33,11 +33,12 @@ Direct1 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/Bias"
 Direct2 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/BiasMin"
 filename_list = [
                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKSC-GEC-ion.flt",
-                Direct2 + "/" + "client_Raw/" + "HKSC-GEC-mdoel.flt",
-                Direct2 + "/" + "client_Min/" + "HKSC-GEC.flt",
-                Direct2 + "/" + "client_Omc/" + "HKSC-GEC.flt",
-                Direct2 + "/" + "client_Rank/" + "HKSC-GEC.flt",
-                Direct2 + "/" + "client_2/" + "HKSC-GEC.flt"
+                Direct2 + "/" + "client_SomeSat/" + "HKSC-GEC.flt",
+                #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client-aug/HKLM-GEC-ion.flt",
+                Direct2 + "/" + "client_AllSat/" + "HKSC-GEC.flt",
+                Direct2 + "/" + "client3start/" + "HKTK-GEC.flt",
+                #Direct2 + "/" + "client_Rank/" + "HKSC-GEC.flt",
+                Direct2 + "/" + "client_2/" + "HKLM-GEC.flt"
                 ]
 #filename_list = ["/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKTK/3.flt"]
                  
@@ -59,6 +60,6 @@ for i in range(len(mode_list)):
 # ENU_ALL["ION"] = data
 #begTime = 10
 #while (begTime < 31):
-dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 2,starttime=2,begT=10.1,LastT=21,deltaT=2,time = "UTC+8",Fixed=False,delta_data = 30)
+dr.plot_e_n_u(data = ENU_ALL,type = ["NSAT","E","N","U"],mode = mode_list,ylim = 2,starttime=2,begT=10,LastT=21,deltaT=2,time = "UTC+8",Fixed=True,delta_data = 30)
     #begTime = begTime + 2
 

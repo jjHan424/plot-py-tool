@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2022-04-13 21:37:11
-LastEditTime: 2022-04-29 17:12:19
+LastEditTime: 2022-05-02 12:27:33
 LastEditors: Please set LastEditors
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_bias.py
@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import dataprocess as dp
 import draw as dr
 
-path = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/BiasMin/client/GREAT-GEC-S.bias"
+path = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/BiasMin/client_Omc/GREAT-GEC-S.bias"
 #path = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/serverTestE/GREAT-GEC-S.bias"
 site_list = ["HKCL","HKFN","HKKS","HKKT",
             "HKLT","HKMW","HKNP","HKOH",
