@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-05-10 15:12:56
+LastEditTime: 2022-05-14 20:33:29
 Description: read data file
 '''
 import numpy as np
@@ -419,7 +419,7 @@ def open_pos_ref(filename):
     return all_data
 
 
-def open_crd_grid(filename):
+def open_crd_gridmap(filename):
     all_data={}
     soweek_last = 0
     w_last = 0
@@ -438,4 +438,32 @@ def open_crd_grid(filename):
                 all_data[site].append(float(value[2]))
                 all_data[site].append(float(value[3]))
                 
+    return all_data
+
+
+def H_open_sigma_grid(filename):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            ymd = value[1]
+            hms = value[2]
+            year = float(ymd[0:4])
+            month = float(ymd[5:7])
+            day = float(ymd[8:10])
+            hour = float(hms[0:2])
+            minute = float(hms[3:5])
+            second = float(hms[6:8])
+            [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+            if (w_last==0):
+                    w_last = w
+            soweek = soweek + (w-w_last)*604800
+            sat = value[3]
+            if soweek not in all_data.keys():
+                all_data[soweek]={}
+            all_data[soweek][sat] = abs(float(value[4]))
     return all_data

@@ -1,7 +1,7 @@
 '''
 Author: HanJunjie
 Date: 2021-11-29 21:26:38
-LastEditTime: 2022-05-10 15:02:34
+LastEditTime: 2022-05-11 17:36:20
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_flt.py
@@ -29,11 +29,11 @@ REF_XYZ = {"A010":[ -2175297.0269,4330326.0624,4133584.2257 ],
 
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
-mode_list = ["A010","A024","A025"]
+mode_list = ["A010-sixtens","A010-Hjj"]
 #site_list = ["HKLM","HKSC","HKTK"]
-site_list = ["A010","A024","A025"]
+site_list = ["A010","A010","A025"]
 filename_list = ["/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/sixtens/TEST-0425/grid_G1G2E1E7B1B3_user/20220425/A010_20220425_SSRA02SIX0_K_GEC.pppar.pos",
-                 "/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/sixtens/TEST-0425/grid_G1G2E1E7B1B3_user/20220425/A024_20220425_SSRA02SIX0_K_GEC.pppar.pos",
+                 "/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/sixtens/TEST-0425/grid_G1G2E1E7B1B3_server_new/client_33sites/result/20220425/A010_20220425_epo_K_GEC.pppar.pos",
                  "/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/sixtens/TEST-0425/grid_G1G2E1E7B1B3_user/20220425/A025_20220425_SSRA02SIX0_K_GEC.pppar.pos"]
                  
 # filename_list = [
@@ -47,5 +47,5 @@ for i in range(len(mode_list)):
     ENU_ALL[mode_list[i]] = data_ENU
 
 
-dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 2,starttime=0,begT=0,LastT=1,deltaT=1,time = "UTC",Fixed=False,delta_data = 1)
+dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 2,starttime=0,begT=0,LastT=1,deltaT=1,time = "UTC",Fixed=True,delta_data = 1)
 
