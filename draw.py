@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-05-04 10:48:39
+LastEditTime: 2022-05-17 17:31:49
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -1398,7 +1398,7 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                 if cur_type == "E" or cur_type == "N" or cur_type == "U":
                     RMS_str = RMS_str +'{:.4f}m, '.format(RMS_enu[cur_type][j])
                 if cur_type == "NSAT":
-                    MEAN_str = MEAN_str +'{:.4f}, '.format(MEAN_enu[cur_type][j])
+                    MEAN_str = MEAN_str +'{:.2f}, '.format(MEAN_enu[cur_type][j])
             if cur_type == "E" or cur_type == "N" or cur_type == "U":
                 ax_range = axP[i].axis()
                 #print(len(RMS_str))
@@ -1408,7 +1408,7 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                 ax_range = axP[i].axis()
                 #print(len(RMS_str))
                 #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
-                axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:8*N_mode+2],font_text)
+                axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:7*N_mode+3],font_text)
 
 
         axP[N_plot-1].set_xticks(XTick)
