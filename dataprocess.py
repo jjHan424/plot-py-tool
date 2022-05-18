@@ -178,6 +178,8 @@ def rms(data = []):
     sum = 0
     for i in range(size):
         sum = sum + data[i] * data[i]
+    if size == 0:
+        return 0
     return math.sqrt(sum / size)
     
 def std_stec(IPP_data1 = {},IPP_data2 = {}):

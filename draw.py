@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-05-17 17:31:49
+LastEditTime: 2022-05-18 10:45:38
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -20,6 +20,7 @@ import matplotlib.colors as colors
 from matplotlib.pyplot import MultipleLocator
 #import seaborn as sns
 import math
+import trans as tr
 font = {'family' : 'Arial',
 		'weight' : 500,
 		'size'   : 20,
@@ -241,7 +242,7 @@ def plot_aug_GEC(time_G = [], aug_G = [], time_E = [], aug_E = [], time_C = [], 
     if show:
         plt.show()
 
-def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime = 0,deltaT = 2,begT = 0,LastT=24,time = "UTC",save='',show = False):
+def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime = 0,deltaT = 2,begT = 0,LastT=24,time = "UTC",save='',show = False,year = 2021,mon=11,day=1):
     sys_type = {}
     RMS_G,MEAN_G,STD_G = [[],[]],[[],[]],[[],[]]
     RMS_E,MEAN_E,STD_E = [[],[]],[[],[]],[[],[]]
@@ -343,9 +344,8 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         delta_Time = int(time[3:end_time]) + starttime
     else:
         delta_Time = starttime
-    for time in data.keys():
-        cov_Time = time - delta_Time * 3600
-        break
+    secow_start = tr.ymd2gpst(year,mon,day,starttime,00,00)
+    cov_Time = secow_start[1] - delta_Time * 3600
     end_Time = begT + LastT
     delta_X = math.ceil((LastT)/deltaT)
     XLabel = []
@@ -1216,7 +1216,7 @@ def plot_upd_wl_oneday_GEC(all_data={},savedir='save_fig_path',mode = 'upd_wl',s
     if show:
         plt.show()
 
-def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,begT = 0,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30):
+def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,begT = 0,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10):
     #with plt.style.context("science","grid"):
         N_plot = len(type)
         N_mode = len(mode)
@@ -1257,9 +1257,10 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
             delta_Time = int(time[3:end_time]) + starttime
         else:
             delta_Time = starttime
-        for time in data[mode[0]].keys():
-            cov_Time = time - delta_Time * 3600
-            break
+        #for time in data[mode[0]].keys():
+        secow_start = tr.ymd2gpst(year,mon,day,starttime,00,00)
+        cov_Time = secow_start[1] - delta_Time * 3600
+      
         end_Time = begT + LastT
         delta_X = math.ceil((LastT)/deltaT)
         XLabel = []

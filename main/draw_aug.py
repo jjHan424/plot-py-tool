@@ -1,8 +1,8 @@
 '''
 Author: your name
 Date: 2021-11-12 09:38:43
-LastEditTime: 2022-05-02 12:06:46
-LastEditors: Please set LastEditors
+LastEditTime: 2022-05-18 10:47:27
+LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_aug.py
 '''
@@ -87,8 +87,8 @@ import draw as dr
 # dr.plot_aug_GEC(time_G,aug_G,time_E,aug_E,time_C,aug_C,'ion',save_fig_path)
 # dr.plot_aug_GEC(time_G,aug_G,time_E,aug_E,time_C,aug_C,'trp',save_fig_path)
 
-path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/const_server_ion/HKLM-GEC-S.aug"
-path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/BiasMin/client_Omc/HKLM-GEC-I.aug"
+path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/305/server-ion/HKSC-GEC-S.aug"
+path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/305/client-rank/HKSC-GEC-I.aug"
 #path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKSC-GEC-I-ion.aug"
 # site_list = ["HKCL","HKFN","HKKS","HKKT","HKLM",
 #             "HKLT","HKMW","HKNP","HKOH","HKPC",
@@ -112,7 +112,7 @@ data = dp.pre_aug_new(head_I,data_I,data_S)
 #数据在UTC的开始时间为02:00，画图的横坐标时间系统为UTC+8，在UTC+8下从10:00开始画10小时的数据，统计结果为画图的结果
 # begTime = 10
 # while (begTime < 31):
-dr.plot_aug_GEC_new(data,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC+8",show = True,deltaT=2,ylim=0.1,begT=10,LastT=21)
+dr.plot_aug_GEC_new(data,head_I,type = "ION",freq = 1,starttime = 8,time = "UTC+8",show = True,deltaT=1,ylim=0.1,begT=16,LastT=10,year = 2021,mon=11,day=1)
 # begTime = begTime + 2
 # dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 2,time = "UTC+8",show = True,deltaT=2,ylim=0.1)
 
