@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-05-18 10:45:38
+LastEditTime: 2022-06-01 11:37:57
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -13,7 +13,7 @@ import matplotlib as mpl
 mpl.use("TkAgg")
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-#plt.style.use('science')
+plt.style.use('science')
 from numpy.core.fromnumeric import shape, size
 import dataprocess as dp
 import matplotlib.colors as colors
@@ -242,7 +242,7 @@ def plot_aug_GEC(time_G = [], aug_G = [], time_E = [], aug_E = [], time_C = [], 
     if show:
         plt.show()
 
-def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime = 0,deltaT = 2,begT = 0,LastT=24,time = "UTC",save='',show = False,year = 2021,mon=11,day=1):
+def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,year = 2021,mon=11,day=1):
     sys_type = {}
     RMS_G,MEAN_G,STD_G = [[],[]],[[],[]],[[],[]]
     RMS_E,MEAN_E,STD_E = [[],[]],[[],[]],[[],[]]
@@ -318,7 +318,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         ymin = -ylim
         ymax = ylim
         col = 1
-        figP,axP = plt.subplots(1,1,figsize=(20,10),sharey=True,sharex=True)
+        figP,axP = plt.subplots(1,1,figsize=(12,10),sharey=True,sharex=True)
         axP.set_xlabel('Time' + '(' + time + ')')
         axP.set_ylabel('Difference of Troposphere Delay correction/m',font)
         axP.grid(linestyle='--',linewidth=0.2, color='black',axis='both')
@@ -342,8 +342,10 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     if "+" in time:
         end_time = len(time)
         delta_Time = int(time[3:end_time]) + starttime
+        begT = int(time[3:end_time]) + starttime
     else:
         delta_Time = starttime
+        begT=starttime
     secow_start = tr.ymd2gpst(year,mon,day,starttime,00,00)
     cov_Time = secow_start[1] - delta_Time * 3600
     end_Time = begT + LastT
@@ -1216,7 +1218,7 @@ def plot_upd_wl_oneday_GEC(all_data={},savedir='save_fig_path',mode = 'upd_wl',s
     if show:
         plt.show()
 
-def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,begT = 0,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10):
+def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10):
     #with plt.style.context("science","grid"):
         N_plot = len(type)
         N_mode = len(mode)
@@ -1255,12 +1257,15 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
         if "+" in time:
             end_time = len(time)
             delta_Time = int(time[3:end_time]) + starttime
+            begT = int(time[3:end_time]) + starttime
         else:
             delta_Time = starttime
+            begT=starttime
         #for time in data[mode[0]].keys():
-        secow_start = tr.ymd2gpst(year,mon,day,starttime,00,00)
-        cov_Time = secow_start[1] - delta_Time * 3600
-      
+        secow_start = tr.ymd2gpst(year,mon,day,0,00,00)
+        cov_Time = secow_start[1] - 0 * 3600
+        if "+" in time:
+            cov_Time = secow_start[1] - int(time[3:end_time]) * 3600
         end_Time = begT + LastT
         delta_X = math.ceil((LastT)/deltaT)
         XLabel = []
@@ -1362,7 +1367,7 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                     else:
                         temp = np.mean(data_plot[cur_type][j])
                         MEAN_enu[cur_type].append(temp)
-                        #data_plot[cur_type][j] = data_plot[cur_type][j]-temp
+                        data_plot[cur_type][j] = data_plot[cur_type][j]-temp
                         axP[i].scatter(time[j],data_plot[cur_type][j])
                         temp = dp.rms(data_plot[cur_type][j])
                         RMS_enu[cur_type].append(temp)
@@ -1494,11 +1499,14 @@ def plot_enu(data = {},type = ["ENU"],mode = ["DEFAULT"],ylim = 1,starttime = 0,
     if "+" in time:
         end_time = len(time)
         delta_Time = int(time[3:end_time]) + starttime
+        begT = int(time[3:end_time]) + starttime
     else:
         delta_Time = starttime
+        begT=starttime
     for time in data[mode[0]].keys():
         cov_Time = time - delta_Time * 3600
         break
+    
     end_Time = begT + LastT
     delta_X = math.ceil((LastT)/deltaT)
     XLabel = []
@@ -1662,7 +1670,7 @@ def plot_enu(data = {},type = ["ENU"],mode = ["DEFAULT"],ylim = 1,starttime = 0,
 
     plt.show()
 
-def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,starttime = 0,deltaT = 2,begT = 0,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30):
+def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10):
     N_plot = len(type)
     N_mode = len(mode)
     f1=5
@@ -1695,11 +1703,14 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
     if "+" in time:
         end_time = len(time)
         delta_Time = int(time[3:end_time]) + starttime
+        begT = int(time[3:end_time]) + starttime
     else:
         delta_Time = starttime
-    for time in data.keys():
-        cov_Time = time - delta_Time * 3600
-        break
+        begT=starttime
+    
+    secow_start = tr.ymd2gpst(year,mon,day,starttime,00,00)
+    cov_Time = secow_start[1] - delta_Time * 3600
+    
     end_Time = begT + LastT
     delta_X = math.ceil((LastT)/deltaT)
     XLabel = []

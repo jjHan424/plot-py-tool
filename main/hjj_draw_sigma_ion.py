@@ -2,7 +2,7 @@
 Author: HanJunjie HanJunjie@whu.edu.cn
 Date: 2022-05-13 12:56:14
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
-LastEditTime: 2022-05-14 21:14:26
+LastEditTime: 2022-05-20 19:21:39
 FilePath: /plot-py-tool/main/hjj_draw_sigma_ion.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -19,11 +19,11 @@ import draw as dr
 #import seaborn as sns
 import trans as tr
 
-path_G = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/BiasMin/GPS.txt"
+path_G = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/305/GPS-2.txt"
 sigma_G= rf.H_open_sigma_grid(path_G)
-path_E = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/BiasMin/GAL.txt" 
+path_E = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/305/GAL-2.txt" 
 sigma_E= rf.H_open_sigma_grid(path_E)
-path_C = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/BiasMin/BDS.txt" 
+path_C = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/305/BDS-2.txt" 
 sigma_C= rf.H_open_sigma_grid(path_C)
 
 all_data = {}
@@ -47,8 +47,6 @@ timeG,timeE,timeC=[[] for i in range(60)],[[] for i in range(60)],[[] for i in r
 #data_convert
 for time in sigma_G:
     for sat in sigma_G[time]:
-        if sat != "G09":
-            continue
         prn = int(sat[1:3])
         timeG[prn].append((time-convtime)/3600)
         dataG[prn].append(sigma_G[time][sat])

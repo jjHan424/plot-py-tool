@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-05-14 20:33:29
+LastEditTime: 2022-05-30 15:28:09
 Description: read data file
 '''
 import numpy as np
@@ -430,6 +430,9 @@ def open_crd_gridmap(filename):
             value = line.split()
             
             head_end = True
+            if len(value) >= 5:
+                if value[4] == "False":
+                    head_end = False
             if head_end:
                 site = value[0]
                 if site not in all_data.keys():
@@ -450,6 +453,8 @@ def H_open_sigma_grid(filename):
     with open(filename,'rt') as f:
         for line in f:
             value = line.split()
+            if (len(value) <= 2):
+                continue
             ymd = value[1]
             hms = value[2]
             year = float(ymd[0:4])
