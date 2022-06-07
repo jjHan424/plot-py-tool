@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2022-03-07 10:03:20
-LastEditTime: 2022-05-30 15:59:41
+LastEditTime: 2022-06-06 16:02:04
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_mapgrid.py
@@ -121,8 +121,9 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 #               'T430':[-2411015.2264,5380265.7133,2425132.7008]
 #                 }
 
-mark_point_xyz = rf.open_crd_gridmap("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/GuangZhou_Site.crd")
-
+mark_point_xyz = rf.open_crd_gridmap("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/WuHan_Site.crd")
+Lines_xyz1 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-grid/SEPT-GEC.flt")
+#Lines_xyz2 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-comp/SEPT-GEC.flt")
 # mark_point_xyz = {'2006':[-2430340.3590,5359921.7657,2450575.0220],
 #               '2010':[-2419056.7812,5364365.3435,2452055.3961],
 #               '2017':[-2424178.5320,5365092.3806,2445506.8814],
@@ -132,6 +133,8 @@ mark_point_xyz = rf.open_crd_gridmap("/Users/hjj/Documents/HJJ/Master_1/IonoGrid
 
 m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11.2, tiles='Stamen Terrain')
 mark_point_blh={}
+Lines_blh1={}
+Lines_blh2={}
 minLat = 90
 minLon = 180
 maxLat = -90
@@ -153,6 +156,15 @@ for site in mark_point_xyz.keys():
     
     folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='black'),tooltip="click").add_to(m)
 
+for time in Lines_xyz1:
+    blh = tr.xyz2blh(Lines_xyz1[time]["X"],Lines_xyz1[time]["Y"],Lines_xyz1[time]["Z"])
+    blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+    Lines_blh1[time]=[blh[0],blh[1],blh[2]]
+# for time in Lines_xyz2:
+#     blh = tr.xyz2blh(Lines_xyz2[time]["X"],Lines_xyz2[time]["Y"],Lines_xyz2[time]["Z"])
+#     blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+#     Lines_blh2[time]=[blh[0],blh[1],blh[2]]
+
 
 # minLat = int(minLat)
 # minLon = int(minLon)
@@ -168,7 +180,7 @@ if delta>10:
     space = delta/5
     count = 5
 else:
-    space = 0.2
+    space = 0.5
     count = 0
 if count==0:
     maxLat = maxLat + space/2
@@ -260,5 +272,10 @@ while cur_Lat < maxLat:
     cur_Lat = cur_Lat + space
 # text ref
 folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space),show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
-m.save('/Users/hjj/Desktop/GuangZhou.html')
+# plot lines
+for time in Lines_blh1:
+    folium.Circle(radius=50,location=[Lines_blh1[time][0],Lines_blh1[time][1]],color="Blue",fill=True,fill_color="#3186cc").add_to(m)
+# for time in Lines_blh2:
+#     folium.Circle(radius=50,location=[Lines_blh2[time][0],Lines_blh2[time][1]],color="Red",fill=True,fill_color="#3186cc").add_to(m)
+m.save('/Users/hjj/Desktop/WuHan-SEPT.html')
 # webbrowser.open('/Users/hjj/Desktop/HongKongGridS.html')

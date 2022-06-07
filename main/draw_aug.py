@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2021-11-12 09:38:43
-LastEditTime: 2022-05-21 13:46:04
+LastEditTime: 2022-06-06 16:49:28
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_aug.py
@@ -90,8 +90,8 @@ import draw as dr
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/server-ion/HKSC-GEC-S.aug"
 # path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/client-aug/HKSC-GEC-I.aug"
 
-path_S = "/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/MeiTuan/PPPRTK/2022114-0/server/2008-GEC-S.aug"
-path_I = "/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/MeiTuan/PPPRTK/2022114-grid/client/2008-GEC-I.aug"
+path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/server-ion/WUDA-GEC-5.aug"
+path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-grid/WUDA-GEC-I.aug"
 
 #path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKSC-GEC-I-ion.aug"
 # site_list = ["HKCL","HKFN","HKKS","HKKT","HKLM",
@@ -116,8 +116,8 @@ data = dp.pre_aug_new(head_I,data_I,data_S)
 #数据在UTC的开始时间为02:00，画图的横坐标时间系统为UTC+8，在UTC+8下从10:00开始画10小时的数据，统计结果为画图的结果
 # begTime = 10
 # while (begTime < 31):
-dr.plot_aug_GEC_new(data,head_I,type = "ION",freq = 1,starttime = 1,time = "UTC",show = True,deltaT=1,ylim=0.1,LastT=15,year = 2022,mon=4,day=24)
-dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 1,time = "UTC",show = True,deltaT=1,ylim=0.1,LastT=15,year = 2022,mon=4,day=24)
+dr.plot_aug_GEC_new(data,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=2,ylim=0.5,LastT=22,year = 2021,mon=12,day=5)
+dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=2,ylim=0.5,LastT=22,year = 2021,mon=12,day=5)
 
 # begTime = begTime + 2
 # dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 2,time = "UTC+8",show = True,deltaT=2,ylim=0.1)

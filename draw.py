@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-06-01 11:37:57
+LastEditTime: 2022-06-06 17:18:00
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -1218,7 +1218,7 @@ def plot_upd_wl_oneday_GEC(all_data={},savedir='save_fig_path',mode = 'upd_wl',s
     if show:
         plt.show()
 
-def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10):
+def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10,all=False):
     #with plt.style.context("science","grid"):
         N_plot = len(type)
         N_mode = len(mode)
@@ -1312,7 +1312,7 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
         for i in range(N_mode):
             for cur_time in data[mode[i]].keys():
                 plot_time = (cur_time-cov_Time) / 3600
-                if (plot_time >= begT and plot_time <= (begT + LastT)):
+                if ((plot_time >= begT and plot_time <= (begT + LastT)) or all):
                     if data[mode[i]][cur_time]["AMB"] == 0:
                         Float_NUM[i] = Float_NUM[i] + 1
                     elif data[mode[i]][cur_time]["AMB"] == 1:
@@ -1698,7 +1698,7 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
             axP[i].set_position([box.x0, box.y0, box.width*0.9, box.height])
         if type[i] == "RMS" or type[i] == "STD":
             axP[i].set_position([box.x0, box.y0*0.9, box.width, box.height])
-            axP[i].set_ylim(0,0.6)
+            #axP[i].set_ylim(0,0.6)
     
     if "+" in time:
         end_time = len(time)
@@ -1940,3 +1940,142 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
 
     plt.show()
     #plt.savefig("/Users/hjj/Desktop/test.svg")
+
+def plot_SatofAug(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10,all=False):
+    #with plt.style.context("science","grid"):
+        N_plot = 1
+        N_mode = len(mode)
+        f1=5
+        ymin = -ylim
+        ymax = ylim
+        
+        figP,axP = plt.subplots(N_plot,1,figsize=(12,10),sharey=False,sharex=True)
+        axP.set_xlabel('Time' + '(' + time + ')')
+        font2 = {'family' : 'Times new roman',
+            'weight' : 600,
+            'size'   : 15,
+                }
+        axP.set_title("Number of Satellite",font)
+        
+        if "+" in time:
+            end_time = len(time)
+            delta_Time = int(time[3:end_time]) + starttime
+            begT = int(time[3:end_time]) + starttime
+        else:
+            delta_Time = starttime
+            begT=starttime
+        #for time in data[mode[0]].keys():
+        secow_start = tr.ymd2gpst(year,mon,day,0,00,00)
+        cov_Time = secow_start[1] - 0 * 3600
+        if "+" in time:
+            cov_Time = secow_start[1] - int(time[3:end_time]) * 3600
+        end_Time = begT + LastT
+        delta_X = math.ceil((LastT)/deltaT)
+        XLabel = []
+        XTick = []
+        starttime = begT - deltaT
+        for i in range(delta_X):
+            starttime = starttime + deltaT
+            cur_Str_X = '%02d' % (starttime % 24) + ":00"
+            XLabel.append(cur_Str_X)
+            XTick.append(starttime)       
+        if starttime < end_Time:
+            starttime = starttime + deltaT
+            cur_Str_X = '%02d' % (starttime % 24) + ":00"
+            XLabel.append(cur_Str_X)
+            XTick.append(starttime)
+
+
+        time = [[] for i in range(N_mode)]
+        data_plot = {}
+        data_E = [[] for i in range(N_mode)]
+        data_N = [[] for i in range(N_mode)]
+        data_U = [[] for i in range(N_mode)]
+        data_S = [[] for i in range(N_mode)]
+        Fixed_NUM = [[] for i in range(N_mode)]
+        Float_NUM = [[] for i in range(N_mode)]
+        ALL_NUM = [[] for i in range(N_mode)]
+
+        for i in range(N_mode):
+            Fixed_NUM[i] = 0
+            Float_NUM[i] = 0
+            ALL_NUM[i] = (LastT*3600) / delta_data + 1
+
+        RMS_enu,STD_enu,MEAN_enu = {},{},{}
+        
+        time_sG = [[] for i in range(100)]
+        time_sE = [[] for i in range(100)]
+        time_sC = [[] for i in range(100)]
+        time_TRP = []
+        data_sG = [[] for i in range(100)]
+        data_sE = [[] for i in range(100)]
+        data_sC = [[] for i in range(100)]
+        data_TRP = []
+
+        for i in range(N_mode):
+            for cur_time in data[mode[i]].keys():
+                plot_time = (cur_time-cov_Time) / 3600
+                if ((plot_time >= begT and plot_time <= (begT + LastT)) or all):
+                    time[i].append(plot_time)
+                    data_E[i].append(len(data[mode[i]][cur_time]))
+
+        data_plot["E"] = data_E
+
+        for i in range(N_plot):
+            cur_type = "E"
+            RMS_enu[cur_type] = []
+            STD_enu[cur_type] = []
+            MEAN_enu[cur_type] = []
+            if (cur_type != "ION"):
+                for j in range(N_mode):
+                    temp = np.mean(data_plot[cur_type][j])
+                    MEAN_enu[cur_type].append(temp)
+                    # data_plot[cur_type][j] = data_plot[cur_type][j]-temp
+                    axP.scatter(time[j],data_plot[cur_type][j])
+                    temp = dp.rms(data_plot[cur_type][j])
+                    RMS_enu[cur_type].append(temp)
+                    temp = np.std(data_plot[cur_type][j])
+                    STD_enu[cur_type].append(temp)
+                        
+            
+        font_text = {'family' : 'Times new roman',
+            'weight' : 600,
+            'size'   : 15,
+                    }
+        for i in range(N_plot):
+            cur_type = "E"
+            RMS_str = "RMS:"
+            MEAN_str = "MEAN:"
+            for j in range(N_mode):
+                if cur_type == "E":
+                    MEAN_str = MEAN_str +'{:.2f}, '.format(MEAN_enu[cur_type][j])
+            if cur_type == "E":
+                ax_range = axP.axis()
+                #print(len(RMS_str))
+                #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
+                axP.text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:7*N_mode+3],font_text)
+
+
+        axP.set_xticks(XTick)
+        axP.set_xticklabels(XLabel)
+        # axP[0].legend(mode,
+        #         framealpha=1,facecolor='w',ncol=1,numpoints=5, markerscale=5, 
+        #         bbox_to_anchor=(1,1),loc=0,borderaxespad=0) 
+        
+            
+        for i in range(N_plot):
+            cur_type="E"
+            axP.set_xticks(XTick)
+            ax_range = axP.axis()
+            
+            axP.legend(mode,prop=font_text,
+            framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3, 
+            borderaxespad=0,bbox_to_anchor=(1,1.12),loc=1) 
+            #axP[i].autoscale(tight=True)
+            if cur_type == "E" or cur_type == "N" or cur_type == "U":
+                print("\n"+cur_type)
+                for j in range(N_mode):
+                    print(mode[j] + ":")
+                    print('RMS={:.4f}cm,MEAN={:.4f}cm,STD={:.4f}cm'.format(RMS_enu[cur_type][j]*100,MEAN_enu[cur_type][j]*100,STD_enu[cur_type][j]*100))
+
+        plt.show()

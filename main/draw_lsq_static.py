@@ -1,7 +1,7 @@
 '''
 Author: HanJunjie
 Date: 2021-11-29 21:26:38
-LastEditTime: 2022-05-22 13:19:38
+LastEditTime: 2022-06-04 22:32:58
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_flt.py
@@ -22,18 +22,19 @@ import trans as tr
 REF_XYZ = {"HKLM":[-2414046.6433,5391602.1169,2396878.6436],
            "HKSC":[-2414267.6255,5386768.7774,2407459.7930],
            "HKTK":[-2418093.0695,5374658.0963,2430428.9388],
-           "HKSL":[-2393383.0432,5393860.9504,2412592.1881]}
+           "HKSL":[-2393383.0432,5393860.9504,2412592.1881],
+           "XGXN":[-2220831.1448,5007544.3057,3256075.5557]}
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
 #mode_list = ["GEC","G","E","C","GE"]#,"4 Sites Grid","3 Sites MLCM"]
-mode_list = ["OSB-AR","UPD-AR","PPP"]
+mode_list = ["1.0","2.0"]
 #site_list = ["HKLM","HKSC","HKTK"]
-#site_list = ["HKSC","HKSC","HKLM"]
-site_list = "HKSC"
+site_list = ["XGXN","XGXN","HKLM"]
+#site_list = "HKSC"
 Direct = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/Bias"
 filename_list = [
-                "/Users/hjj/Documents/HJJ/Master_1/OSB/PPP/UPD_PPP-AR",
-                "/Users/hjj/Documents/HJJ/Master_1/OSB/PPP/UPD_PPP-AR-2",
+                "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/aug/XGXN-GEC-AR1.flt",
+                "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/aug/XGXN-GEC-AR.flt",
                 "/Users/hjj/Documents/HJJ/Master_1/OSB/PPP/UPD_PPP",
                 "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/compare/HKSL-GEC-ALL-10000.flt",
                 "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/compare/HKSL-GEC-ALL-100000.flt",
@@ -58,7 +59,7 @@ filename_list = [
 #                  ]
 for i in range(len(mode_list)):
     data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
-    data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = site_list)
+    data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = site_list[i])
     ENU_ALL[mode_list[i]] = data_ENU
     
 # path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKLM/5-MW.aug"
@@ -69,6 +70,6 @@ for i in range(len(mode_list)):
 # ENU_ALL["ION"] = data
 #begTime = 10
 #while (begTime < 31):
-dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 1.5,starttime=1,LastT=23,deltaT=2,time = "UTC",Fixed=False,delta_data = 30,year=2021,mon=4,day=10)
+dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.2,starttime=2,LastT=1,deltaT=1,time = "UTC",Fixed=False,delta_data = 5,year=2021,mon=12,day=5)
     #begTime = begTime + 2
 
