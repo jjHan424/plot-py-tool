@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2021-11-12 09:38:43
-LastEditTime: 2022-06-06 16:49:28
+LastEditTime: 2022-06-15 11:51:38
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_aug.py
@@ -90,8 +90,8 @@ import draw as dr
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/server-ion/HKSC-GEC-S.aug"
 # path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/client-aug/HKSC-GEC-I.aug"
 
-path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/server-ion/WUDA-GEC-5.aug"
-path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-grid/WUDA-GEC-I.aug"
+path_S = "/Volumes/H_GREAT/2Project/Allystar/rtppp_test/20220612-PPPAR/HKSC_20220613_SGG_CLK01_S_GEC.aug"
+path_I = "/Volumes/H_GREAT/2Project/Allystar/rtppp_test/20220612-PPPAR/HKSC_20220613_SGG_CLK01_K_GEC.aug"
 
 #path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKSC-GEC-I-ion.aug"
 # site_list = ["HKCL","HKFN","HKKS","HKKT","HKLM",
@@ -104,8 +104,8 @@ path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/cli
 # #path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKLM-GEC-I-ion.aug"
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/server_ion/HKLM-GEC-S.aug"
 
-[head_I,data_I] = rf.open_aug_file_new(path_I)
-[head_S,data_S] = rf.open_aug_file_new(path_S)
+[head_I,data_I] = rf.open_aug_file_rtppp(path_I)
+[head_S,data_S] = rf.open_aug_file_rtppp(path_S)
 data = dp.pre_aug_new(head_I,data_I,data_S)
 #starttime 数据在UTC下的开始时间
 #begT 画图起始时间，在time的设置下
@@ -116,8 +116,10 @@ data = dp.pre_aug_new(head_I,data_I,data_S)
 #数据在UTC的开始时间为02:00，画图的横坐标时间系统为UTC+8，在UTC+8下从10:00开始画10小时的数据，统计结果为画图的结果
 # begTime = 10
 # while (begTime < 31):
-dr.plot_aug_GEC_new(data,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=2,ylim=0.5,LastT=22,year = 2021,mon=12,day=5)
-dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=2,ylim=0.5,LastT=22,year = 2021,mon=12,day=5)
+dr.plot_aug_GEC_new(data,head_I,type = "P",freq = 1,starttime = 7,time = "UTC",show = True,deltaT=2,ylim=1.5,LastT=6,year = 2022,mon=6,day=13)
+dr.plot_aug_GEC_new(data,head_I,type = "L",freq = 1,starttime = 7,time = "UTC",show = True,deltaT=2,ylim=0.2,LastT=6,year = 2022,mon=6,day=13)
+
+# dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=2,ylim=0.5,LastT=22,year = 2021,mon=12,day=5)
 
 # begTime = begTime + 2
 # dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 2,time = "UTC+8",show = True,deltaT=2,ylim=0.1)

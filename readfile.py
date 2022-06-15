@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-05-30 15:28:09
+LastEditTime: 2022-06-15 11:21:16
 Description: read data file
 '''
 import numpy as np
@@ -472,3 +472,172 @@ def H_open_sigma_grid(filename):
                 all_data[soweek]={}
             all_data[soweek][sat] = abs(float(value[4]))
     return all_data
+
+def open_ltt_file(filename,Fixed=True,SPP=True):
+    if not SPP:
+        if Fixed:
+            all_data={}
+            soweek_last = 0
+            w_last = 0
+            head_end = False
+            epoch_flag = True
+            with open(filename,'rt') as f:
+                for line in f:
+                    value = line.split()
+                    if value[0] != "Week":
+                        soweek = float(value[1])
+                        if (soweek < soweek_last):
+                            w_last = w_last + 1
+                        soweek = soweek + w_last*604800
+                        soweek_last = soweek
+                        #soweek = hour + minute/60.0 + second/3600.0
+                        if soweek not in all_data.keys():
+                            all_data[soweek]={}
+                        all_data[soweek]['X'] = float(value[5])
+                        all_data[soweek]['Y'] = float(value[6])
+                        all_data[soweek]['Z'] = float(value[7])
+                        all_data[soweek]['NSAT'] = float(value[8])
+                        all_data[soweek]['PDOP'] = float(value[9])
+                        if value[10] == 'Fixed':
+                            all_data[soweek]['AMB'] = 1
+                        else:
+                            all_data[soweek]['AMB'] = 0
+        else:
+            all_data={}
+            soweek_last = 0
+            w_last = 0
+            head_end = False
+            epoch_flag = True
+            with open(filename,'rt') as f:
+                for line in f:
+                    value = line.split()
+                    if value[0] != "Week":
+                        soweek = float(value[1])
+                        if (soweek < soweek_last):
+                            w_last = w_last + 1
+                        soweek = soweek + w_last*604800
+                        soweek_last = soweek
+                        #soweek = hour + minute/60.0 + second/3600.0
+                        if soweek not in all_data.keys():
+                            all_data[soweek]={}
+                        all_data[soweek]['X'] = float(value[2])
+                        all_data[soweek]['Y'] = float(value[3])
+                        all_data[soweek]['Z'] = float(value[4])
+                        all_data[soweek]['NSAT'] = float(value[8])
+                        all_data[soweek]['PDOP'] = float(value[9])
+                        all_data[soweek]['AMB'] = 1
+    else:
+        all_data={}
+        soweek_last = 0
+        w_last = 0
+        head_end = False
+        epoch_flag = True
+        with open(filename,'rt') as f:
+            for line in f:
+                value = line.split()
+                if value[0] != "Week":
+                    soweek = float(value[1])
+                    if (soweek < soweek_last):
+                        w_last = w_last + 1
+                    soweek = soweek + w_last*604800
+                    soweek_last = soweek
+                    #soweek = hour + minute/60.0 + second/3600.0
+                    if soweek not in all_data.keys():
+                        all_data[soweek]={}
+                    all_data[soweek]['X'] = float(value[2])
+                    all_data[soweek]['Y'] = float(value[3])
+                    all_data[soweek]['Z'] = float(value[4])
+                    all_data[soweek]['NSAT'] = float(value[5])
+                    all_data[soweek]['PDOP'] = float(value[6])
+                    all_data[soweek]['AMB'] = 1           
+    return all_data
+
+
+def open_flt_ppp_rtpppfile(filename):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if line[0] != "%":
+                soweek = float(value[7])
+                if (soweek < soweek_last):
+                    w_last = w_last + 1
+                soweek = soweek + w_last*604800
+                soweek_last = soweek
+                #soweek = hour + minute/60.0 + second/3600.0
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+                all_data[soweek]['X'] = float(value[17])
+                all_data[soweek]['Y'] = float(value[18])
+                all_data[soweek]['Z'] = float(value[19])
+                all_data[soweek]['Q'] = float(value[20])
+                all_data[soweek]['NSAT'] = float(value[20])
+                all_data[soweek]['PDOP'] = float(value[20])
+                all_data[soweek]['AMB'] = 1
+                
+    return all_data
+
+def open_aug_file_rtppp(filename):
+    all_data={}
+    head_info={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = False
+    num_sat = 0
+    last_day = 0
+    day=0
+    file_exist = os.path.exists(filename)
+    if (not file_exist):
+        return all_data
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if value[0] == "%" or value[0] == "##" or value[0] == "amb":
+                epoch_flag = False
+                continue               
+            if value[0]=="*":
+                value=line.split()
+                year=(float(value[1]))
+                month=(float(value[2]))
+                day=(float(value[3]))
+                hour=(float(value[4]))
+                minute=(float(value[5]))
+                second=(float(value[6]))
+                [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+                if (not epoch_flag):
+                    min_sow = soweek
+                if (soweek < min_sow):
+                    soweek = soweek + 604800
+                epoch_flag = True
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+            if ((value[0][0] == "C" or value[0][0] == "E" or value[0][0] == "G") and epoch_flag):
+                sat = value[0]
+                if (sat not in all_data[soweek].keys()):
+                    all_data[soweek][sat] = {}
+                all_data[soweek][sat]["L1"] = float(value[1])
+                all_data[soweek][sat]["P1"] = float(value[2])
+                all_data[soweek][sat]["L2"] = float(value[3])
+                all_data[soweek][sat]["P2"] = float(value[4])
+
+    head_info["G"]={}
+    head_info["G"]["L1"]=1
+    head_info["G"]["P1"]=2
+    head_info["G"]["L2"]=3
+    head_info["G"]["P2"]=4
+    head_info["E"]={}
+    head_info["E"]["L1"]=1
+    head_info["E"]["P1"]=2
+    head_info["E"]["L2"]=3
+    head_info["E"]["P2"]=4
+    head_info["C"]={}
+    head_info["C"]["L1"]=1
+    head_info["C"]["P1"]=2
+    head_info["C"]["L2"]=3
+    head_info["C"]["P2"]=4
+    return (head_info,all_data)

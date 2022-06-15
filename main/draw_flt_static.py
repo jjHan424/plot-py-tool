@@ -1,7 +1,7 @@
 '''
 Author: HanJunjie
 Date: 2021-11-29 21:26:38
-LastEditTime: 2022-06-06 16:27:54
+LastEditTime: 2022-06-11 14:03:43
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_flt.py
@@ -29,42 +29,43 @@ REF_XYZ = {"HKLM":[-2414046.6433,5391602.1169,2396878.6436],
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
 #mode_list = ["GEC","G","E","C","GE"]#,"4 Sites Grid","3 Sites MLCM"]
-mode_list = ["Grid-corObs","Grid-virTual"]#,"Omc","Rank"]
+mode_list = ["0.06"]#,"Omc","Rank"]
 #mode_list = ["GRID"]#,"Omc","Rank"]
 #site_list = ["HKLM","HKSC","HKTK"]
 #site_list = ["WUDA","WUDA","WUDA"]
-site_list = ["E033","E033","E033"]
+site_list = ["HKSC","E033","E033"]
 #site_list = "HKSC"
 Y=2021
-M=12
-D=5
-S=8
+M=11
+D=1
+S=3
 Direct1 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/100"
-Direct2 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias"
+Direct2 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/305"
 Direct3 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result"
 # HongKong
-# filename_list = [
-#                 # "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/HKSC-GEC.flt",
-#                 # "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/HKSC-GEC.flt",
-#                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client-aug/HKSC-GEC-corObs.flt",
-#                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client-aug/HKSC-GEC.flt",
-#                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientGrid/HKST-HKSC-GEC-corObs.flt",
-#                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientGrid/HKST-HKSC-GEC.flt",
-#                 #Direct1 + "/client-comp/"  + "HKSC-GEC.flt",
-#                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client-aug/HKLM-GEC-ion.flt",
-#                 #Direct1 + "/client-aug/"  + "HKSC-GEC-corObs.flt",
-#                 Direct1 + "/client-rank/"  + "HKSC-GEC-corObs.flt",
-#                 Direct1 + "/client-rank/"  + "HKSC-GEC.flt",
-#                 #Direct2 + "/" + "client_Rank/" + "HKSC-GEC.flt",
-#                 #Direct1 + "/" + "client_2/" + "HKLM-GEC.flt"
-#                 ]
-# China
 filename_list = [
-                #Direct3 + "/client-comp/"  + "E033-GEC.flt",
-                Direct3 + "/client-grid/"  + "E033-GEC.flt",
-                Direct3 + "/client-grid/"  + "E033-GEC-vir.flt",
-                Direct3 + "/client-grid/"  + "E033-GEC.flt"
+                # "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/HKSC-GEC.flt",
+                # "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/HKSC-GEC.flt",
+                #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client-aug/HKSC-GEC-corObs.flt",
+                #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client-aug/HKSC-GEC.flt",
+                #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientGrid/HKST-HKSC-GEC-corObs.flt",
+                #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientGrid/HKST-HKSC-GEC.flt",
+                #Direct1 + "/client-comp/"  + "HKSC-GEC.flt",
+                #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client-aug/HKLM-GEC-ion.flt",
+                #Direct1 + "/client-aug/"  + "HKSC-GEC-corObs.flt",
+                Direct2 + "/client-upd-aug/"  + "HKSC-GEC-corObs.flt",
+                Direct1 + "/client-rank/"  + "HKSC-GEC.flt",
+                #Direct2 + "/" + "client_Rank/" + "HKSC-GEC.flt",
+                #Direct1 + "/" + "client_2/" + "HKLM-GEC.flt"
                 ]
+# China
+# filename_list = [
+#                 #Direct3 + "/client-comp/"  + "E033-GEC.flt",
+#                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/client/WUDA-GEC.flt",
+#                 Direct3 + "/client-grid/"  + "E033-GEC.flt",
+#                 Direct3 + "/client-grid-corObs002/"  + "E033-GEC.flt",
+#                 Direct3 + "/client-grid/"  + "E033-GEC.flt"
+#                 ]
 #filename_list = ["/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKTK/3.flt"]
                  
 # filename_list = [
@@ -85,6 +86,6 @@ for i in range(len(mode_list)):
 # ENU_ALL["ION"] = data
 #begTime = 10
 #while (begTime < 31):
-dr.plot_e_n_u(data = ENU_ALL,type = ["NSAT","E","N","U"],mode = mode_list,ylim = 2,starttime=S,LastT=10,deltaT=1,time = "UTC",Fixed=True,delta_data = 1,year = Y,mon=M,day=D)
+dr.plot_e_n_u(data = ENU_ALL,type = ["NSAT","E","N","U"],mode = mode_list,ylim = 2,starttime=S,LastT=22,deltaT=1,time = "UTC",Fixed=True,delta_data = 1,year = Y,mon=M,day=D)
     #begTime = begTime + 2
 

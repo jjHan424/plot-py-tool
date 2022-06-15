@@ -2,7 +2,7 @@
 Author: HanJunjie HanJunjie@whu.edu.cn
 Date: 2022-05-11 11:08:04
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
-LastEditTime: 2022-06-01 20:18:45
+LastEditTime: 2022-06-14 15:01:49
 FilePath: /plot-py-tool/main/time_trans.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -12,9 +12,9 @@ sys.path.insert(0,os.path.dirname(__file__)+'/..')
 
 import trans as tr
 
-year=2021
-mon=12
-day=5
+year=2022
+mon=6
+day=13
 
 print("GPST(Week Sow): ",tr.ymd2gpst(year,mon,day,0,0,00))
 print("Day of Year: ",tr.ymd2doy(year,mon,day,0,0,00))

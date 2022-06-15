@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2022-03-07 10:03:20
-LastEditTime: 2022-06-06 16:02:04
+LastEditTime: 2022-06-10 11:26:06
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_mapgrid.py
@@ -130,8 +130,11 @@ Lines_xyz1 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid
 #               '2014':[-2384904.1935,5383810.3345,2442958.7433],
 #               "2008":[-2400517.6908,5373926.9125,2449368.0968]
 #                 }
-
-m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11.2, tiles='Stamen Terrain')
+# title='Stamen Terrain'
+#title='https://wprd01.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=1&style=8&ltype=11' #街道图
+title='https://webrd02.is.autonavi.com/appmaptile?lang=en&size=1&scale=1&style=8&x={x}&y={y}&z={z}' #常规英文
+#title='https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}' #卫星
+m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11.2, tiles=title, attr='高德-卫星影像图')
 mark_point_blh={}
 Lines_blh1={}
 Lines_blh2={}
@@ -159,7 +162,8 @@ for site in mark_point_xyz.keys():
 for time in Lines_xyz1:
     blh = tr.xyz2blh(Lines_xyz1[time]["X"],Lines_xyz1[time]["Y"],Lines_xyz1[time]["Z"])
     blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-    Lines_blh1[time]=[blh[0],blh[1],blh[2]]
+    blh_G = tr.wgs84togcj02(blh[0], blh[1])
+    Lines_blh1[time]=[blh_G[0],blh_G[1],blh[2]]
 # for time in Lines_xyz2:
 #     blh = tr.xyz2blh(Lines_xyz2[time]["X"],Lines_xyz2[time]["Y"],Lines_xyz2[time]["Z"])
 #     blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
@@ -273,9 +277,9 @@ while cur_Lat < maxLat:
 # text ref
 folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space),show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
 # plot lines
-for time in Lines_blh1:
-    folium.Circle(radius=50,location=[Lines_blh1[time][0],Lines_blh1[time][1]],color="Blue",fill=True,fill_color="#3186cc").add_to(m)
+# for time in Lines_blh1:
+#     folium.Circle(radius=50,location=[Lines_blh1[time][0],Lines_blh1[time][1]],color="Blue",fill=True,fill_color="#3186cc").add_to(m)
 # for time in Lines_blh2:
 #     folium.Circle(radius=50,location=[Lines_blh2[time][0],Lines_blh2[time][1]],color="Red",fill=True,fill_color="#3186cc").add_to(m)
-m.save('/Users/hjj/Desktop/WuHan-SEPT.html')
+m.save('/Users/hjj/Desktop/WuHan.html')
 # webbrowser.open('/Users/hjj/Desktop/HongKongGridS.html')

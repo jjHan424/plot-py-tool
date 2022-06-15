@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-06-06 17:18:00
+LastEditTime: 2022-06-15 11:50:29
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -247,11 +247,15 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     RMS_G,MEAN_G,STD_G = [[],[]],[[],[]],[[],[]]
     RMS_E,MEAN_E,STD_E = [[],[]],[[],[]],[[],[]]
     RMS_C,MEAN_C,STD_C = [[],[]],[[],[]],[[],[]]
+
+    RMS_G1,MEAN_G1,STD_G1 = [[],[]],[[],[]],[[],[]]
+    RMS_E1,MEAN_E1,STD_E1 = [[],[]],[[],[]],[[],[]]
+    RMS_C1,MEAN_C1,STD_C1 = [[],[]],[[],[]],[[],[]]
     G_L,E_L,C_L = [],[],[]
     if type == 'P':
         f1=0
         f2=1
-        figP,axP = plt.subplots(3,2,figsize=(12,10),sharey=True,sharex=True)
+        figP,axP = plt.subplots(3,2,figsize=(15,10),sharey=True,sharex=True)
         ymin = -ylim
         ymax = ylim
         col = 2
@@ -259,36 +263,40 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP[2][0].set_xlabel('Time' + '(' + time + ')')
         axP[2][1].set_xlabel('Time' + '(' + time + ')')
         axP[1][0].set_ylabel('Difference of augmentation correction/m',font)
-        axP[0][0].set_title('G')
-        axP[0][1].set_title('G')
-        axP[1][0].set_title('E')
-        axP[1][1].set_title('E')
-        axP[2][0].set_title('C')
-        axP[2][1].set_title('C')
+        axP[0][0].set_title('G-P1')
+        axP[0][1].set_title('G-P2')
+        axP[1][0].set_title('E-P1')
+        axP[1][1].set_title('E-P2')
+        axP[2][0].set_title('C-P1')
+        axP[2][1].set_title('C-P2')
         for i in range(3):
             for j in range(2):
                 axP[i][j].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
                 axP[i][j].set_ylim(ymin,ymax)
+        type1="P1"
+        type2="P2"
     elif type == 'L':
         f1=2
         f2=3
-        figP,axP = plt.subplots(3,2,figsize=(12,10),sharey=True,sharex=True)
+        figP,axP = plt.subplots(3,2,figsize=(15,10),sharey=True,sharex=True)
         ymin = -ylim
         ymax = ylim
         col = 2
         axP[2][0].set_xlabel('Time' + '(' + time + ')')
         axP[2][1].set_xlabel('Time' + '(' + time + ')')
         axP[1][0].set_ylabel('Difference of augmentation correction/m',font)
-        axP[0][0].set_title('G')
-        axP[0][1].set_title('G')
-        axP[1][0].set_title('E')
-        axP[1][1].set_title('E')
-        axP[2][0].set_title('C')
-        axP[2][1].set_title('C')
+        axP[0][0].set_title('G-L1')
+        axP[0][1].set_title('G-L2')
+        axP[1][0].set_title('E-L1')
+        axP[1][1].set_title('E-L2')
+        axP[2][0].set_title('C-L1')
+        axP[2][1].set_title('C-L2')
         for i in range(3):
             for j in range(2):
                 axP[i][j].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
                 axP[i][j].set_ylim(ymin,ymax)
+        type1="L1"
+        type2="L2"
     elif type == 'ION':
         f1=5
         ymin = -ylim
@@ -339,6 +347,10 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     data_E = [[] for i in range(100)]
     data_C = [[] for i in range(100)]
     data_TRP = []
+    data_G1 = [[] for i in range(100)]
+    data_R1 = [[] for i in range(100)]
+    data_E1 = [[] for i in range(100)]
+    data_C1 = [[] for i in range(100)]
     if "+" in time:
         end_time = len(time)
         delta_Time = int(time[3:end_time]) + starttime
@@ -364,7 +376,26 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         XLabel.append(cur_Str_X)
         XTick.append(starttime)
 
-
+    if type == "L" or type == "P":
+        for time in data.keys():
+            plot_time = (time - cov_Time) / 3600
+            if (plot_time > begT and plot_time < begT + LastT):
+                for sat in data[time].keys():
+                    prn = int(sat[1:3])
+                    # if abs(data[time][sat][sys_type[sat[0]]]) > -1:
+                    if sat[0] == "C":
+                        data_C[prn-1].append(data[time][sat][type1])
+                        data_C1[prn-1].append(data[time][sat][type2])
+                        time_C[prn-1].append(plot_time)
+                    if sat[0] == "G":
+                        data_G[prn-1].append(data[time][sat][type1])
+                        data_G1[prn-1].append(data[time][sat][type2])
+                        time_G[prn-1].append(plot_time)
+                    if sat[0] == "E":
+                        data_E[prn-1].append(data[time][sat][type1])
+                        data_E1[prn-1].append(data[time][sat][type2])
+                        time_E[prn-1].append(plot_time)
+    
     if type == "ION":
         for time in data.keys():
             plot_time = (time - cov_Time) / 3600
@@ -473,7 +504,92 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP.set_xticks(XTick)
         axP.set_xticklabels(XLabel)
 
-
+    if type == "L" or type=="P":
+        for i in range(100):
+                G,E,C = True,True,True
+                num = len(time_G[i])
+                if num < 1:
+                    G = False
+                num = len(time_E[i])
+                if num < 1:
+                    E = False
+                num = len(time_C[i])
+                if num < 1:
+                    C = False
+                if G:
+                    axP[0][0].scatter(time_G[i],data_G[i],s=1)
+                    axP[0][1].scatter(time_G[i],data_G1[i],s=1)
+                    prn = '%02d' % (i + 1)
+                    G_L.append('G'+prn)
+                    temp = dp.rms(data_G[i])
+                    RMS_G[0].append(temp)
+                    temp = dp.rms(data_G1[i])
+                    RMS_G1[0].append(temp)
+                    temp = np.std(data_G[i])
+                    STD_G[0].append(temp)
+                    temp = np.mean(data_G[i])
+                    MEAN_G[0].append(temp)
+                if E:
+                    axP[1][0].scatter(time_E[i],data_E[i],s=1)
+                    axP[1][1].scatter(time_E[i],data_E1[i],s=1)
+                    prn = '%02d' % (i + 1)
+                    E_L.append('E'+prn)
+                    temp = dp.rms(data_E[i])
+                    RMS_E[0].append(temp)
+                    temp = dp.rms(data_E1[i])
+                    RMS_E1[0].append(temp)
+                    temp = np.std(data_E[i])
+                    STD_E[0].append(temp)
+                    temp = np.mean(data_E[i])
+                    MEAN_E[0].append(temp)
+                if C:
+                    axP[2][0].scatter(time_C[i],data_C[i],s=1)
+                    axP[2][1].scatter(time_C[i],data_C1[i],s=1)
+                    prn = '%02d' % (i + 1)
+                    C_L.append('C'+prn)
+                    temp = dp.rms(data_C[i])
+                    RMS_C[0].append(temp)
+                    temp = dp.rms(data_C1[i])
+                    RMS_C1[0].append(temp)
+                    temp = np.std(data_C[i])
+                    STD_C[0].append(temp)
+                    temp = np.mean(data_C[i])
+                    MEAN_C[0].append(temp)
+        font_text = {'family' : 'Arial',
+		'weight' : 500,
+		'size'   : 15,
+                }
+        font2 = {"size":7}
+        axP[0][1].legend(G_L,prop=font2,
+            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=2, 
+            bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
+        ax_range = axP[0][0].axis()
+        axP[0][0].text(ax_range[0],ax_range[3],r'RMS={:.4f}cm'.format(np.mean(RMS_G[0])*100),font_text)
+        ax_range = axP[0][1].axis()
+        axP[0][1].text(ax_range[0],ax_range[3],r'RMS={:.4f}cm'.format(np.mean(RMS_G1[0])*100),font_text)
+        axP[1][1].legend(E_L,prop=font2,
+            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=2, 
+            bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
+        ax_range = axP[1][0].axis()
+        axP[1][0].text(ax_range[0],ax_range[3],r'RMS={:.4f}cm'.format(np.mean(RMS_E[0])*100),font_text)
+        ax_range = axP[1][1].axis()
+        axP[1][1].text(ax_range[0],ax_range[3],r'RMS={:.4f}cm'.format(np.mean(RMS_E1[0])*100),font_text)
+        axP[2][1].legend(C_L,prop=font2,
+            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=2, 
+            bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
+        ax_range = axP[2][0].axis()
+        axP[2][0].text(ax_range[0],ax_range[3],r'RMS={:.4f}cm'.format(np.mean(RMS_C[0])*100),font_text)
+        ax_range = axP[2][1].axis()
+        axP[2][1].text(ax_range[0],ax_range[3],r'RMS={:.4f}cm'.format(np.mean(RMS_C1[0])*100),font_text)
+        axP[0][1].set_xticks(XTick)
+        axP[0][0].set_xticks(XTick)
+        axP[1][1].set_xticks(XTick)
+        axP[1][0].set_xticks(XTick)
+        axP[2][1].set_xticks(XTick)
+        axP[2][0].set_xticks(XTick)
+        axP[2][0].set_xticklabels(XLabel)
+        axP[2][1].set_xticklabels(XLabel)
+    
     # figP.suptitle(mode)
     #plt.savefig(savedir)
     if show:
@@ -1107,7 +1223,7 @@ def plot_upd_nl_GEC(all_data={},savedir='save_fig_path',mode = 'upd_nl',show = F
                 time_C[prn-1].append(time / 3600)
                 data_C[prn-1].append(all_data[time][sat])
                 continue
-    colormap = sns.color_palette("colorblind",40)
+    #colormap = sns.color_palette("colorblind",40)
     G_j,E_j,C_j = 0,0,0
     for i in range(40):
         G,R,E,C = True,True,True,True
@@ -1128,19 +1244,19 @@ def plot_upd_nl_GEC(all_data={},savedir='save_fig_path',mode = 'upd_nl',show = F
             C_j = C_j+1
         
         if G:
-            axP[0].scatter(time_G[i],data_G[i],s=2,marker='D',c = colormap[G_j])
+            axP[0].scatter(time_G[i],data_G[i],s=2,marker='D')
             std_G.append(np.std(data_G[i]))
             prn = '%02d' % (i + 1)
             G_L.append('G'+prn)
 
         if E:
-            axP[1].scatter(time_E[i],data_E[i],s=2,marker='D',c = colormap[E_j])
+            axP[1].scatter(time_E[i],data_E[i],s=2,marker='D')
             prn = '%02d' % (i + 1)
             std_E.append(np.std(data_E[i]))
             E_L.append('E'+prn)
 
         if C:
-            axP[2].scatter(time_C[i],data_C[i],s=2,marker='D',c = colormap[C_j])
+            axP[2].scatter(time_C[i],data_C[i],s=2,marker='D')
             prn = '%02d' % (i + 1)
             std_C.append(np.std(data_C[i]))
             C_L.append('C'+prn)

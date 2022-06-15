@@ -1,7 +1,7 @@
 '''
 Author: HanJunjie
 Date: 2021-11-29 21:26:38
-LastEditTime: 2022-06-04 22:32:58
+LastEditTime: 2022-06-08 22:39:41
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_flt.py
@@ -27,15 +27,15 @@ REF_XYZ = {"HKLM":[-2414046.6433,5391602.1169,2396878.6436],
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
 #mode_list = ["GEC","G","E","C","GE"]#,"4 Sites Grid","3 Sites MLCM"]
-mode_list = ["1.0","2.0"]
+mode_list = ["Float","Fixed"]
 #site_list = ["HKLM","HKSC","HKTK"]
-site_list = ["XGXN","XGXN","HKLM"]
+site_list = ["HKSC","HKSC"]
 #site_list = "HKSC"
 Direct = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/Bias"
 filename_list = [
-                "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/aug/XGXN-GEC-AR1.flt",
-                "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/aug/XGXN-GEC-AR.flt",
-                "/Users/hjj/Documents/HJJ/Master_1/OSB/PPP/UPD_PPP",
+                "/Users/hjj/Documents/HJJ/Master_1/OSB/PPP/UPD_PPP-Float",
+                "/Users/hjj/Documents/HJJ/Master_1/OSB/PPP/UPD_PPP-AR-OSB_UPD",
+                #"/Users/hjj/Documents/HJJ/Master_1/OSB/PPP/HKSC-GEC.flt",
                 "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/compare/HKSL-GEC-ALL-10000.flt",
                 "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/compare/HKSL-GEC-ALL-100000.flt",
                 Direct + "/" + "client/" + "HKSC-GEC.flt",
@@ -70,6 +70,6 @@ for i in range(len(mode_list)):
 # ENU_ALL["ION"] = data
 #begTime = 10
 #while (begTime < 31):
-dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.2,starttime=2,LastT=1,deltaT=1,time = "UTC",Fixed=False,delta_data = 5,year=2021,mon=12,day=5)
+dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 1,starttime=6,LastT=12,deltaT=1,time = "UTC",Fixed=False,delta_data = 30,year=2021,mon=4,day=10)
     #begTime = begTime + 2
 

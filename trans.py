@@ -5,6 +5,8 @@ import glv
 from math import *
 import numpy as np
 
+
+
 def blh2xyz(B,L,H):
     sB = sin(B)
     cB = cos(B)
@@ -121,3 +123,42 @@ def mjd2gpst(day,sec):
 def ymd2doy(year,month,day,hour,minute,second):
     doy = floor(month*275/9)-floor((month+9)/12)*(floor((year-4*floor(year/4)+2)/3)+1)+day-30
     return doy
+
+def transformlat(lng, lat):
+    PI = 3.1415926535897932384626
+    ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * \
+          lat + 0.1 * lng * lat + 0.2 * sqrt(abs(lng))
+    ret += (20.0 * sin(6.0 * lng * PI) + 20.0 *
+            sin(2.0 * lng * PI)) * 2.0 / 3.0
+    ret += (20.0 * sin(lat * PI) + 40.0 *
+            sin(lat / 3.0 * PI)) * 2.0 / 3.0
+    ret += (160.0 * sin(lat / 12.0 * PI) + 320 *
+            sin(lat * PI / 30.0)) * 2.0 / 3.0
+    return ret
+def transformlng(lng, lat):
+    PI = 3.1415926535897932384626
+    ret = 300.0 + lng + 2.0 * lat + 0.1 * lng * lng + \
+          0.1 * lng * lat + 0.1 * sqrt(abs(lng))
+    ret += (20.0 * sin(6.0 * lng * PI) + 20.0 *
+            sin(2.0 * lng * PI)) * 2.0 / 3.0
+    ret += (20.0 * sin(lng * PI) + 40.0 *
+            sin(lng / 3.0 * PI)) * 2.0 / 3.0
+    ret += (150.0 * sin(lng / 12.0 * PI) + 300.0 *
+            sin(lng / 30.0 * PI)) * 2.0 / 3.0
+    return ret
+
+def wgs84togcj02(lng, lat):
+    PI = 3.1415926535897932384626
+    ee = 0.00669342162296594323
+    a = 6378245.0
+    dlat = transformlat(lng - 105.0, lat - 35.0)
+    dlng = transformlng(lng - 105.0, lat - 35.0)
+    radlat = lat / 180.0 * PI
+    magic = sin(radlat)
+    magic = 1 - ee * magic * magic
+    sqrtmagic = sqrt(magic)
+    dlat = (dlat * 180.0) / ((a * (1 - ee)) / (magic * sqrtmagic) * PI)
+    dlng = (dlng * 180.0) / (a / sqrtmagic * cos(radlat) * PI)
+    mglat = lat + dlat
+    mglng = lng + dlng
+    return [mglng, mglat]
