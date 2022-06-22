@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2021-11-12 09:38:43
-LastEditTime: 2022-06-15 11:51:38
+LastEditTime: 2022-06-22 13:46:06
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_aug.py
@@ -90,8 +90,8 @@ import draw as dr
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/server-ion/HKSC-GEC-S.aug"
 # path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/client-aug/HKSC-GEC-I.aug"
 
-path_S = "/Volumes/H_GREAT/2Project/Allystar/rtppp_test/20220612-PPPAR/HKSC_20220613_SGG_CLK01_S_GEC.aug"
-path_I = "/Volumes/H_GREAT/2Project/Allystar/rtppp_test/20220612-PPPAR/HKSC_20220613_SGG_CLK01_K_GEC.aug"
+path_S = "/Users/hjj/Desktop/2022_0620StaticAUG/res/20220620/NOVA_20220620_SGG_CLK06_S_GEC.aug"   # PPPAR算的改正数
+path_I = "/Users/hjj/Desktop/2022_0620StaticPPPRTK/res/20220620/NOVA_20220620_SGG_CLK06_K_GEC.aug"# 内插改正数
 
 #path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKSC-GEC-I-ion.aug"
 # site_list = ["HKCL","HKFN","HKKS","HKKT","HKLM",
@@ -116,9 +116,14 @@ data = dp.pre_aug_new(head_I,data_I,data_S)
 #数据在UTC的开始时间为02:00，画图的横坐标时间系统为UTC+8，在UTC+8下从10:00开始画10小时的数据，统计结果为画图的结果
 # begTime = 10
 # while (begTime < 31):
-dr.plot_aug_GEC_new(data,head_I,type = "P",freq = 1,starttime = 7,time = "UTC",show = True,deltaT=2,ylim=1.5,LastT=6,year = 2022,mon=6,day=13)
-dr.plot_aug_GEC_new(data,head_I,type = "L",freq = 1,starttime = 7,time = "UTC",show = True,deltaT=2,ylim=0.2,LastT=6,year = 2022,mon=6,day=13)
-
+# dr.plot_aug_GEC_new(data,head_I,type = "P",freq = 1,starttime = 17,time = "UTC",show = True,deltaT=2,ylim=1.5,LastT=7,year = 2022,mon=6,day=20)
+dr.plot_aug_GEC_new(data,head_I,type = "L",freq = 1,starttime = 17,time = "UTC",show = True,deltaT=2,ylim=0.2,LastT=7,year = 2022,mon=6,day=20)
+#########
+#year mon day starttime 为开始时间
+#ylim 为y坐标范围
+#time 可以是UTC或者UTC+8等为控制横坐标显示
+#type “ION”为电离层，“TRP”为对流层
+##########
 # dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=2,ylim=0.5,LastT=22,year = 2021,mon=12,day=5)
 
 # begTime = begTime + 2

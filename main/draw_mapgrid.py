@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2022-03-07 10:03:20
-LastEditTime: 2022-06-10 11:26:06
+LastEditTime: 2022-06-21 20:43:20
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_mapgrid.py
@@ -121,8 +121,8 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 #               'T430':[-2411015.2264,5380265.7133,2425132.7008]
 #                 }
 
-mark_point_xyz = rf.open_crd_gridmap("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/WuHan_Site.crd")
-Lines_xyz1 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-grid/SEPT-GEC.flt")
+mark_point_xyz = rf.open_crd_gridmap("/Volumes/H_GREAT/2Project/Allystar/WH-AUG.crd")
+Lines_xyz1 = rf.open_flt_pos_rtpppfile("/Volumes/H_GREAT/2Project/Allystar/2022_0620Dynamic2/res/20220620/NOVA_20220620_SGG_CLK06_K_GEC.pppar.pos")
 #Lines_xyz2 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-comp/SEPT-GEC.flt")
 # mark_point_xyz = {'2006':[-2430340.3590,5359921.7657,2450575.0220],
 #               '2010':[-2419056.7812,5364365.3435,2452055.3961],
@@ -131,9 +131,10 @@ Lines_xyz1 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid
 #               "2008":[-2400517.6908,5373926.9125,2449368.0968]
 #                 }
 # title='Stamen Terrain'
-#title='https://wprd01.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=1&style=8&ltype=11' #街道图
-title='https://webrd02.is.autonavi.com/appmaptile?lang=en&size=1&scale=1&style=8&x={x}&y={y}&z={z}' #常规英文
-#title='https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}' #卫星
+# title='https://wprd01.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=1&style=8&ltype=11' #街道图
+# title='http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}'#高德
+# title='https://webrd02.is.autonavi.com/appmaptile?lang=en&size=1&scale=1&style=8&x={x}&y={y}&z={z}' #常规英文
+title='https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}' #卫星
 m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11.2, tiles=title, attr='高德-卫星影像图')
 mark_point_blh={}
 Lines_blh1={}
@@ -156,8 +157,12 @@ for site in mark_point_xyz.keys():
     if blh[1] > maxLon:
         maxLon = blh[1]
     mark_point_blh[site]=[blh[0],blh[1],blh[2]]
-    
-    folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='black'),tooltip="click").add_to(m)
+    if site=="JFNG":
+        folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='black'),tooltip="click").add_to(m)
+    else:
+        folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
+
+
 
 for time in Lines_xyz1:
     blh = tr.xyz2blh(Lines_xyz1[time]["X"],Lines_xyz1[time]["Y"],Lines_xyz1[time]["Z"])
@@ -277,9 +282,24 @@ while cur_Lat < maxLat:
 # text ref
 folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space),show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
 # plot lines
-# for time in Lines_blh1:
-#     folium.Circle(radius=50,location=[Lines_blh1[time][0],Lines_blh1[time][1]],color="Blue",fill=True,fill_color="#3186cc").add_to(m)
+for time in Lines_blh1:
+    folium.Circle(radius=50,location=[Lines_blh1[time][0],Lines_blh1[time][1]],color="Blue",fill=True,fill_color="#3186cc").add_to(m)
 # for time in Lines_blh2:
 #     folium.Circle(radius=50,location=[Lines_blh2[time][0],Lines_blh2[time][1]],color="Red",fill=True,fill_color="#3186cc").add_to(m)
-m.save('/Users/hjj/Desktop/WuHan.html')
+
+# plot triangle
+xyz = mark_point_xyz["N047"]
+blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+xyz = mark_point_xyz["N004"]
+blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+xyz = mark_point_xyz["R293"]
+blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+c="green"
+folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
+folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
+folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
+m.save('/Users/hjj/Desktop/WH-AUG-卫星.html')
 # webbrowser.open('/Users/hjj/Desktop/HongKongGridS.html')

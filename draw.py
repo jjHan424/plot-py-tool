@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-06-15 11:50:29
+LastEditTime: 2022-06-22 09:45:43
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -13,7 +13,7 @@ import matplotlib as mpl
 mpl.use("TkAgg")
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-plt.style.use('science')
+# plt.style.use('science')
 from numpy.core.fromnumeric import shape, size
 import dataprocess as dp
 import matplotlib.colors as colors
@@ -1484,7 +1484,7 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                         temp = np.mean(data_plot[cur_type][j])
                         MEAN_enu[cur_type].append(temp)
                         data_plot[cur_type][j] = data_plot[cur_type][j]-temp
-                        axP[i].scatter(time[j],data_plot[cur_type][j])
+                        axP[i].scatter(time[j],data_plot[cur_type][j],s=1)
                         temp = dp.rms(data_plot[cur_type][j])
                         RMS_enu[cur_type].append(temp)
                         temp = np.std(data_plot[cur_type][j])
@@ -1533,8 +1533,8 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                 axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:7*N_mode+3],font_text)
 
 
-        axP[N_plot-1].set_xticks(XTick)
-        axP[N_plot-1].set_xticklabels(XLabel)
+        # axP[N_plot-1].set_xticks(XTick)
+        # axP[N_plot-1].set_xticklabels(XLabel)
         # axP[0].legend(mode,
         #         framealpha=1,facecolor='w',ncol=1,numpoints=5, markerscale=5, 
         #         bbox_to_anchor=(1,1),loc=0,borderaxespad=0) 
@@ -1542,11 +1542,11 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
             
         for i in range(N_plot):
             cur_type=type[i]
-            axP[i].set_xticks(XTick)
+            # axP[i].set_xticks(XTick)
             ax_range = axP[i].axis()
             if (N_plot==3):
                 axP[i].legend(mode,prop=font_text,
-                framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3, 
+                framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=3, 
                 borderaxespad=0,bbox_to_anchor=(1,1.13),loc=1) 
             if (N_plot==4):
                 axP[i].legend(mode,prop=font_text,

@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-06-15 11:21:16
+LastEditTime: 2022-06-19 14:32:14
 Description: read data file
 '''
 import numpy as np
@@ -329,6 +329,10 @@ def open_flt_pos_rtpppfile(filename):
                 all_data[soweek]['Q'] = float(value[5])
                 all_data[soweek]['NSAT'] = float(value[5])
                 all_data[soweek]['PDOP'] = float(value[5])
+                # if value[5] == '1':
+                #     all_data[soweek]['AMB'] = 1
+                # else:
+                #     all_data[soweek]['AMB'] = 0
                 if value[15] == 'Fixed':
                     all_data[soweek]['AMB'] = 1
                 else:
@@ -387,7 +391,7 @@ def open_bias_file_grid(filename):
                     i = i+1
     return (all_data)
 
-def open_pos_ref(filename):
+def open_pos_ref_IE(filename):
     all_data={}
     soweek_last = 0
     w_last = 0
@@ -641,3 +645,96 @@ def open_aug_file_rtppp(filename):
     head_info["C"]["L2"]=3
     head_info["C"]["P2"]=4
     return (head_info,all_data)
+
+
+def open_ppp_float_rtpppfile(filename):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if line[0] != "%":
+                soweek = float(value[7])
+                if (soweek < soweek_last):
+                    w_last = w_last + 1
+                soweek = soweek + w_last*604800
+                soweek_last = soweek
+                #soweek = hour + minute/60.0 + second/3600.0
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+                all_data[soweek]['E'] = float(value[8])
+                all_data[soweek]['N'] = float(value[9])
+                all_data[soweek]['U'] = float(value[10])
+                all_data[soweek]['NSAT'] = float(value[10])
+                all_data[soweek]['AMB'] = 1
+                
+                # if value[15] == 'Fixed':
+                #     all_data[soweek]['AMB'] = 1
+                # else:
+                #     all_data[soweek]['AMB'] = 0
+                
+    return all_data
+
+
+def open_pos_ref_GREAT(filename):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if line[0] != "#":
+                soweek = float(value[0])
+                if (soweek < soweek_last):
+                    w_last = w_last + 1
+                soweek = soweek + w_last*604800
+                soweek_last = soweek
+                #soweek = hour + minute/60.0 + second/3600.0
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+                all_data[soweek]['X'] = float(value[1])
+                all_data[soweek]['Y'] = float(value[2])
+                all_data[soweek]['Z'] = float(value[3])
+                all_data[soweek]['Q'] = float(value[5])
+                all_data[soweek]['NSAT'] = float(value[5])
+                all_data[soweek]['PDOP'] = float(value[5])
+                if value[19] == 'Fixed':
+                    all_data[soweek]['AMB'] = 1
+                else:
+                    all_data[soweek]['AMB'] = 0
+                
+    return all_data
+
+
+def open_flt_ppprtk_rtpppfile(filename):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if line[0] != "%":
+                soweek = float(value[7])
+                if (soweek < soweek_last):
+                    w_last = w_last + 1
+                soweek = soweek + w_last*604800
+                soweek_last = soweek
+                #soweek = hour + minute/60.0 + second/3600.0
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+                all_data[soweek]['X'] = float(value[29])
+                all_data[soweek]['Y'] = float(value[30])
+                all_data[soweek]['Z'] = float(value[31])
+                all_data[soweek]['Q'] = float(value[20])
+                all_data[soweek]['NSAT'] = float(value[20])
+                all_data[soweek]['PDOP'] = float(value[20])
+                all_data[soweek]['AMB'] = 1
+                
+    return all_data

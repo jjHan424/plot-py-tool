@@ -1,8 +1,8 @@
 '''
 Author: 韩俊杰
 Date: 2021-09-15 14:13:07
-LastEditTime: 2022-04-20 14:37:54
-LastEditors: Please set LastEditors
+LastEditTime: 2022-06-19 12:38:15
+LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/dataprocess.py
 '''
@@ -321,6 +321,8 @@ def XYZ2ENU_dynamic(XYZ = {},REF_XYZ = {}):
 
     for time in XYZ.keys():
         if time not in all_data and time in REF_XYZ.keys():
+            if REF_XYZ[time]["AMB"] != 1:
+                continue
             all_data[time] = {}
             xyz.append(XYZ[time]["X"])
             xyz.append(XYZ[time]["Y"])
