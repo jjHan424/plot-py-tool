@@ -1,7 +1,7 @@
 '''
 Author: Han Junjie
 Date: 2021-11-23 20:07:41
-LastEditTime: 2022-06-10 13:48:41
+LastEditTime: 2022-06-27 11:59:00
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_upd.py
@@ -22,11 +22,11 @@ import trans as tr
 
 file_nl = {}
 file_wl = {}
-file_nl[0] = '/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/UPD/upd_nl-339'
+file_nl[0] = '/Volumes/H_GREAT/2Project/Allystar/20220622_WH2_ZHD/NRTK_20220627_SGG_CLK04_S_GEC.upd'
 
 file_wl[0] = '/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/GERAT_UPDLSQ/ambupd/upd_wl_2020001_G_UC'
 week,sec = tr.ymd2gpst(2017,7,20,0,0,0)
-nl = rf.open_upd_nl_file(file_nl)
+nl = rf.open_upd_rtpppfile(file_nl)
 #wl = rf.open_upd_wl_onedayfile(file_wl)
 #dr.plot_upd_wl_oneday_GEC(wl,'/Users/hjj/Desktop/','UPD WL',True)
 dr.plot_upd_nl_GEC(nl,'/Users/hjj/Desktop/','UPD NL',True)

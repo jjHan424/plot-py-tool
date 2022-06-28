@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-06-19 14:32:14
+LastEditTime: 2022-06-28 21:51:23
 Description: read data file
 '''
 import numpy as np
@@ -612,6 +612,7 @@ def open_aug_file_rtppp(filename):
                 hour=(float(value[4]))
                 minute=(float(value[5]))
                 second=(float(value[6]))
+                satnum = float(value[7])
                 [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
                 if (not epoch_flag):
                     min_sow = soweek
@@ -628,6 +629,7 @@ def open_aug_file_rtppp(filename):
                 all_data[soweek][sat]["P1"] = float(value[2])
                 all_data[soweek][sat]["L2"] = float(value[3])
                 all_data[soweek][sat]["P2"] = float(value[4])
+                all_data[soweek][sat]["TRP1"] = satnum
 
     head_info["G"]={}
     head_info["G"]["L1"]=1
@@ -737,4 +739,110 @@ def open_flt_ppprtk_rtpppfile(filename):
                 all_data[soweek]['PDOP'] = float(value[20])
                 all_data[soweek]['AMB'] = 1
                 
+    return all_data
+
+def open_arinf_rtpppfile(filename,sat = "G15"):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    wr=False
+    data1 = []
+    time1 = []
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            time = value[0].split(':')
+            if len(time) > 2:
+                year=2022
+                mon=6
+                day=22
+                hour = float(time[0])
+                min = float(time[1])
+                sec = float(time[2])
+                [w,soweek] = tr.ymd2gpst(year,mon,day,hour,min,sec)
+                if (w_last == 0):
+                    w_last = w
+                soweek = soweek + (w - w_last)*7*24*3600
+            if value[0] == "WL_INF":
+                wr = True
+                continue
+            elif not wr:
+                wr=False
+                continue
+            if wr and value[0][0] != sat[0]:
+                wr=False
+            if wr and value[0]==sat:
+                data1.append(float(value[1]))
+                time1.append(soweek)
+                wr = False
+  
+    return (time1,data1)
+
+def open_ppprtk_rtpppfile(filename):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if line[0] != "%":
+                soweek = float(value[7])
+                if (soweek < soweek_last):
+                    w_last = w_last + 1
+                soweek = soweek + w_last*604800
+                soweek_last = soweek
+                #soweek = hour + minute/60.0 + second/3600.0
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+                all_data[soweek]['X'] = float(value[29])
+                all_data[soweek]['Y'] = float(value[30])
+                all_data[soweek]['Z'] = float(value[31])
+                all_data[soweek]['Q'] = float(value[20])
+                all_data[soweek]['NSAT'] = float(value[24])
+                # all_data[soweek]['NSAT'] = float(value[12])
+                # all_data[soweek]['NSAT'] = float(value[18])
+                all_data[soweek]['PDOP'] = float(value[20])
+                if (all_data[soweek]['NSAT'] <= 4):
+                    all_data[soweek]['AMB'] = 0
+                else:
+                    all_data[soweek]['AMB'] = 1
+                # all_data[soweek]['AMB'] = 1
+                
+    return all_data
+
+
+def open_upd_rtpppfile(filename_list,sys="G"):
+    all_data = {} 
+    for index in filename_list:
+        filename = filename_list[index]
+        w_last = 0
+        with open(filename,'rt') as f:
+            for line in f:
+                value = line.split()
+                if value[0]=='*':
+                    if value[7] == "0":
+                        continue
+                    year=float(value[1])
+                    mon=float(value[2])
+                    day=float(value[3])
+                    hour = float(value[4])
+                    min = float(value[5])
+                    sec = float(value[6])
+                    [w,soweek] = tr.ymd2gpst(year,mon,day,hour,min,sec)
+                    if (w_last==0):
+                        w_last = w
+                    soweek = soweek + (w-w_last)*604800
+                    if soweek not in all_data.keys():
+                        all_data[soweek]={}
+                    w_last = w
+                    continue
+                
+                sat = value[0]
+                if 'x' not in sat and sat not in all_data[soweek].keys():
+                    all_data[soweek][sat] = (float(value[1]))
+                    continue
     return all_data

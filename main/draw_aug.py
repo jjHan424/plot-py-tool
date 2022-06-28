@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2021-11-12 09:38:43
-LastEditTime: 2022-06-22 13:46:06
+LastEditTime: 2022-06-27 11:05:20
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_aug.py
@@ -90,8 +90,8 @@ import draw as dr
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/server-ion/HKSC-GEC-S.aug"
 # path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/client-aug/HKSC-GEC-I.aug"
 
-path_S = "/Users/hjj/Desktop/2022_0620StaticAUG/res/20220620/NOVA_20220620_SGG_CLK06_S_GEC.aug"   # PPPAR算的改正数
-path_I = "/Users/hjj/Desktop/2022_0620StaticPPPRTK/res/20220620/NOVA_20220620_SGG_CLK06_K_GEC.aug"# 内插改正数
+path_S = "/Volumes/SAMSUNG USB/20220626Static302/2022_0626AUG06/res/20220626/NOVA_20220626_SGG_CLK06_S_GEC.aug"   # PPPAR算的改正数
+path_I = "/Volumes/SAMSUNG USB/20220626Static302/2022_0626Static06/res/20220626/NOVA_20220626_SGG_CLK06_K_GEC.aug"# 内插改正数
 
 #path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKSC-GEC-I-ion.aug"
 # site_list = ["HKCL","HKFN","HKKS","HKKT","HKLM",
@@ -104,6 +104,8 @@ path_I = "/Users/hjj/Desktop/2022_0620StaticPPPRTK/res/20220620/NOVA_20220620_SG
 # #path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKLM-GEC-I-ion.aug"
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/server_ion/HKLM-GEC-S.aug"
 
+# [head_I,data_I] = rf.open_aug_file_rtppp(path_I)
+# [head_S,data_S] = rf.open_aug_file_rtppp(path_S)
 [head_I,data_I] = rf.open_aug_file_rtppp(path_I)
 [head_S,data_S] = rf.open_aug_file_rtppp(path_S)
 data = dp.pre_aug_new(head_I,data_I,data_S)
@@ -117,7 +119,7 @@ data = dp.pre_aug_new(head_I,data_I,data_S)
 # begTime = 10
 # while (begTime < 31):
 # dr.plot_aug_GEC_new(data,head_I,type = "P",freq = 1,starttime = 17,time = "UTC",show = True,deltaT=2,ylim=1.5,LastT=7,year = 2022,mon=6,day=20)
-dr.plot_aug_GEC_new(data,head_I,type = "L",freq = 1,starttime = 17,time = "UTC",show = True,deltaT=2,ylim=0.2,LastT=7,year = 2022,mon=6,day=20)
+dr.plot_aug_GEC_new(data,head_I,type = "L",freq = 1,starttime = 14,time = "UTC+8",show = True,deltaT=1,ylim=0.2,LastT=12,year = 2022,mon=6,day=26)
 #########
 #year mon day starttime 为开始时间
 #ylim 为y坐标范围

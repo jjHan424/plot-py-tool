@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-06-22 09:45:43
+LastEditTime: 2022-06-28 21:34:04
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -330,7 +330,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP.set_xlabel('Time' + '(' + time + ')')
         axP.set_ylabel('Difference of Troposphere Delay correction/m',font)
         axP.grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-        axP.set_ylim(ymin,ymax)
+        # axP.set_ylim(ymin,ymax)
         sys_type["C"]="TRP1"
         sys_type["G"]="TRP1"
         sys_type["E"]="TRP1"
@@ -1201,28 +1201,34 @@ def plot_upd_nl_GEC(all_data={},savedir='save_fig_path',mode = 'upd_nl',show = F
     axP[0].set_ylabel(mode+'(Cycles)')
     axP[1].set_ylabel(mode+'(Cycles)')
     axP[2].set_ylabel(mode+'(Cycles)')
-    axP[0].set_title('G-NL')
-    axP[1].set_title('E-NL')
-    axP[2].set_title('C-NL')
-    axP[0].set_ylim(0.0,1) 
-    axP[1].set_ylim(0.0,1) 
-    axP[2].set_ylim(0.0,1) 
+    if "WL" in mode:
+        axP[0].set_title('G-WL')
+        axP[1].set_title('E-WL')
+        axP[2].set_title('C-WL')
+    else:
+        axP[0].set_title('G-NL')
+        axP[1].set_title('E-NL')
+        axP[2].set_title('C-NL')
+    # axP[0].set_ylim(0.0,1) 
+    # axP[1].set_ylim(0.0,1) 
+    # axP[2].set_ylim(0.0,1) 
 
     for time in all_data:
         for sat in all_data[time]:
             prn = int(sat[1:3])
-            if (sat[0]=='G'):
-                time_G[prn-1].append(time / 3600)
-                data_G[prn-1].append(all_data[time][sat])
-                continue
-            if (sat[0]=='E'):
-                time_E[prn-1].append(time / 3600)
-                data_E[prn-1].append(all_data[time][sat])
-                continue
-            if (sat[0]=='C'):
-                time_C[prn-1].append(time / 3600)
-                data_C[prn-1].append(all_data[time][sat])
-                continue
+            if (all_data[time][sat] != 999.9999):
+                if (sat[0]=='G'):
+                    time_G[prn-1].append(time / 3600)
+                    data_G[prn-1].append(all_data[time][sat])
+                    continue
+                if (sat[0]=='E'):
+                    time_E[prn-1].append(time / 3600)
+                    data_E[prn-1].append(all_data[time][sat])
+                    continue
+                if (sat[0]=='C'):
+                    time_C[prn-1].append(time / 3600)
+                    data_C[prn-1].append(all_data[time][sat])
+                    continue
     #colormap = sns.color_palette("colorblind",40)
     G_j,E_j,C_j = 0,0,0
     for i in range(40):
@@ -1275,27 +1281,27 @@ def plot_upd_nl_GEC(all_data={},savedir='save_fig_path',mode = 'upd_nl',show = F
     axP[1].grid()
     axP[2].grid()
 
-    savedir1 = savedir + mode + ".png" 
-    plt.savefig(savedir1)
-    figS,axS = plt.subplots(3,1,figsize=(20,15),sharey=True,sharex=False)
-    axS[0].set_ylabel('UPD STD(Cycles)')
-    axS[1].set_ylabel('UPD STD(Cycles)')
-    axS[2].set_ylabel('UPD STD(Cycles)')
-    axS[0].set_title('G-STD-NL')
-    axS[1].set_title('E-STD-NL')
-    axS[2].set_title('C-STD-NL')
-    axS[0].set_ylim(0,0.1)
-    axS[0].bar(range(len(std_G)),std_G,tick_label=G_L)
-    axS[1].bar(range(len(std_E)),std_E,tick_label=E_L)
-    axS[2].bar(range(len(std_C)),std_C,tick_label=C_L)
-    axS[0].grid(axis = "y")
-    axS[1].grid(axis = "y")
-    axS[2].grid(axis = "y")
-    axS[0].set_axisbelow(True)
-    axS[1].set_axisbelow(True)
-    axS[2].set_axisbelow(True)
-    savedir2 = savedir + mode + "std.png" 
-    plt.savefig(savedir2)
+    # savedir1 = savedir + mode + ".png" 
+    # plt.savefig(savedir1)
+    # figS,axS = plt.subplots(3,1,figsize=(20,15),sharey=True,sharex=False)
+    # axS[0].set_ylabel('UPD STD(Cycles)')
+    # axS[1].set_ylabel('UPD STD(Cycles)')
+    # axS[2].set_ylabel('UPD STD(Cycles)')
+    # axS[0].set_title('G-STD-NL')
+    # axS[1].set_title('E-STD-NL')
+    # axS[2].set_title('C-STD-NL')
+    # axS[0].set_ylim(0,0.1)
+    # axS[0].bar(range(len(std_G)),std_G,tick_label=G_L)
+    # axS[1].bar(range(len(std_E)),std_E,tick_label=E_L)
+    # axS[2].bar(range(len(std_C)),std_C,tick_label=C_L)
+    # axS[0].grid(axis = "y")
+    # axS[1].grid(axis = "y")
+    # axS[2].grid(axis = "y")
+    # axS[0].set_axisbelow(True)
+    # axS[1].set_axisbelow(True)
+    # axS[2].set_axisbelow(True)
+    # savedir2 = savedir + mode + "std.png" 
+    # plt.savefig(savedir2)
     if show:
         plt.show()
 
@@ -1334,13 +1340,14 @@ def plot_upd_wl_oneday_GEC(all_data={},savedir='save_fig_path',mode = 'upd_wl',s
     if show:
         plt.show()
 
-def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10,all=False):
+def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10,all=False,Sigma=3,Sigma_num=1):
     #with plt.style.context("science","grid"):
         N_plot = len(type)
         N_mode = len(mode)
         f1=5
         ymin = -ylim
         ymax = ylim
+
         
         figP,axP = plt.subplots(N_plot,1,figsize=(12,10),sharey=False,sharex=True)
         axP[N_plot-1].set_xlabel('Time' + '(' + time + ')')
@@ -1465,49 +1472,124 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
         data_plot["NSAT"] = data_S
         data_plot["TRP"] = data_TRP
 
-        for i in range(N_plot):
-            cur_type = type[i]
+
+
+
+        if Sigma == 0:
+            for i in range(N_plot):
+                cur_type = type[i]
+                RMS_enu[cur_type] = []
+                STD_enu[cur_type] = []
+                MEAN_enu[cur_type] = []
+                if (cur_type != "ION"):
+                    for j in range(N_mode):
+                        indexs = []
+                        if cur_type == "TRP":
+                            axP[i].scatter(time_TRP,data_plot[cur_type])
+                            temp = dp.rms(data_plot[cur_type])
+                            RMS_enu[cur_type].append(temp)
+                            temp = np.std(data_plot[cur_type])
+                            STD_enu[cur_type].append(temp)
+                            temp = np.mean(data_plot[cur_type])
+                            MEAN_enu[cur_type].append(temp)
+                        else:
+                            temp_M = np.mean(data_plot[cur_type][j])
+                            #MEAN_enu[cur_type].append(temp_M)
+                            temp = dp.rms(data_plot[cur_type][j])
+                            #RMS_enu[cur_type].append(temp)
+                            temp = np.std(data_plot[cur_type][j])
+                            #STD_enu[cur_type].append(temp)
+                            time_temp = time[j]
+                            if cur_type!="NSAT":
+                                data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
+                            temp_M = np.mean(data_plot[cur_type][j])
+                            MEAN_enu[cur_type].append(temp_M)
+                            temp = dp.rms(data_plot[cur_type][j])
+                            RMS_enu[cur_type].append(temp)
+                            temp = np.std(data_plot[cur_type][j])
+                            STD_enu[cur_type].append(temp)
+                            axP[i].scatter(time_temp,data_plot[cur_type][j],s=1)
+                            
+                            
+                if (cur_type == "ION"):
+                    for sat_i in range(100):
+                        G,E,C = True,True,True
+                        num = len(time_sG[sat_i])
+                        if num < 1:
+                            G = False
+                        num = len(time_sE[sat_i])
+                        if num < 1:
+                            E = False
+                        num = len(time_sC[sat_i])
+                        if num < 1:
+                            C = False
+                        if G:
+                            axP[i].scatter(time_sG[sat_i],data_sG[sat_i])
+                        if E:
+                            axP[i].scatter(time_sE[sat_i],data_sE[sat_i])
+                        if C:
+                            axP[i].scatter(time_sC[sat_i],data_sC[sat_i])
+        if Sigma > 0:
+            cur_type = "E"
             RMS_enu[cur_type] = []
             STD_enu[cur_type] = []
             MEAN_enu[cur_type] = []
-            if (cur_type != "ION"):
-                for j in range(N_mode):
-                    if cur_type == "TRP":
-                        axP[i].scatter(time_TRP,data_plot[cur_type])
-                        temp = dp.rms(data_plot[cur_type])
-                        RMS_enu[cur_type].append(temp)
-                        temp = np.std(data_plot[cur_type])
-                        STD_enu[cur_type].append(temp)
-                        temp = np.mean(data_plot[cur_type])
-                        MEAN_enu[cur_type].append(temp)
-                    else:
-                        temp = np.mean(data_plot[cur_type][j])
-                        MEAN_enu[cur_type].append(temp)
-                        data_plot[cur_type][j] = data_plot[cur_type][j]-temp
-                        axP[i].scatter(time[j],data_plot[cur_type][j],s=1)
-                        temp = dp.rms(data_plot[cur_type][j])
-                        RMS_enu[cur_type].append(temp)
-                        temp = np.std(data_plot[cur_type][j])
-                        STD_enu[cur_type].append(temp)
+            cur_type = "N"
+            RMS_enu[cur_type] = []
+            STD_enu[cur_type] = []
+            MEAN_enu[cur_type] = []
+            cur_type = "U"
+            RMS_enu[cur_type] = []
+            STD_enu[cur_type] = []
+            MEAN_enu[cur_type] = []
+            for j in range(N_mode):
+                    mean_E = np.mean(data_plot["E"][j])
+                    mean_N = np.mean(data_plot["N"][j])
+                    mean_U = np.mean(data_plot["U"][j])
+                    std_E = np.std(data_plot["E"][j])
+                    std_N = np.std(data_plot["N"][j])
+                    std_U = np.std(data_plot["U"][j])
+                    rms_E = dp.rms(data_plot["E"][j])
+                    rms_N = dp.rms(data_plot["N"][j])
+                    rms_U = dp.rms(data_plot["U"][j])
+                    while Sigma_num >= 1:
+                        Sigma_num = Sigma_num - 1
+                        indexs = []
+                        mean_E = np.mean(data_plot["E"][j])
+                        mean_N = np.mean(data_plot["N"][j])
+                        mean_U = np.mean(data_plot["U"][j])
+                        std_E = np.std(data_plot["E"][j])
+                        std_N = np.std(data_plot["N"][j])
+                        std_U = np.std(data_plot["U"][j])
+                        rms_E = dp.rms(data_plot["E"][j])
+                        rms_N = dp.rms(data_plot["N"][j])
+                        rms_U = dp.rms(data_plot["U"][j])
+                        time[j]
+                        #data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M
+                        print(len(time[j]))
+                        for ii in range(len(time[j])):
+                            if abs(data_plot["E"][j][ii] - mean_E) > Sigma * std_E or abs(data_plot["N"][j][ii] - mean_N) >  Sigma * std_N or abs(data_plot["U"][j][ii] - mean_U) >  Sigma * std_U:
+                                indexs.append(ii)
+                        data_plot["E"][j] = np.delete(data_plot["E"][j],indexs)
+                        data_plot["N"][j] = np.delete(data_plot["N"][j],indexs)
+                        data_plot["U"][j] = np.delete(data_plot["U"][j],indexs)
+                        time[j] = np.delete(time[j],indexs)
                         
-            if (cur_type == "ION"):
-                for sat_i in range(100):
-                    G,E,C = True,True,True
-                    num = len(time_sG[sat_i])
-                    if num < 1:
-                        G = False
-                    num = len(time_sE[sat_i])
-                    if num < 1:
-                        E = False
-                    num = len(time_sC[sat_i])
-                    if num < 1:
-                        C = False
-                    if G:
-                        axP[i].scatter(time_sG[sat_i],data_sG[sat_i])
-                    if E:
-                        axP[i].scatter(time_sE[sat_i],data_sE[sat_i])
-                    if C:
-                        axP[i].scatter(time_sC[sat_i],data_sC[sat_i])
+                    
+                    MEAN_enu["E"].append(mean_E)
+                    MEAN_enu["N"].append(mean_N)
+                    MEAN_enu["U"].append(mean_U)
+                    print(len(time[j]))
+                    RMS_enu["E"].append(rms_E)
+                    RMS_enu["N"].append(rms_N)
+                    RMS_enu["U"].append(rms_U)
+                    STD_enu["E"].append(std_E)
+                    STD_enu["N"].append(std_N)
+                    STD_enu["U"].append(std_U)
+                    axP[0].scatter(time[j],data_plot["E"][j],s=1)
+                    axP[1].scatter(time[j],data_plot["N"][j],s=1)
+                    axP[2].scatter(time[j],data_plot["U"][j],s=1)
+
         font_text = {'family' : 'Times new roman',
             'weight' : 600,
             'size'   : 15,
@@ -1535,6 +1617,8 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
 
         # axP[N_plot-1].set_xticks(XTick)
         # axP[N_plot-1].set_xticklabels(XLabel)
+
+
         # axP[0].legend(mode,
         #         framealpha=1,facecolor='w',ncol=1,numpoints=5, markerscale=5, 
         #         bbox_to_anchor=(1,1),loc=0,borderaxespad=0) 
