@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-07-02 14:48:00
+LastEditTime: 2022-07-02 20:46:46
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -13,7 +13,7 @@ import matplotlib as mpl
 mpl.use("TkAgg")
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-# plt.style.use('science')
+plt.style.use(['science','grid'])
 from numpy.core.fromnumeric import shape, size
 import dataprocess as dp
 import matplotlib.colors as colors
@@ -369,12 +369,12 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         starttime = starttime + deltaT
         cur_Str_X = '%02d' % (starttime % 24) + ":00"
         XLabel.append(cur_Str_X)
-        XTick.append(starttime)       
-    if starttime < end_Time:
+        XTick.append(int(starttime))       
+    while starttime < math.ceil(end_Time):
         starttime = starttime + deltaT
         cur_Str_X = '%02d' % (starttime % 24) + ":00"
         XLabel.append(cur_Str_X)
-        XTick.append(starttime)
+        XTick.append(int(starttime))
 
     if type == "L" or type == "P":
         for time in data.keys():
@@ -1398,12 +1398,12 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
             starttime = starttime + deltaT
             cur_Str_X = '%02d' % (starttime % 24) + ":00"
             XLabel.append(cur_Str_X)
-            XTick.append(starttime)       
-        if starttime < end_Time:
+            XTick.append(int(starttime))       
+        while starttime < math.ceil(end_Time):
             starttime = starttime + deltaT
             cur_Str_X = '%02d' % (starttime % 24) + ":00"
             XLabel.append(cur_Str_X)
-            XTick.append(starttime)
+            XTick.append(int(starttime))
 
 
         time = [[] for i in range(N_mode)]
@@ -1472,63 +1472,6 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
         data_plot["NSAT"] = data_S
         data_plot["TRP"] = data_TRP
 
-
-
-
-        if Sigma == 0:
-            for i in range(N_plot):
-                cur_type = type[i]
-                RMS_enu[cur_type] = []
-                STD_enu[cur_type] = []
-                MEAN_enu[cur_type] = []
-                if (cur_type != "ION"):
-                    for j in range(N_mode):
-                        indexs = []
-                        if cur_type == "TRP":
-                            axP[i].scatter(time_TRP,data_plot[cur_type])
-                            temp = dp.rms(data_plot[cur_type])
-                            RMS_enu[cur_type].append(temp)
-                            temp = np.std(data_plot[cur_type])
-                            STD_enu[cur_type].append(temp)
-                            temp = np.mean(data_plot[cur_type])
-                            MEAN_enu[cur_type].append(temp)
-                        else:
-                            temp_M = np.mean(data_plot[cur_type][j])
-                            #MEAN_enu[cur_type].append(temp_M)
-                            temp = dp.rms(data_plot[cur_type][j])
-                            #RMS_enu[cur_type].append(temp)
-                            temp = np.std(data_plot[cur_type][j])
-                            #STD_enu[cur_type].append(temp)
-                            time_temp = time[j]
-                            if cur_type!="NSAT":
-                                data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
-                            temp_M = np.mean(data_plot[cur_type][j])
-                            MEAN_enu[cur_type].append(temp_M)
-                            temp = dp.rms(data_plot[cur_type][j])
-                            RMS_enu[cur_type].append(temp)
-                            temp = np.std(data_plot[cur_type][j])
-                            STD_enu[cur_type].append(temp)
-                            axP[i].scatter(time_temp,data_plot[cur_type][j],s=1)
-                            
-                            
-                if (cur_type == "ION"):
-                    for sat_i in range(100):
-                        G,E,C = True,True,True
-                        num = len(time_sG[sat_i])
-                        if num < 1:
-                            G = False
-                        num = len(time_sE[sat_i])
-                        if num < 1:
-                            E = False
-                        num = len(time_sC[sat_i])
-                        if num < 1:
-                            C = False
-                        if G:
-                            axP[i].scatter(time_sG[sat_i],data_sG[sat_i])
-                        if E:
-                            axP[i].scatter(time_sE[sat_i],data_sE[sat_i])
-                        if C:
-                            axP[i].scatter(time_sC[sat_i],data_sC[sat_i])
         if Sigma > 0:
             cur_type = "E"
             RMS_enu[cur_type] = []
@@ -1604,19 +1547,75 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                     rms_E = dp.rms(data_plot["E"][j])
                     rms_N = dp.rms(data_plot["N"][j])
                     rms_U = dp.rms(data_plot["U"][j])
-                    MEAN_enu["E"].append(mean_E)
-                    MEAN_enu["N"].append(mean_N)
-                    MEAN_enu["U"].append(mean_U)
-                    print(len(time[j]))
-                    RMS_enu["E"].append(rms_E)
-                    RMS_enu["N"].append(rms_N)
-                    RMS_enu["U"].append(rms_U)
-                    STD_enu["E"].append(std_E)
-                    STD_enu["N"].append(std_N)
-                    STD_enu["U"].append(std_U)
-                    axP[0].scatter(time[j],data_plot["E"][j]-mean_E,s=1)
-                    axP[1].scatter(time[j],data_plot["N"][j]-mean_N,s=1)
-                    axP[2].scatter(time[j],data_plot["U"][j]-mean_U,s=1)
+                    # MEAN_enu["E"].append(mean_E)
+                    # MEAN_enu["N"].append(mean_N)
+                    # MEAN_enu["U"].append(mean_U)
+                    # print(len(time[j]))
+                    # RMS_enu["E"].append(rms_E)
+                    # RMS_enu["N"].append(rms_N)
+                    # RMS_enu["U"].append(rms_U)
+                    # STD_enu["E"].append(std_E)
+                    # STD_enu["N"].append(std_N)
+                    # STD_enu["U"].append(std_U)
+                    # axP[0].scatter(time[j],data_plot["E"][j]-mean_E,s=5)
+                    # axP[1].scatter(time[j],data_plot["N"][j]-mean_N,s=5)
+                    # axP[2].scatter(time[j],data_plot["U"][j]-mean_U,s=5)
+
+        if Sigma >= 0:
+            for i in range(N_plot):
+                cur_type = type[i]
+                RMS_enu[cur_type] = []
+                STD_enu[cur_type] = []
+                MEAN_enu[cur_type] = []
+                if (cur_type != "ION"):
+                    for j in range(N_mode):
+                        indexs = []
+                        if cur_type == "TRP":
+                            axP[i].scatter(time_TRP,data_plot[cur_type])
+                            temp = dp.rms(data_plot[cur_type])
+                            RMS_enu[cur_type].append(temp)
+                            temp = np.std(data_plot[cur_type])
+                            STD_enu[cur_type].append(temp)
+                            temp = np.mean(data_plot[cur_type])
+                            MEAN_enu[cur_type].append(temp)
+                        else:
+                            temp_M = np.mean(data_plot[cur_type][j])
+                            #MEAN_enu[cur_type].append(temp_M)
+                            temp = dp.rms(data_plot[cur_type][j])
+                            #RMS_enu[cur_type].append(temp)
+                            temp = np.std(data_plot[cur_type][j])
+                            #STD_enu[cur_type].append(temp)
+                            time_temp = time[j]
+                            # if cur_type!="NSAT":
+                            #     data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
+                            temp_M = np.mean(data_plot[cur_type][j])
+                            MEAN_enu[cur_type].append(temp_M)
+                            temp = dp.rms(data_plot[cur_type][j])
+                            RMS_enu[cur_type].append(temp)
+                            temp = np.std(data_plot[cur_type][j])
+                            STD_enu[cur_type].append(temp)
+                            axP[i].scatter(time_temp,data_plot[cur_type][j],s=5)
+                            
+                            
+                if (cur_type == "ION"):
+                    for sat_i in range(100):
+                        G,E,C = True,True,True
+                        num = len(time_sG[sat_i])
+                        if num < 1:
+                            G = False
+                        num = len(time_sE[sat_i])
+                        if num < 1:
+                            E = False
+                        num = len(time_sC[sat_i])
+                        if num < 1:
+                            C = False
+                        if G:
+                            axP[i].scatter(time_sG[sat_i],data_sG[sat_i])
+                        if E:
+                            axP[i].scatter(time_sE[sat_i],data_sE[sat_i])
+                        if C:
+                            axP[i].scatter(time_sC[sat_i],data_sC[sat_i])
+        
 
         font_text = {'family' : 'Times new roman',
             'weight' : 600,
@@ -1642,9 +1641,9 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                 #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
                 axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:7*N_mode+3],font_text)
 
-
-        # axP[N_plot-1].set_xticks(XTick)
-        # axP[N_plot-1].set_xticklabels(XLabel)
+        if not all:
+            axP[N_plot-1].set_xticks(XTick)
+            axP[N_plot-1].set_xticklabels(XLabel)
 
 
         # axP[0].legend(mode,
@@ -1654,15 +1653,16 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
             
         for i in range(N_plot):
             cur_type=type[i]
-            # axP[i].set_xticks(XTick)
+            if not all:
+                axP[i].set_xticks(XTick)
             ax_range = axP[i].axis()
             if (N_plot==3):
                 axP[i].legend(mode,prop=font_text,
-                framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=3, 
+                framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=3, 
                 borderaxespad=0,bbox_to_anchor=(1,1.13),loc=1) 
             if (N_plot==4):
                 axP[i].legend(mode,prop=font_text,
-                framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3, 
+                framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3,
                 borderaxespad=0,bbox_to_anchor=(1,1.16),loc=1) 
             #axP[i].autoscale(tight=True)
             if cur_type == "E" or cur_type == "N" or cur_type == "U":
@@ -1948,12 +1948,12 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
         starttime = starttime + deltaT
         cur_Str_X = '%02d' % (starttime % 24) + ":00"
         XLabel.append(cur_Str_X)
-        XTick.append(starttime)       
-    if starttime < end_Time:
+        XTick.append(int(starttime))       
+    while starttime < math.ceil(end_Time):
         starttime = starttime + deltaT
         cur_Str_X = '%02d' % (starttime % 24) + ":00"
         XLabel.append(cur_Str_X)
-        XTick.append(starttime)
+        XTick.append(int(starttime))
 
 
     time_G = [[] for i in range(N_mode)]
@@ -2206,12 +2206,12 @@ def plot_SatofAug(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,sta
             starttime = starttime + deltaT
             cur_Str_X = '%02d' % (starttime % 24) + ":00"
             XLabel.append(cur_Str_X)
-            XTick.append(starttime)       
-        if starttime < end_Time:
+            XTick.append(int(starttime))       
+        while starttime < math.ceil(end_Time):
             starttime = starttime + deltaT
             cur_Str_X = '%02d' % (starttime % 24) + ":00"
             XLabel.append(cur_Str_X)
-            XTick.append(starttime)
+            XTick.append(int(starttime))
 
 
         time = [[] for i in range(N_mode)]
