@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-06-28 21:34:04
+LastEditTime: 2022-07-02 14:48:00
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -1553,7 +1553,6 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                     rms_N = dp.rms(data_plot["N"][j])
                     rms_U = dp.rms(data_plot["U"][j])
                     while Sigma_num >= 1:
-                        Sigma_num = Sigma_num - 1
                         indexs = []
                         mean_E = np.mean(data_plot["E"][j])
                         mean_N = np.mean(data_plot["N"][j])
@@ -1574,8 +1573,37 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                         data_plot["N"][j] = np.delete(data_plot["N"][j],indexs)
                         data_plot["U"][j] = np.delete(data_plot["U"][j],indexs)
                         time[j] = np.delete(time[j],indexs)
-                        
-                    
+                        Sigma_num = Sigma_num - 1
+                    index_3_EN = []
+                    index_5_EN = []
+                    index_5_U=[]
+                    index_10_U=[]
+                    for ii in range(len(time[j])):
+                        if math.sqrt((data_plot["E"][j][ii] - mean_E) * (data_plot["E"][j][ii] - mean_E) + (data_plot["N"][j][ii] - mean_N) * (data_plot["N"][j][ii] - mean_N)) < 0.03:
+                            index_3_EN.append(ii)
+                        if math.sqrt((data_plot["E"][j][ii] - mean_E) * (data_plot["E"][j][ii] - mean_E) + (data_plot["N"][j][ii] - mean_N) * (data_plot["N"][j][ii] - mean_N)) < 0.05:
+                            index_5_EN.append(ii)
+                        if math.sqrt((data_plot["U"][j][ii] - mean_U) * (data_plot["U"][j][ii] - mean_U)) < 0.05:
+                            index_5_U.append(ii)
+                        if math.sqrt((data_plot["U"][j][ii] - mean_U) * (data_plot["U"][j][ii] - mean_U)) < 0.10:
+                            index_10_U.append(ii)
+                    print("3:",len(index_3_EN))
+                    print("5:",len(index_5_EN))
+                    print("U5:",len(index_5_U))
+                    print("U10:",len(index_10_U))
+                            
+                    # rms_E = dp.rms(data_plot["E"][j]-mean_E)
+                    # rms_N = dp.rms(data_plot["N"][j]-mean_N)
+                    # rms_U = dp.rms(data_plot["U"][j]-mean_U)
+                    mean_E = np.mean(data_plot["E"][j])
+                    mean_N = np.mean(data_plot["N"][j])
+                    mean_U = np.mean(data_plot["U"][j])
+                    std_E = np.std(data_plot["E"][j])
+                    std_N = np.std(data_plot["N"][j])
+                    std_U = np.std(data_plot["U"][j])
+                    rms_E = dp.rms(data_plot["E"][j])
+                    rms_N = dp.rms(data_plot["N"][j])
+                    rms_U = dp.rms(data_plot["U"][j])
                     MEAN_enu["E"].append(mean_E)
                     MEAN_enu["N"].append(mean_N)
                     MEAN_enu["U"].append(mean_U)
@@ -1586,9 +1614,9 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                     STD_enu["E"].append(std_E)
                     STD_enu["N"].append(std_N)
                     STD_enu["U"].append(std_U)
-                    axP[0].scatter(time[j],data_plot["E"][j],s=1)
-                    axP[1].scatter(time[j],data_plot["N"][j],s=1)
-                    axP[2].scatter(time[j],data_plot["U"][j],s=1)
+                    axP[0].scatter(time[j],data_plot["E"][j]-mean_E,s=1)
+                    axP[1].scatter(time[j],data_plot["N"][j]-mean_N,s=1)
+                    axP[2].scatter(time[j],data_plot["U"][j]-mean_U,s=1)
 
         font_text = {'family' : 'Times new roman',
             'weight' : 600,
