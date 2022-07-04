@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-07-02 20:46:46
+LastEditTime: 2022-07-03 13:05:01
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -1659,7 +1659,7 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
             if (N_plot==3):
                 axP[i].legend(mode,prop=font_text,
                 framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=3, 
-                borderaxespad=0,bbox_to_anchor=(1,1.13),loc=1) 
+                borderaxespad=0,bbox_to_anchor=(1,1.17),loc=1) 
             if (N_plot==4):
                 axP[i].legend(mode,prop=font_text,
                 framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3,
