@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-07-03 13:05:01
+LastEditTime: 2022-07-06 17:10:26
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -1530,10 +1530,11 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                             index_5_U.append(ii)
                         if math.sqrt((data_plot["U"][j][ii] - mean_U) * (data_plot["U"][j][ii] - mean_U)) < 0.10:
                             index_10_U.append(ii)
-                    print("3:",len(index_3_EN))
-                    print("5:",len(index_5_EN))
-                    print("U5:",len(index_5_U))
-                    print("U10:",len(index_10_U))
+                    print(mode[j])
+                    print("Horizon(<3cm)    " + '{:.2f}%'.format(len(index_3_EN)/len(time[j])*100))
+                    print("Horizon(<5cm)    " + '{:.2f}%'.format(len(index_5_EN)/len(time[j])*100))
+                    print("Altitude(<5cm)   " + '{:.2f}%'.format(len(index_5_U)/len(time[j])*100))
+                    print("Altitude(<10cm)  " + '{:.2f}%'.format(len(index_10_U)/len(time[j])*100))
                             
                     # rms_E = dp.rms(data_plot["E"][j]-mean_E)
                     # rms_N = dp.rms(data_plot["N"][j]-mean_N)

@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2022-04-20 14:13:57
-LastEditTime: 2022-07-02 14:53:17
+LastEditTime: 2022-07-06 17:07:53
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_pos_rtppp_dynamic.py
@@ -26,10 +26,10 @@ mode_list = ["SEPT"]
 #site_list = ["HKLM","HKSC","HKTK"]
 site_list = ["SEPT","NOVA","HKLM"]
 filename_list = [#"/Volumes/SAMSUNG USB/2022_0628Dynamic/res/20220628/NOVA_20220628_SGG_CLK01_K_GEC.pppar.pos",
-                "/Volumes/H_GREAT/2Project/Allystar/2022_0628DynamicMSK/01/res/20220628/MSK1_20220628_SGG_CLK01_K_GEC.pppar.pos",
+                "/Volumes/H_GREAT/2Project/Allystar/ALLYSTAR_20220628_Data/Dynamic/NOVA.pos",
                  "/Volumes/SAMSUNG USB/2022_0628Dynamic/res/20220628/NOVA_20220628_SGG_CLK01_K_GEC.pppar.pos",
                  "/Users/hjj/Documents/HJJ/Master_1/文档/PPPRTK综述/综述2.0/20211206/穿越高架桥/SEPT_20211206_SGG_CLK06_K_GEC_pppar_brige.pos"]
-filename_ref = ["/Volumes/H_GREAT/2Project/Allystar/2022_0628Dynamic/IE/TC_combined.txt",
+filename_ref = ["/Volumes/H_GREAT/2Project/Allystar/2022_0628Dynamic/IE/GNSS_combined.txt",
                  "/Volumes/H_GREAT/2Project/Allystar/2022_0628Dynamic/IE/TC_combined.txt",
                  "/Users/hjj/Documents/HJJ/Master_1/文档/PPPRTK综述/综述2.0/20211206/穿越高架桥/TC_combined_smoothed_ToTrimble_brige.txt"]
 Y=2022
