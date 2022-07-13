@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2022-03-07 10:03:20
-LastEditTime: 2022-07-01 16:30:18
+LastEditTime: 2022-07-13 14:46:15
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_mapgrid.py
@@ -121,20 +121,21 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 #               'T430':[-2411015.2264,5380265.7133,2425132.7008]
 #                 }
 
-mark_point_xyz = rf.open_crd_gridmap("/Volumes/H_GREAT/2Project/Allystar/HN-AUG.crd")
+mark_point_xyz = rf.open_crd_gridmap("/Volumes/H_GREAT/2Project/Allystar/SZ-AUG.crd")
 # Lines_xyz1 = rf.open_flt_pos_rtpppfile("/Volumes/SAMSUNG USB/2022_0628Dynamic/res/20220628/NOVA_20220628_SGG_CLK01_K_GEC.pppar.pos")
 #Lines_xyz2 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-comp/SEPT-GEC.flt")
 # mark_point_xyz = {'2006':[-2430340.3590,5359921.7657,2450575.0220],
 #               '2010':[-2419056.7812,5364365.3435,2452055.3961],
 #               '2017':[-2424178.5320,5365092.3806,2445506.8814],
 #               '2014':[-2384904.1935,5383810.3345,2442958.7433],
-#               "2008":[-2400517.6908,5373926.9125,2449368.0968]
+#               "2008":[-2400517.6908,5373926.9125,2449368.0968],
+#               "2022":[-2401355.6901,5379177.7051,2437245.3320]
 #                 }
 # title='Stamen Terrain'
 # title='https://wprd01.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=1&style=8&ltype=11' #街道图
-# title='http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}'#高德
+title='http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}'#高德
 # title='https://webrd02.is.autonavi.com/appmaptile?lang=en&size=1&scale=1&style=8&x={x}&y={y}&z={z}' #常规英文
-title='https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}' #卫星
+# title='https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}' #卫星
 m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11.2, tiles=title, attr='高德-卫星影像图')
 mark_point_blh={}
 Lines_blh1={}
@@ -157,7 +158,7 @@ for site in mark_point_xyz.keys():
     if blh[1] > maxLon:
         maxLon = blh[1]
     mark_point_blh[site]=[blh[0],blh[1],blh[2]]
-    if site=="JFNG":
+    if site=="DGXG" or site == "DGTX":
         folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='black'),tooltip="click").add_to(m)
     else:
         folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
@@ -189,7 +190,7 @@ if delta>10:
     space = delta/5
     count = 5
 else:
-    space = 0.5
+    space = 0.2
     count = 0
 if count==0:
     maxLat = maxLat + space/2
@@ -288,18 +289,88 @@ folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_L
 #     folium.Circle(radius=50,location=[Lines_blh2[time][0],Lines_blh2[time][1]],color="Red",fill=True,fill_color="#3186cc").add_to(m)
 
 # plot triangle
-# xyz = mark_point_xyz["N047"]
+# xyz = mark_point_xyz["HNHK"]
 # blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
 # blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["N062"]
+# xyz = mark_point_xyz["HNQZ"]
 # blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
 # blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["N010"]
+# xyz = mark_point_xyz["HNSJ"]
 # blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
 # blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
 # c="green"
 # folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
 # folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
 # folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
-m.save('/Users/hjj/Desktop/HN-AUG.html')
+
+# xyz = mark_point_xyz["HSY1"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# xyz = mark_point_xyz["HNQZ"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# xyz = mark_point_xyz["HNSJ"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# c="green"
+# folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
+# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
+# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
+
+# xyz = mark_point_xyz["HNPP"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# xyz = mark_point_xyz["HNQZ"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# xyz = mark_point_xyz["HSY1"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# c="green"
+# folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
+# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
+# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
+
+# xyz = mark_point_xyz["HNPP"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# xyz = mark_point_xyz["HNSY"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# xyz = mark_point_xyz["HSY1"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# c="green"
+# folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
+# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
+# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
+
+# xyz = mark_point_xyz["HNPP"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# xyz = mark_point_xyz["HNDF"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# xyz = mark_point_xyz["HNSY"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# c="green"
+# folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
+# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
+# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
+
+# xyz = mark_point_xyz["HNHK"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# xyz = mark_point_xyz["HNPP"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# xyz = mark_point_xyz["HNQZ"]
+# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+# blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+# c="green"
+# folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
+# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
+# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
+m.save('/Users/hjj/Desktop/SZ-AUG.html')
 # webbrowser.open('/Users/hjj/Desktop/HongKongGridS.html')

@@ -1,11 +1,13 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-06-28 21:51:23
+LastEditTime: 2022-07-13 16:50:37
 Description: read data file
 '''
 import numpy as np
 import math
+
+from pyrsistent import s
 import trans as tr
 import os
 
@@ -846,3 +848,43 @@ def open_upd_rtpppfile(filename_list,sys="G"):
                     all_data[soweek][sat] = (float(value[1]))
                     continue
     return all_data
+
+
+def open_augc_file_rtppp(filename,sitename):
+    all_data={}
+    head_info={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = False
+    num_sat = 0
+    last_day = 0
+    day=0
+    file_exist = os.path.exists(filename)
+    if (not file_exist):
+        return all_data
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()               
+            if value[0]=="*":
+                value=line.split()
+                year=(float(value[1]))
+                month=(float(value[2]))
+                day=(float(value[3]))
+                hour=(float(value[4]))
+                minute=(float(value[5]))
+                second=(float(value[6]))
+                satnum = float(value[7])
+                [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+                if (not epoch_flag):
+                    min_sow = soweek
+                if (soweek < min_sow):
+                    soweek = soweek + 604800
+                epoch_flag = True
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+                continue
+            all_data[soweek][sitename[int(value[0])-1]] = int(value[1])
+            continue
+
+    return (all_data)

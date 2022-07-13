@@ -1,7 +1,7 @@
 '''
 Author: HanJunjie
 Date: 2021-11-29 21:26:38
-LastEditTime: 2022-07-06 17:11:40
+LastEditTime: 2022-07-11 19:58:57
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_flt.py
@@ -34,21 +34,22 @@ REF_XYZ = {"A010":[ -2175297.0269,4330326.0624,4133584.2257 ],
            "107":[ -2267808.9916,5009350.0812,3220969.7384],
            "ZHD":[-2267775.3665,5009356.0078,3220980.7585],
            "WUH2":[-2267750.2523,5009154.5652,3221294.4287],
-           "302":[-2267824.8799,5009330.7127,3220987.9427]}
+           "302":[-2267824.8799,5009330.7127,3220987.9427],
+           "HK02":[-2094676.8787,5634981.6694,2123731.8825]}
 Y=2022
 M=7
-D=4
-S=0 #21
-L=24
+D=10
+S=16 #21
+L=8
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
-mode_list = ["04","06","01"]
+mode_list = ["GRID"]
 #site_list = ["HKLM","HKSC","HKTK"]
-site_list = ["107","107","107"]
+site_list = ["HK02","HK02","HKSC"]
 filename_list = [#"/Volumes/H_GREAT/2Project/Allystar/20220622_WH2_ZHD/WUH2_20220622_SGG_CLK06_K_GEC.pppar.pos",
-                "/Volumes/H_GREAT/2Project/Allystar/2022_0702Static107/H107_20220704_SGG_CLK04_K_GEC.pppar.pos",
-                 "/Volumes/H_GREAT/2Project/Allystar/2022_0702Static107/H107_20220704_SGG_CLK06_K_GEC.pppar.pos",
-                 "/Volumes/H_GREAT/2Project/Allystar/2022_0702Static107/H107_20220704_SGG_CLK01_K_GEC.pppar.pos"]
+                "/Volumes/H_GREAT/2Project/Allystar/2022_0710DataAnalyse/HK02_20220710_epo_K_GEC.pppar.pos",
+                 "/Volumes/H_GREAT/2Project/Allystar/2022_0710DataAnalyse/HK02_20220710_SGG_CLK01_K_GECX.pppar.pos",
+                 "/Volumes/H_GREAT/2Project/Allystar/2022_0710DataAnalyse/HKSC_20220710_SGG_CLK01_K_GEC.pppar.pos"]
                  
 # filename_list = [
 #                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKTK/5.flt",
@@ -62,5 +63,5 @@ for i in range(len(mode_list)):
     ENU_ALL[mode_list[i]] = data_ENU
 
 
-dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.2,starttime=S,LastT=L,all=False,deltaT=1,year=Y,mon=M,day=D,time = "UTC",Fixed=True,delta_data = 5,Sigma=3,Sigma_num=0)
+dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 1,starttime=S,LastT=L,all=False,deltaT=1,year=Y,mon=M,day=D,time = "UTC",Fixed=True,delta_data = 5,Sigma=3,Sigma_num=0)
 

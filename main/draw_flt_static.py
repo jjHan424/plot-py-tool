@@ -1,7 +1,7 @@
 '''
 Author: HanJunjie
 Date: 2021-11-29 21:26:38
-LastEditTime: 2022-06-11 14:03:43
+LastEditTime: 2022-07-08 16:51:16
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_flt.py
@@ -22,23 +22,26 @@ import trans as tr
 REF_XYZ = {"HKLM":[-2414046.6433,5391602.1169,2396878.6436],
            "HKSC":[-2414267.6255,5386768.7774,2407459.7930],
            "HKTK":[-2418093.0695,5374658.0963,2430428.9388],
-           "2008":[-2400517.6908,5373926.9125,2449368.0968],
+           "2008":[-2400517.6874,5373926.9119,2449368.0923],
            "WUDA":[-2267761.1796,5009370.8535,3220970.6102],
            "E033":[-2340806.3005,4922578.8973,3302011.7872],
-           "N047":[-2350716.9401,4955782.5397,3244265.6251]}
+           "N047":[-2350716.9401,4955782.5397,3244265.6251],
+           "2017":[-2424178.5320,5365092.3806,2445506.8814],
+           '2010':[-2419056.7812,5364365.3435,2452055.3961]}
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
 #mode_list = ["GEC","G","E","C","GE"]#,"4 Sites Grid","3 Sites MLCM"]
-mode_list = ["0.06"]#,"Omc","Rank"]
+mode_list = ["2008"]#,"Omc","Rank"]
 #mode_list = ["GRID"]#,"Omc","Rank"]
 #site_list = ["HKLM","HKSC","HKTK"]
 #site_list = ["WUDA","WUDA","WUDA"]
-site_list = ["HKSC","E033","E033"]
+site_list = ["2008","E033","E033"]
 #site_list = "HKSC"
-Y=2021
-M=11
-D=1
-S=3
+Y=2022
+M=4
+D=27
+S=21
+L=1
 Direct1 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/100"
 Direct2 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/305"
 Direct3 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result"
@@ -53,6 +56,7 @@ filename_list = [
                 #Direct1 + "/client-comp/"  + "HKSC-GEC.flt",
                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client-aug/HKLM-GEC-ion.flt",
                 #Direct1 + "/client-aug/"  + "HKSC-GEC-corObs.flt",
+                "/Volumes/H_GREAT/2Project/MeiTuan/MEITUAN_data/2008-GEC.flt",
                 Direct2 + "/client-upd-aug/"  + "HKSC-GEC-corObs.flt",
                 Direct1 + "/client-rank/"  + "HKSC-GEC.flt",
                 #Direct2 + "/" + "client_Rank/" + "HKSC-GEC.flt",
@@ -75,6 +79,7 @@ filename_list = [
 #                  ]
 for i in range(len(mode_list)):
     data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
+    # data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
     data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = site_list[i])
     ENU_ALL[mode_list[i]] = data_ENU
     
@@ -86,6 +91,6 @@ for i in range(len(mode_list)):
 # ENU_ALL["ION"] = data
 #begTime = 10
 #while (begTime < 31):
-dr.plot_e_n_u(data = ENU_ALL,type = ["NSAT","E","N","U"],mode = mode_list,ylim = 2,starttime=S,LastT=22,deltaT=1,time = "UTC",Fixed=True,delta_data = 1,year = Y,mon=M,day=D)
+dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.5,starttime=S,LastT=L,deltaT=1,time = "UTC",all=False,Fixed=True,delta_data = 30,year = Y,mon=M,day=D,Sigma=3,Sigma_num=1)
     #begTime = begTime + 2
 

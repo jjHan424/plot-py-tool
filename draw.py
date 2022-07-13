@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-07-06 17:10:26
+LastEditTime: 2022-07-13 17:16:47
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -294,7 +294,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         for i in range(3):
             for j in range(2):
                 axP[i][j].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-                axP[i][j].set_ylim(ymin,ymax)
+                # axP[i][j].set_ylim(ymin,ymax)
         type1="L1"
         type2="L2"
     elif type == 'ION':
@@ -310,7 +310,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP[2].set_title('C')
         for i in range(3):
                 axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-                axP[i].set_ylim(ymin,ymax)
+                # axP[i].set_ylim(ymin,ymax)
                 box = axP[i].get_position()
                 axP[i].set_position([box.x0, box.y0, box.width*0.99, box.height])
         if freq==1:
@@ -330,10 +330,23 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP.set_xlabel('Time' + '(' + time + ')')
         axP.set_ylabel('Difference of Troposphere Delay correction/m',font)
         axP.grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-        # axP.set_ylim(ymin,ymax)
+        axP.set_ylim(ymin,ymax)
         sys_type["C"]="TRP1"
         sys_type["G"]="TRP1"
         sys_type["E"]="TRP1"
+    elif type == 'NSAT':
+        f1=4
+        ymin = -ylim
+        ymax = ylim
+        col = 1
+        figP,axP = plt.subplots(3,1,figsize=(12,10),sharey=True,sharex=True)
+        axP[2].set_xlabel('Time' + '(' + time + ')')
+        axP[1].set_ylabel('Number of Sat',font)
+        axP[0].set_title('G')
+        axP[1].set_title('E')
+        axP[2].set_title('C')
+        # axP.set_xlabel('Time' + '(' + time + ')')
+        
     else:
         print("Wrong mode")
     
@@ -414,6 +427,26 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
                         if sat[0] == "E" and sys_type[sat[0]] in data[time][sat].keys():
                             data_E[prn-1].append(data[time][sat][sys_type[sat[0]]])
                             time_E[prn-1].append(plot_time)
+    if type == "NSAT":
+        for time in data.keys():
+            num_C,num_G,num_E = 0,0,0
+            plot_time = (time - cov_Time) / 3600
+            if (plot_time > begT and plot_time < begT + LastT):
+                for sat in data[time].keys():
+                    prn = int(sat[1:3])
+                    if sat[0] == "C":
+                        num_C = num_C + 1
+                    if sat[0] == "G":
+                        num_G = num_G + 1
+                    if sat[0] == "E":
+                        num_E = num_E + 1
+                
+                data_C[0].append(num_C)
+                time_C[0].append(plot_time)
+                data_G[0].append(num_G)
+                time_G[0].append(plot_time)
+                data_E[0].append(num_E)
+                time_E[0].append(plot_time)
     if type == "TRP":
         for time in data.keys():
             plot_time = (time - cov_Time) / 3600
@@ -423,7 +456,19 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
                     data_TRP.append(data[time][sat][sys_type[sat[0]]])
                     time_TRP.append(plot_time)
                     break
-
+    if type == "NSAT":
+        axP[0].scatter(time_G[0],data_G[0])
+        axP[1].scatter(time_E[0],data_E[0])
+        axP[2].scatter(time_C[0],data_C[0])
+        font_text = {'family' : 'Arial',
+		'weight' : 500,
+		'size'   : 15,
+                }
+        
+        axP[2].set_xticks(XTick)
+        axP[1].set_xticks(XTick)
+        axP[0].set_xticks(XTick)
+        axP[2].set_xticklabels(XLabel)
     if type == "ION":
         for i in range(100):
                 G,E,C = True,True,True
@@ -466,6 +511,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
                     STD_C[0].append(temp)
                     temp = np.mean(data_C[i])
                     MEAN_C[0].append(temp)
+        
         font_text = {'family' : 'Arial',
 		'weight' : 500,
 		'size'   : 15,
@@ -594,6 +640,71 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     #plt.savefig(savedir)
     if show:
         plt.show()  
+
+def plot_augc_NUM(data={},sitename=[],deltaT=2,LastT=24,starttime=0,year=2022,mon=1,day=1,time="UTC",all=False):
+    f1=4
+    col = 1
+    figP,axP = plt.subplots(1,1,figsize=(12,10),sharey=True,sharex=True)
+    axP.set_xlabel('Time' + '(' + time + ')')
+    axP.set_ylabel('Number of Sat',font)
+
+    #Time set
+    if "+" in time:
+        end_time = len(time)
+        delta_Time = int(time[3:end_time]) + starttime
+        begT = int(time[3:end_time]) + starttime
+    else:
+        delta_Time = starttime
+        begT=starttime
+    secow_start = tr.ymd2gpst(year,mon,day,starttime,00,00)
+    cov_Time = secow_start[1] - delta_Time * 3600
+    end_Time = begT + LastT
+    delta_X = math.ceil((LastT)/deltaT)
+    XLabel = []
+    XTick = []
+    starttime = begT - deltaT
+    for i in range(delta_X):
+        starttime = starttime + deltaT
+        cur_Str_X = '%02d' % (starttime % 24) + ":00"
+        XLabel.append(cur_Str_X)
+        XTick.append(int(starttime))       
+    while starttime < math.ceil(end_Time):
+        starttime = starttime + deltaT
+        cur_Str_X = '%02d' % (starttime % 24) + ":00"
+        XLabel.append(cur_Str_X)
+        XTick.append(int(starttime))
+
+    Sitenum = len(sitename)
+    dataplot={}
+    timeplot={}
+   
+    for time in data.keys():
+        plot_time = (time - cov_Time) / 3600
+        if (plot_time > begT and plot_time < begT + LastT or not all):
+            for oneSite in data[time].keys():
+                if oneSite not in sitename:
+                    continue
+                if oneSite not in dataplot.keys():
+                    dataplot[oneSite]=[]
+                    timeplot[oneSite]=[]
+                dataplot[oneSite].append(data[time][oneSite])
+                timeplot[oneSite].append(plot_time)
+    legd=[]
+    # ss=600
+    for oneSite in dataplot.keys():
+        axP.scatter(timeplot[oneSite],dataplot[oneSite])
+        # ss=ss-100
+        legd.append(oneSite)
+
+    axP.legend(legd)
+    if not all:
+        axP.set_xticks(XTick)
+        axP.set_xticklabels(XLabel)
+    plt.show()
+    
+    
+
+    
 
 
 def plot_tec_GREC(all_data = {},savedir='save_fig_path',station = 'hjj',show = False):
@@ -1548,6 +1659,9 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                     rms_E = dp.rms(data_plot["E"][j])
                     rms_N = dp.rms(data_plot["N"][j])
                     rms_U = dp.rms(data_plot["U"][j])
+                    # data_plot["E"][j] = data_plot["E"][j]-mean_E
+                    # data_plot["N"][j] = data_plot["N"][j]-mean_N
+                    # data_plot["U"][j] = data_plot["U"][j]-mean_U
                     # MEAN_enu["E"].append(mean_E)
                     # MEAN_enu["N"].append(mean_N)
                     # MEAN_enu["U"].append(mean_U)
