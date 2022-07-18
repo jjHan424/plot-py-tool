@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2021-11-12 09:38:43
-LastEditTime: 2022-07-11 13:22:18
+LastEditTime: 2022-07-18 15:00:40
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_aug.py
@@ -90,8 +90,11 @@ import draw as dr
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/server-ion/HKSC-GEC-S.aug"
 # path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/client-aug/HKSC-GEC-I.aug"
 
-path_S = "/Volumes/H_GREAT/2Project/Allystar/2022_0710DataAnalyse/HKSC_20220710_SGG_CLK01_S_GEC.aug"   # PPPAR算的改正数
-path_I = "/Volumes/H_GREAT/2Project/Allystar/2022_0710DataAnalyse/HKSC_20220710_SGG_CLK01_K_GEC.aug"# 内插改正数
+path_S = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/IONTRP/HKSC-GEC-S-2.aug"   # PPPAR算的改正数
+path_I = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/IONTRP/HKSC-GEC-I.aug"# 内插改正数
+
+# path_S = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-S-2.aug"   # PPPAR算的改正数
+# path_I = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-I.aug"# 内插改正数
 
 #path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKSC-GEC-I-ion.aug"
 # site_list = ["HKCL","HKFN","HKKS","HKKT","HKLM",
@@ -107,11 +110,12 @@ path_I = "/Volumes/H_GREAT/2Project/Allystar/2022_0710DataAnalyse/HKSC_20220710_
 
 # [head_I,data_I] = rf.open_aug_file_rtppp(path_I)
 # [head_S,data_S] = rf.open_aug_file_rtppp(path_S)
-[head_I,data_I] = rf.open_aug_file_rtppp(path_I)
-[head_S,data_S] = rf.open_aug_file_rtppp(path_S)
+# [head_I,data_I] = rf.open_aug_file_rtppp(path_I)
+# [head_S,data_S] = rf.open_aug_file_rtppp(path_S)
 
-# [head_I,data_I] = rf.open_aug_file_new(path_I)
-# [head_S,data_S] = rf.open_aug_file_new(path_S)
+
+[head_I,data_I] = rf.open_aug_file_new(path_I)
+[head_S,data_S] = rf.open_aug_file_new(path_S)
 data = dp.pre_aug_new(head_I,data_I,data_S)
 #starttime 数据在UTC下的开始时间
 #begT 画图起始时间，在time的设置下
@@ -123,7 +127,7 @@ data = dp.pre_aug_new(head_I,data_I,data_S)
 # begTime = 10
 # while (begTime < 31):
 # dr.plot_aug_GEC_new(data,head_I,type = "P",freq = 1,starttime = 17,time = "UTC",show = True,deltaT=2,ylim=1.5,LastT=7,year = 2022,mon=6,day=20)
-dr.plot_aug_GEC_new(data,head_I,type = "L",freq = 1,starttime = 16,time = "UTC",show = True,deltaT=1,ylim=0.2,LastT=8,year = 2022,mon=7,day=10)
+dr.plot_aug_GEC_new(data_I,head_I,type = "NSAT",freq = 1,starttime = 4,time = "UTC",show = True,deltaT=2,ylim=0.2,LastT=18,year = 2021,mon=11,day=1)
 #########
 #year mon day starttime 为开始时间
 #ylim 为y坐标范围

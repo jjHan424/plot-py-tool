@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2022-03-07 10:03:20
-LastEditTime: 2022-07-13 14:46:15
+LastEditTime: 2022-07-15 16:32:03
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_mapgrid.py
@@ -121,7 +121,7 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 #               'T430':[-2411015.2264,5380265.7133,2425132.7008]
 #                 }
 
-mark_point_xyz = rf.open_crd_gridmap("/Volumes/H_GREAT/2Project/Allystar/SZ-AUG.crd")
+mark_point_xyz = rf.open_crd_gridmap("/Volumes/H_GREAT/2Project/Tencent/WH-Tencent.crd")
 # Lines_xyz1 = rf.open_flt_pos_rtpppfile("/Volumes/SAMSUNG USB/2022_0628Dynamic/res/20220628/NOVA_20220628_SGG_CLK01_K_GEC.pppar.pos")
 #Lines_xyz2 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-comp/SEPT-GEC.flt")
 # mark_point_xyz = {'2006':[-2430340.3590,5359921.7657,2450575.0220],
@@ -158,8 +158,8 @@ for site in mark_point_xyz.keys():
     if blh[1] > maxLon:
         maxLon = blh[1]
     mark_point_blh[site]=[blh[0],blh[1],blh[2]]
-    if site=="DGXG" or site == "DGTX":
-        folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='black'),tooltip="click").add_to(m)
+    if site=="DGXG" or site == "HZHY":
+        folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='green'),tooltip="click").add_to(m)
     else:
         folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
 
@@ -190,7 +190,7 @@ if delta>10:
     space = delta/5
     count = 5
 else:
-    space = 0.2
+    space = 0.5
     count = 0
 if count==0:
     maxLat = maxLat + space/2
@@ -372,5 +372,5 @@ folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_L
 # folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
 # folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
 # folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
-m.save('/Users/hjj/Desktop/SZ-AUG.html')
+m.save('/Users/hjj/Desktop/WH-TENCENT-AUG.html')
 # webbrowser.open('/Users/hjj/Desktop/HongKongGridS.html')

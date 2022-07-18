@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-07-13 17:16:47
+LastEditTime: 2022-07-18 15:00:36
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -294,7 +294,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         for i in range(3):
             for j in range(2):
                 axP[i][j].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-                # axP[i][j].set_ylim(ymin,ymax)
+                axP[i][j].set_ylim(ymin,ymax)
         type1="L1"
         type2="L2"
     elif type == 'ION':
@@ -310,7 +310,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP[2].set_title('C')
         for i in range(3):
                 axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-                # axP[i].set_ylim(ymin,ymax)
+                axP[i].set_ylim(ymin,ymax)
                 box = axP[i].get_position()
                 axP[i].set_position([box.x0, box.y0, box.width*0.99, box.height])
         if freq==1:
@@ -464,7 +464,9 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
 		'weight' : 500,
 		'size'   : 15,
                 }
-        
+        mean_Sat_G=np.mean(data_G[0])
+        mean_Sat_E=np.mean(data_E[0])
+        mean_Sat_C=np.mean(data_C[0])
         axP[2].set_xticks(XTick)
         axP[1].set_xticks(XTick)
         axP[0].set_xticks(XTick)
@@ -549,7 +551,10 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP.text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_G[0])*100, np.mean(RMS_G[0])*100, np.mean(STD_G[0])*100))
         axP.set_xticks(XTick)
         axP.set_xticklabels(XLabel)
-
+    if type == "NSAT":
+        ax_range = axP[0].axis()
+        font2 = {"size":20}
+        axP[0].text(ax_range[0],ax_range[3],r'ALL: {:.1f}, G: {:.1f}, E: {:.1f}, C: {:.1f}'.format(mean_Sat_C+mean_Sat_E+mean_Sat_G,mean_Sat_G,mean_Sat_E,mean_Sat_C),font2)
     if type == "L" or type=="P":
         for i in range(100):
                 G,E,C = True,True,True
@@ -680,7 +685,7 @@ def plot_augc_NUM(data={},sitename=[],deltaT=2,LastT=24,starttime=0,year=2022,mo
    
     for time in data.keys():
         plot_time = (time - cov_Time) / 3600
-        if (plot_time > begT and plot_time < begT + LastT or not all):
+        if (plot_time > begT and plot_time < begT + LastT or all):
             for oneSite in data[time].keys():
                 if oneSite not in sitename:
                     continue
@@ -690,12 +695,14 @@ def plot_augc_NUM(data={},sitename=[],deltaT=2,LastT=24,starttime=0,year=2022,mo
                 dataplot[oneSite].append(data[time][oneSite])
                 timeplot[oneSite].append(plot_time)
     legd=[]
+    Mean_Sat={}
     # ss=600
     for oneSite in dataplot.keys():
         axP.scatter(timeplot[oneSite],dataplot[oneSite])
+        Mean_Sat[oneSite]=np.mean(dataplot[oneSite])
         # ss=ss-100
         legd.append(oneSite)
-
+    print(Mean_Sat)
     axP.legend(legd)
     if not all:
         axP.set_xticks(XTick)
