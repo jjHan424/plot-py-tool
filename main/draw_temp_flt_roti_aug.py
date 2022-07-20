@@ -2,13 +2,15 @@
 Author: HanJunjie HanJunjie@whu.edu.cn
 Date: 2022-07-16 14:31:10
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
-LastEditTime: 2022-07-16 16:25:57
+LastEditTime: 2022-07-18 17:08:20
 FilePath: /plot-py-tool/main/draw_temp_flt_roti_aug.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
+from cProfile import label
 import os
 import sys
 import math
+from turtle import color
 #from main.draw_flt_static import REF_XYZ
 sys.path.insert(0,os.path.dirname(__file__)+'/..')
 import numpy as np
@@ -16,10 +18,10 @@ import readfile as rf
 import matplotlib as mpl
 mpl.use("TkAgg")
 import matplotlib.pyplot as plt
-plt.style.use(['science','grid'])
+plt.style.use(['science'])
 import dataprocess as dp
 import draw as dr
-#import seaborn as sns
+import seaborn as sns
 import trans as tr
 #path set
 # path_flt = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-AR-2.flt"
@@ -27,7 +29,7 @@ path_flt = "/Volumes/H_GREAT/WangBo_Paper/2021305/HKSC-GC-AR-2.flt"
 path_roti = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/res/HKSC_GEC_0.15.ismr"
 path_aug_I = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/IONTRP/HKSC-GEC-I.aug"
 path_aug_S = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/IONTRP/HKSC-GEC-S-2.aug"
-figP,axP = plt.subplots(3,1,figsize=(12,10),sharey=False,sharex=True)
+figP,axP = plt.subplots(3,1,figsize=(19,10),sharey=False,sharex=True)
 #Time
 time="UTC"
 starttime=8
@@ -37,6 +39,7 @@ day=1
 LastT=14
 deltaT=2
 all=False
+colormap = sns.color_palette(['xkcd:green','xkcd:blue','xkcd:red', 'xkcd:brown', 'xkcd:pink', 'xkcd:purple'],100)
 ###-------------Time Set in Plot--------------###
 if "+" in time:
     end_time = len(time)
@@ -83,21 +86,23 @@ for cur_time in data_ENU:
         dataU.append(data_ENU[cur_time]["U"])
 ss=10
 axP[0].set_ylim(-1,1)
-axP[0].scatter(time1,dataE,s=ss)
-axP[0].scatter(time1,dataN,s=ss)
-axP[0].scatter(time1,dataU,s=ss)
-font2 = {'family' : 'Times new roman',
+axP[0].scatter(time1,dataE,s=ss,color=colormap[0])
+axP[0].scatter(time1,dataN,s=ss,color=colormap[1])
+axP[0].scatter(time1,dataU,s=ss,color=colormap[2])
+font2 = {'family' : 'Arial',
             'weight' : 600,
-            'size'   : 15,
+            'size'   : 25,
                 }
 axP[0].set_ylabel("Positioning Errors(m)",font2)
 font2 = {'family' : 'Times new roman',
             'weight' : 600,
-            'size'   : 15,
+            'size'   : 20,
                 }
 axP[0].legend(["E","N","U"],markerscale=2,prop=font2)
 axP[0].set_xticks(XTick)
 axP[0].set_xticklabels(XLabel)
+axP[0].set_yticks([-1.00,-0.75,-0.50,-0.25,0.00,0.25,0.50,0.75,1.00])
+axP[0].set_yticklabels(["-1.00","","-0.50","","0.00","","0.50","","1.00"],fontsize=25)
 
 
 ###-------------ROTI-------------###
@@ -138,19 +143,21 @@ for i in range(100):
         C = False
     E=False
     if G:
-        axP[1].scatter(time_G[i],data_G[i],s=1)
+        axP[1].scatter(time_G[i],data_G[i],s=1,color=colormap[i])
     if E:
-        axP[1].scatter(time_E[i],data_E[i],s=1)
+        axP[1].scatter(time_E[i],data_E[i],s=1,color=colormap[i])
     if C:
-        axP[1].scatter(time_C[i],data_C[i],s=1)
-font2 = {'family' : 'Times new roman',
+        axP[1].scatter(time_C[i],data_C[i],s=1,color=colormap[i])
+font2 = {'family' : 'Arial',
             'weight' : 600,
-            'size'   : 15,
+            'size'   : 25,
                 }
 axP[1].set_ylabel("ROTI(TECU/min)",font2)
 axP[1].set_xticks(XTick)
 # axP[2].set_yticklabels([-0.2,-0.1,0,0.1,0.2],fontsize="x-large")
 axP[1].set_ylim(0,2)
+axP[1].set_yticks([0,0.25,0.50,0.75,1,1.25,1.50,1.75,2])
+axP[1].set_yticklabels(["0.00","","0.50","","1.00","","1.50","","2.00"],fontsize=25)
 ###-------------AUG--------------###
 [head_I,data_I] = rf.open_aug_file_new(path_aug_I)
 [head_S,data_S] = rf.open_aug_file_new(path_aug_S)
@@ -198,18 +205,25 @@ for i in range(100):
         C = False
     E=False
     if G:
-        axP[2].scatter(time_G[i],data_G[i],s=1)
+        axP[2].scatter(time_G[i],data_G[i],s=1,color=colormap[i])
     if E:
-        axP[2].scatter(time_E[i],data_E[i],s=1)
+        axP[2].scatter(time_E[i],data_E[i],s=1,color=colormap[i])
     if C:
-        axP[2].scatter(time_C[i],data_C[i],s=1)
-font2 = {'family' : 'Times new roman',
+        axP[2].scatter(time_C[i],data_C[i],s=1,color=colormap[i])
+font2 = {'family' : 'Arial',
             'weight' : 600,
-            'size'   : 15,
+            'size'   : 25,
                 }
-axP[2].set_ylabel("Difference of Ionosphere Delay correction(m)",font2)
+axP[2].set_ylabel("Difference of STEC(m)",font2)
 axP[2].set_xticks(XTick)
-axP[2].set_xticklabels(XLabel,fontsize="x-large")
+axP[2].set_xticklabels(XLabel,fontsize=25)
 # axP[2].set_yticklabels([-0.2,-0.1,0,0.1,0.2],fontsize="x-large")
 axP[2].set_ylim(-0.2,0.2)
+axP[2].set_yticks([-0.2,-0.15,-0.1,-0.05,0,0.05,0.1,0.15,0.2])
+axP[2].set_yticklabels(["-0.20","","-0.10","","0.00","","0.10","","0.20"],fontsize=25)
+axP[2].set_xlabel("UTC",font2)
+axP[0].grid(False)
+axP[1].grid(False)
+axP[2].grid(False)
+plt.savefig("/Users/hjj/Desktop/HKSC_GC_PPPRTK_ROTI_AUG.svg")
 plt.show()

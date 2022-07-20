@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-07-18 15:00:36
+LastEditTime: 2022-07-18 21:52:45
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -18,7 +18,7 @@ from numpy.core.fromnumeric import shape, size
 import dataprocess as dp
 import matplotlib.colors as colors
 from matplotlib.pyplot import MultipleLocator
-#import seaborn as sns
+import seaborn as sns
 import math
 import trans as tr
 font = {'family' : 'Arial',
@@ -1634,6 +1634,7 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                         data_plot["N"][j] = np.delete(data_plot["N"][j],indexs)
                         data_plot["U"][j] = np.delete(data_plot["U"][j],indexs)
                         time[j] = np.delete(time[j],indexs)
+                        data_plot["NSAT"][j] = np.delete(data_plot["NSAT"][j],indexs)
                         Sigma_num = Sigma_num - 1
                     index_3_EN = []
                     index_5_EN = []
