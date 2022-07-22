@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-07-16 15:41:17
+LastEditTime: 2022-07-22 15:21:12
 Description: read data file
 '''
 import numpy as np
@@ -331,14 +331,14 @@ def open_flt_pos_rtpppfile(filename):
                 all_data[soweek]['Q'] = float(value[5])
                 all_data[soweek]['NSAT'] = float(value[5])
                 all_data[soweek]['PDOP'] = float(value[5])
-                # if value[5] == '1':
-                #     all_data[soweek]['AMB'] = 1
-                # else:
-                #     all_data[soweek]['AMB'] = 0
-                if value[15] == 'Fixed':
+                if value[5] == '1':
                     all_data[soweek]['AMB'] = 1
                 else:
                     all_data[soweek]['AMB'] = 0
+                # if value[15] == 'Fixed':
+                #     all_data[soweek]['AMB'] = 1
+                # else:
+                #     all_data[soweek]['AMB'] = 0
                 
     return all_data
 
@@ -808,7 +808,7 @@ def open_ppprtk_rtpppfile(filename):
                 # all_data[soweek]['NSAT'] = float(value[12])
                 # all_data[soweek]['NSAT'] = float(value[18])
                 all_data[soweek]['PDOP'] = float(value[20])
-                if (all_data[soweek]['NSAT'] <= 4):
+                if (all_data[soweek]['NSAT'] < 0):
                     all_data[soweek]['AMB'] = 0
                 else:
                     all_data[soweek]['AMB'] = 1

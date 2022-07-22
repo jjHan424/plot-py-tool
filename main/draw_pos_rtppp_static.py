@@ -1,7 +1,7 @@
 '''
 Author: HanJunjie
 Date: 2021-11-29 21:26:38
-LastEditTime: 2022-07-20 12:36:46
+LastEditTime: 2022-07-22 15:22:03
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_flt.py
@@ -42,20 +42,25 @@ REF_XYZ = {"A010":[ -2175297.0269,4330326.0624,4133584.2257 ],
            "SZK":[ -2401848.6479,5379319.6166,2436510.7520]}
 Y=2022
 M=7
-D=19
-S=0 #21
-L=24
+D=21
+S=15 #21
+L=9
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
-mode_list = ["S-CLK01","S-CLK06"]
+mode_list = ["DGXG","HZHY"]
 #site_list = ["HKLM","HKSC","HKTK"]
-site_list = ["SZK","SZK","DGXG","DGXG","DGXG","DGXG"]
-filename_list = [#"/Volumes/H_GREAT/2Project/Allystar/20220622_WH2_ZHD/WUH2_20220622_SGG_CLK06_K_GEC.pppar.pos",
-                "/Volumes/H_GREAT/2Project/Allystar/2022_0719Data/SZK1_20220719_SGG_CLK01_K_GEC_S.pppar.pos",
-                # "/Volumes/H_GREAT/2Project/Allystar/2022_0716EPO/AUG2/res/20220716/DGXG_20220716_epo_K_GEC.pppar.pos",
-                 #"/Volumes/H_GREAT/2Project/Allystar/2022_0716EPO/AUG3/res/20220716/DGXG_20220716_epo_K_GEC.pppar.pos",
-                 #"/Volumes/H_GREAT/2Project/Allystar/2022_0716EPO/AUG4/res/20220716/DGXG_20220716_epo_K_GEC.pppar.pos",
-                 "/Volumes/H_GREAT/2Project/Allystar/2022_0719Data/SZK1_20220719_SGG_CLK06_K_GEC_S.pppar.pos"]
+site_list = ["DGXG","HZHY","SZK","SZK","SZK","SZK"]
+mode="/Volumes/H_GREAT/2Project/Allystar/2022_0720EPO/"
+path_dir1 = "res/20220720/SZK1_20220720_epo_K_GEC.pppar.pos"
+path_dir2 = "res/20220720/SZK1_20220720_epo_K_GEC.pppar.pos"
+path_dir3 = "res/20220720/SZK3_20220720_epo_K_GEC.pppar.pos"
+filename_list=["/Volumes/H_GREAT/2Project/Allystar/2022_0721CLK01/20220721_AUG4/DGXG_20220721_SGG_CLK01_K_GEC.pppar.pos",
+                "/Volumes/H_GREAT/2Project/Allystar/2022_0721CLK01/20220721_AUG4/HZHY_20220721_SGG_CLK01_K_GEC.pppar.pos"]
+# filename_list = [mode+"AUG3/"+path_dir1,
+#                 mode+"AUG3/"+path_dir2,
+#                 mode+"AUG3/"+path_dir3,
+#                 mode+"AUG4/"+path_dir1,
+#                 mode+"AUG5/"+path_dir1]
                  #"/Volumes/H_GREAT/2Project/Allystar/2022_0716EPO/AUG6/res/20220716/DGXG_20220716_epo_K_GEC.pppar.pos"
                  
 # filename_list = [
@@ -65,10 +70,10 @@ filename_list = [#"/Volumes/H_GREAT/2Project/Allystar/20220622_WH2_ZHD/WUH2_2022
 #                  ]
 for i in range(len(mode_list)):
     data_Raw = rf.open_flt_pos_rtpppfile(filename_list[i])
-    #data_Raw = rf.open_ppprtk_rtpppfile(filename_list[i])
+    # data_Raw = rf.open_ppprtk_rtpppfile(filename_list[i])
     data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = site_list[i])
     ENU_ALL[mode_list[i]] = data_ENU
 
 
-dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 1,starttime=S,LastT=L,all=False,deltaT=2,year=Y,mon=M,day=D,time = "UTC+8",Fixed=True,delta_data = 5,Sigma=3,Sigma_num=1)
+dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.5,starttime=S,LastT=L,all=False,deltaT=1,year=Y,mon=M,day=D,time = "UTC",Fixed=True,delta_data = 5,Sigma=3,Sigma_num=1)
 

@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-07-18 21:52:45
+LastEditTime: 2022-07-21 12:20:08
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -1604,6 +1604,7 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
             STD_enu[cur_type] = []
             MEAN_enu[cur_type] = []
             for j in range(N_mode):
+                    Sigma_num_temp = Sigma_num
                     mean_E = np.mean(data_plot["E"][j])
                     mean_N = np.mean(data_plot["N"][j])
                     mean_U = np.mean(data_plot["U"][j])
@@ -1613,7 +1614,7 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                     rms_E = dp.rms(data_plot["E"][j])
                     rms_N = dp.rms(data_plot["N"][j])
                     rms_U = dp.rms(data_plot["U"][j])
-                    while Sigma_num >= 1:
+                    while Sigma_num_temp >= 1:
                         indexs = []
                         mean_E = np.mean(data_plot["E"][j])
                         mean_N = np.mean(data_plot["N"][j])
@@ -1635,7 +1636,7 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                         data_plot["U"][j] = np.delete(data_plot["U"][j],indexs)
                         time[j] = np.delete(time[j],indexs)
                         data_plot["NSAT"][j] = np.delete(data_plot["NSAT"][j],indexs)
-                        Sigma_num = Sigma_num - 1
+                        Sigma_num_temp = Sigma_num_temp - 1
                     index_3_EN = []
                     index_5_EN = []
                     index_5_U=[]

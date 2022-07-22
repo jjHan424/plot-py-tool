@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2021-11-12 09:38:43
-LastEditTime: 2022-07-20 13:00:58
+LastEditTime: 2022-07-22 11:19:42
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_aug.py
@@ -90,8 +90,8 @@ import draw as dr
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/server-ion/HKSC-GEC-S.aug"
 # path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/client-aug/HKSC-GEC-I.aug"
 
-path_S = "/Volumes/H_GREAT/2Project/Allystar/2022_0719Data/DGCA_20220719_SGG_CLK01_S_GEC.aug"   # PPPAR算的改正数
-path_I = "/Volumes/H_GREAT/2Project/Allystar/2022_0719Data/SWHF_20220719_SGG_CLK01_S_GEC.aug"# 内插改正数
+path_S = "/Volumes/H_GREAT/2Project/Allystar/2022_0721CLK01/HZHY_20220721_SGG_CLK01_S_GEC.aug"   # PPPAR算的改正数
+path_I = "/Volumes/H_GREAT/2Project/Allystar/2022_0721CLK01/20220721_AUG3/HZHY_20220721_SGG_CLK01_K_GEC.aug"# 内插改正数
 
 # path_S = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-S-2.aug"   # PPPAR算的改正数
 # path_I = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-I.aug"# 内插改正数
@@ -127,7 +127,7 @@ data = dp.pre_aug_new(head_I,data_I,data_S)
 # begTime = 10
 # while (begTime < 31):
 # dr.plot_aug_GEC_new(data,head_I,type = "P",freq = 1,starttime = 17,time = "UTC",show = True,deltaT=2,ylim=1.5,LastT=7,year = 2022,mon=6,day=20)
-dr.plot_aug_GEC_new(data,head_I,type = "L",freq = 1,starttime = 14,time = "UTC",show = True,deltaT=2,ylim=0.2,LastT=10,year = 2022,mon=7,day=19)
+dr.plot_aug_GEC_new(data,head_I,type = "L",freq = 1,starttime = 15,time = "UTC",show = True,deltaT=2,ylim=0.2,LastT=9,year = 2022,mon=7,day=21)
 #########
 #year mon day starttime 为开始时间
 #ylim 为y坐标范围
