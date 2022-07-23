@@ -13,7 +13,7 @@ import matplotlib as mpl
 mpl.use("TkAgg")
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-plt.style.use(['science','grid'])
+plt.style.use(['science','grid','no-latex'])
 from numpy.core.fromnumeric import shape, size
 import dataprocess as dp
 import matplotlib.colors as colors

@@ -331,14 +331,14 @@ def open_flt_pos_rtpppfile(filename):
                 all_data[soweek]['Q'] = float(value[5])
                 all_data[soweek]['NSAT'] = float(value[5])
                 all_data[soweek]['PDOP'] = float(value[5])
-                if value[5] == '1':
-                    all_data[soweek]['AMB'] = 1
-                else:
-                    all_data[soweek]['AMB'] = 0
-                # if value[15] == 'Fixed':
+                # if value[5] == '1':
                 #     all_data[soweek]['AMB'] = 1
                 # else:
                 #     all_data[soweek]['AMB'] = 0
+                if value[15] == 'Fixed':
+                    all_data[soweek]['AMB'] = 1
+                else:
+                    all_data[soweek]['AMB'] = 0
                 
     return all_data
 
@@ -804,8 +804,8 @@ def open_ppprtk_rtpppfile(filename):
                 all_data[soweek]['Y'] = float(value[30])
                 all_data[soweek]['Z'] = float(value[31])
                 all_data[soweek]['Q'] = float(value[20])
-                all_data[soweek]['NSAT'] = float(value[24])
-                # all_data[soweek]['NSAT'] = float(value[12])
+                # all_data[soweek]['NSAT'] = float(value[24])
+                all_data[soweek]['NSAT'] = float(value[12])
                 # all_data[soweek]['NSAT'] = float(value[18])
                 all_data[soweek]['PDOP'] = float(value[20])
                 if (all_data[soweek]['NSAT'] < 0):
