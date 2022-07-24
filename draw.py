@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-07-21 12:20:08
+LastEditTime: 2022-07-24 15:05:08
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -1801,6 +1801,13 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                 print(mode[i] + ':{:.2f}%'.format(0))
             else:
                 print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (Fixed_NUM[i] + Float_NUM[i]) * 100))
+                
+        print("固定率(Fixed_Sigma/Fixed+Float):")
+        for i in range(N_mode):
+            if ((Fixed_NUM[i]) == 0):
+                print(mode[i] + ':{:.2f}%'.format(0))
+            else:
+                print(mode[i] + ':{:.2f}%'.format(len(time[i]) / (Fixed_NUM[i] + Float_NUM[i]) * 100))
         print("完整率:")
         for i in range(N_mode):
             print(mode[i] + ':{:.2f}%'.format((Fixed_NUM[i] + Float_NUM[i]) / ALL_NUM[i] * 100))
@@ -2431,3 +2438,134 @@ def plot_SatofAug(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,sta
                     print('RMS={:.4f}cm,MEAN={:.4f}cm,STD={:.4f}cm'.format(RMS_enu[cur_type][j]*100,MEAN_enu[cur_type][j]*100,STD_enu[cur_type][j]*100))
 
         plt.show()
+
+
+def plot_aug_NSAT(data = {},mode = {},type = "NSAT",freq = 1,ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,year = 2021,mon=11,day=1,deltaData=5):
+    sys_type = {}
+    RMS_G,MEAN_G,STD_G = [[],[]],[[],[]],[[],[]]
+    RMS_E,MEAN_E,STD_E = [[],[]],[[],[]],[[],[]]
+    RMS_C,MEAN_C,STD_C = [[],[]],[[],[]],[[],[]]
+
+    RMS_G1,MEAN_G1,STD_G1 = [[],[]],[[],[]],[[],[]]
+    RMS_E1,MEAN_E1,STD_E1 = [[],[]],[[],[]],[[],[]]
+    RMS_C1,MEAN_C1,STD_C1 = [[],[]],[[],[]],[[],[]]
+    num_plot = len(mode)
+    G_L,E_L,C_L = [],[],[]
+    if type == 'NSAT':
+        f1=0
+        f2=1
+        num_mode = len(mode)
+        figP,axP = plt.subplots(num_mode,1,figsize=(15,10),sharey=True,sharex=True)
+        ymin = -ylim
+        ymax = ylim
+        col = 2
+        for i in range(num_mode):
+            axP[i].set_xlabel('Time' + '(' + time + ')')
+            axP[i].set_ylabel('Num of Fixed Sat',font)
+            axP[i].set_title(mode[i])
+            axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
+    else:
+        print("Wrong mode")
+    
+    time_G = [[] for i in range(100)]
+    time_R = [[] for i in range(100)]
+    time_E = [[] for i in range(100)]
+    time_C = [[] for i in range(100)]
+    time_TRP = []
+    data_G = [[] for i in range(100)]
+    data_R = [[] for i in range(100)]
+    data_E = [[] for i in range(100)]
+    data_C = [[] for i in range(100)]
+    data_TRP = []
+    data_G1 = [[] for i in range(100)]
+    data_R1 = [[] for i in range(100)]
+    data_E1 = [[] for i in range(100)]
+    data_C1 = [[] for i in range(100)]
+    if "+" in time:
+        end_time = len(time)
+        delta_Time = int(time[3:end_time]) + starttime
+        begT = int(time[3:end_time]) + starttime
+    else:
+        delta_Time = starttime
+        begT=starttime
+    secow_start = tr.ymd2gpst(year,mon,day,starttime,00,00)
+    cov_Time = secow_start[1] - delta_Time * 3600
+    end_Time = begT + LastT
+    delta_X = math.ceil((LastT)/deltaT)
+    XLabel = []
+    XTick = []
+    starttime = begT - deltaT
+    for i in range(delta_X):
+        starttime = starttime + deltaT
+        cur_Str_X = '%02d' % (starttime % 24) + ":00"
+        XLabel.append(cur_Str_X)
+        XTick.append(int(starttime))       
+    while starttime < math.ceil(end_Time):
+        starttime = starttime + deltaT
+        cur_Str_X = '%02d' % (starttime % 24) + ":00"
+        XLabel.append(cur_Str_X)
+        XTick.append(int(starttime))
+   
+    if type == "NSAT":
+        for j in range(num_mode):
+            start = False
+            time_last = 0
+            for time in data[mode[j]].keys():
+                num_C,num_G,num_E = 0,0,0
+                plot_time = (time - cov_Time) / 3600
+                # if ((time - time_last) > deltaData and start):
+                #     data_C[j].append(0)
+                #     time_C[j].append(plot_time)
+                #     data_G[j].append(0)
+                #     time_G[j].append(plot_time)
+                #     data_E[j].append(0)
+                #     time_E[j].append(0)
+                #     data_R[j].append(0)
+                #     time_R[j].append(plot_time)
+                time_last = time
+                if (plot_time > begT and plot_time < begT + LastT):
+                    start = True
+                    for sat in data[mode[j]][time].keys():
+                        prn = int(sat[1:3])
+                        if sat[0] == "C":
+                            num_C = num_C + 1
+                        if sat[0] == "G":
+                            num_G = num_G + 1
+                        if sat[0] == "E":
+                            num_E = num_E + 1
+                    data_C[j].append(num_C)
+                    time_C[j].append(plot_time)
+                    data_G[j].append(num_G)
+                    time_G[j].append(plot_time)
+                    data_E[j].append(num_E)
+                    time_E[j].append(plot_time)
+                    data_R[j].append(num_C+num_G+num_E)
+                    time_R[j].append(plot_time)
+    mean_Sat_C,mean_Sat_E,mean_Sat_G,mean_Sat_R={},{},{},{}
+    if type == "NSAT":
+        for j in range(num_mode):
+            axP[j].plot(time_R[j],data_R[j])
+            axP[j].set_xticks(XTick)
+            mean_Sat_G[mode[j]]=np.mean(data_G[j])
+            mean_Sat_E[mode[j]]=np.mean(data_E[j])
+            mean_Sat_C[mode[j]]=np.mean(data_C[j])
+            mean_Sat_R[mode[j]]=np.mean(data_R[j])
+        
+        font_text = {'family' : 'Arial',
+		'weight' : 500,
+		'size'   : 15,
+                }
+        axP[j].set_xticklabels(XLabel)
+    
+    
+    
+    if type == "NSAT":
+        for j in range(num_mode):      
+            ax_range = axP[j].axis()
+            font2 = {"size":20}
+            axP[j].text(ax_range[0],ax_range[3],r'ALL: {:.1f}, G: {:.1f}, E: {:.1f}, C: {:.1f}'.format(mean_Sat_R[mode[j]],mean_Sat_G[mode[j]],mean_Sat_E[mode[j]],mean_Sat_C[mode[j]]),font2)
+    
+    # figP.suptitle(mode)
+    #plt.savefig(savedir)
+    if show:
+        plt.show()  

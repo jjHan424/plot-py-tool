@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-07-23 11:36:30
+LastEditTime: 2022-07-24 13:06:02
 Description: read data file
 '''
 import numpy as np
@@ -632,6 +632,7 @@ def open_aug_file_rtppp(filename):
                 all_data[soweek][sat]["L2"] = float(value[3])
                 all_data[soweek][sat]["P2"] = float(value[4])
                 all_data[soweek][sat]["TRP1"] = satnum
+                all_data[soweek][sat]["NSAT"] = satnum
 
     head_info["G"]={}
     head_info["G"]["L1"]=1
@@ -808,7 +809,7 @@ def open_ppprtk_rtpppfile(filename):
                 all_data[soweek]['NSAT'] = float(value[12])
                 # all_data[soweek]['NSAT'] = float(value[18])
                 all_data[soweek]['PDOP'] = float(value[20])
-                if (all_data[soweek]['NSAT'] < 0):
+                if (all_data[soweek]['NSAT'] <= 0):
                     all_data[soweek]['AMB'] = 0
                 else:
                     all_data[soweek]['AMB'] = 1
