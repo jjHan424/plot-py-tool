@@ -47,16 +47,31 @@ S=9.5 #21
 L=6
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
+<<<<<<< HEAD
 mode_list = ["SZK1","SZK2","SZK3"]
+=======
+mode_list = ["aug1","aug3","aug4"]
+>>>>>>> 8ebb398b8a98e0a20fdeff90cef8bd1da63a5cf9
 #site_list = ["HKLM","HKSC","HKTK"]
 site_list = ["SZK","SZK","SZK","SZK","SZK","SZK"]
 mode="/Volumes/H_GREAT/2Project/Allystar/2022_0720EPO/"
 path_dir1 = "res/20220720/SZK1_20220720_epo_K_GEC.pppar.pos"
 path_dir2 = "res/20220720/SZK1_20220720_epo_K_GEC.pppar.pos"
 path_dir3 = "res/20220720/SZK3_20220720_epo_K_GEC.pppar.pos"
+<<<<<<< HEAD
 filename_list=["/Volumes/H_GREAT/2Project/Allystar/20220722_SZ/AUG4/SZK1_20220722_SGG_CLK01_K_GEC.ppprtk",
                 "/Volumes/H_GREAT/2Project/Allystar/20220722_SZ/AUG4/SZK2_20220722_SGG_CLK01_K_GEC.ppprtk",
                 "/Volumes/H_GREAT/2Project/Allystar/20220722_SZ/AUG4/SZK3_20220722_SGG_CLK01_K_GEC.ppprtk"]
+=======
+# filename_list=[r"E:\Allystar\PPPRTK_CLK06_SZK1_aug1\res\20220722\SZK1_20220722_SGG_CLK06_K_GEC.pppar.pos",
+#                 r"E:\Allystar\PPPRTK_CLK06_SZK1_aug3\res\20220722\SZK1_20220722_SGG_CLK06_K_GEC.pppar.pos",
+#                 r"E:\Allystar\PPPRTK_CLK06_SZK1_aug4\res\20220722\SZK1_20220722_SGG_CLK06_K_GEC.pppar.pos"]
+                
+filename_list=[r"E:\Allystar\PPPRTK_CLK06_SZK3_aug1\res\20220722\SZK3_20220722_SGG_CLK06_K_GEC.ppprtk",
+               r"E:\Allystar\PPPRTK_CLK06_SZK3_aug3\res\20220722\SZK3_20220722_SGG_CLK06_K_GEC.ppprtk",
+               r"E:\Allystar\PPPRTK_CLK06_SZK3_aug4\res\20220722\SZK3_20220722_SGG_CLK06_K_GEC.ppprtk"]       
+
+>>>>>>> 8ebb398b8a98e0a20fdeff90cef8bd1da63a5cf9
 # filename_list = [mode+"AUG3/"+path_dir1,
 #                 mode+"AUG3/"+path_dir2,
 #                 mode+"AUG3/"+path_dir3,
