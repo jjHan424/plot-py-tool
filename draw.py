@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-07-24 15:05:08
+LastEditTime: 2022-07-26 10:23:53
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -1710,8 +1710,8 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                             temp = np.std(data_plot[cur_type][j])
                             #STD_enu[cur_type].append(temp)
                             time_temp = time[j]
-                            # if cur_type!="NSAT":
-                            #     data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
+                            if cur_type!="NSAT":
+                                data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
                             temp_M = np.mean(data_plot[cur_type][j])
                             MEAN_enu[cur_type].append(temp_M)
                             temp = dp.rms(data_plot[cur_type][j])
@@ -1765,9 +1765,9 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                 #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
                 axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:7*N_mode+3],font_text)
 
-        if not all:
-            axP[N_plot-1].set_xticks(XTick)
-            axP[N_plot-1].set_xticklabels(XLabel)
+        # if not all:
+            # axP[N_plot-1].set_xticks(XTick)
+            # axP[N_plot-1].set_xticklabels(XLabel)
 
 
         # axP[0].legend(mode,
@@ -1777,8 +1777,8 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
             
         for i in range(N_plot):
             cur_type=type[i]
-            if not all:
-                axP[i].set_xticks(XTick)
+            # if not all:
+            #     axP[i].set_xticks(XTick)
             ax_range = axP[i].axis()
             if (N_plot==3):
                 axP[i].legend(mode,prop=font_text,
@@ -2461,7 +2461,8 @@ def plot_aug_NSAT(data = {},mode = {},type = "NSAT",freq = 1,ylim = 1,starttime 
         col = 2
         for i in range(num_mode):
             axP[i].set_xlabel('Time' + '(' + time + ')')
-            axP[i].set_ylabel('Num of Fixed Sat',font)
+            # axP[i].set_ylabel('Num of Fixed Sat',font)
+            axP[i].set_ylabel('Num of Obs Sat',font)
             axP[i].set_title(mode[i])
             axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
     else:
@@ -2544,8 +2545,9 @@ def plot_aug_NSAT(data = {},mode = {},type = "NSAT",freq = 1,ylim = 1,starttime 
     mean_Sat_C,mean_Sat_E,mean_Sat_G,mean_Sat_R={},{},{},{}
     if type == "NSAT":
         for j in range(num_mode):
-            axP[j].plot(time_R[j],data_R[j])
-            axP[j].set_xticks(XTick)
+            # axP[j].plot(time_R[j],data_R[j])
+            axP[j].scatter(time_R[j],data_R[j])
+            # axP[j].set_xticks(XTick)
             mean_Sat_G[mode[j]]=np.mean(data_G[j])
             mean_Sat_E[mode[j]]=np.mean(data_E[j])
             mean_Sat_C[mode[j]]=np.mean(data_C[j])
@@ -2555,7 +2557,7 @@ def plot_aug_NSAT(data = {},mode = {},type = "NSAT",freq = 1,ylim = 1,starttime 
 		'weight' : 500,
 		'size'   : 15,
                 }
-        axP[j].set_xticklabels(XLabel)
+        # axP[j].set_xticklabels(XLabel)
     
     
     

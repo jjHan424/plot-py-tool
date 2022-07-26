@@ -1,12 +1,12 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-07-24 13:06:02
+LastEditTime: 2022-07-26 10:15:18
 Description: read data file
 '''
 import numpy as np
 import math
-
+import glv
 from pyrsistent import s
 import trans as tr
 import os
@@ -910,4 +910,112 @@ def open_ismr(filename):
                     all_data[soweek]={}
                 sat=value[2]
                 all_data[soweek][sat] = float(value[9])
+    return all_data
+
+
+def open_epo_file_rtppp(filename):
+    all_data={}
+    head_info={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = False
+    num_sat = 0
+    last_day = 0
+    day=0
+    file_exist = os.path.exists(filename)
+    if (not file_exist):
+        return all_data
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if value[0] == "%" or value[0] == "##" or value[0] == "amb":
+                epoch_flag = False
+                continue               
+            if value[0]=="*":
+                value=line.split()
+                year=(float(value[1]))
+                month=(float(value[2]))
+                day=(float(value[3]))
+                hour=(float(value[4]))
+                minute=(float(value[5]))
+                second=(float(value[6]))
+                satnum = float(value[9])
+                [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+                if (not epoch_flag):
+                    min_sow = soweek
+                if (soweek < min_sow):
+                    soweek = soweek + 604800
+                epoch_flag = True
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+            if ((value[0][0] == "C" or value[0][0] == "E" or value[0][0] == "G") and epoch_flag):
+                sat = value[0]
+                if (sat not in all_data[soweek].keys()):
+                    all_data[soweek][sat] = {}
+                all_data[soweek][sat]["L1"] = float(value[1])
+                all_data[soweek][sat]["NSAT"] = satnum
+
+    
+    return all_data
+
+def open_gpgga_file(gpgga):
+    t,X,Y,Z,nsat,hdop,state=[],[],[],[],[],[],[]
+    count=0
+    all_data={}
+    with open(gpgga,'rt') as f:
+        for line in f:
+            value=line.split(',')
+            if(value[0] != '$GPGGA'):
+                continue
+            hour=float(value[1][0:2])
+            min=float(value[1][2:4])
+            sec=float(value[1][4:])
+            sec_all = hour*3600+min*60+sec
+            if(value[2]==''):
+                continue
+            b_deg=float(value[2][0:2])
+            b_min=float(value[2][2:])
+            b=(b_deg+b_min/60)
+            if(value[3]==''):
+                continue
+            l_deg=float(value[4][0:3])
+            l_min=float(value[4][3:])
+            l=(l_deg+l_min/60)
+            h=float(value[9])+float(value[11])
+            if sec_all not in all_data.keys():
+                all_data[sec_all]={}
+                all_data[sec_all]["X"]=b
+                all_data[sec_all]["Y"]=l
+                all_data[sec_all]["Z"]=h
+            if(float(value[6])!=4):
+                count=count+1
+                continue
+        
+    return all_data
+
+def open_pos_ref_HDBD(filename):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if line[0] != "%":
+                soweek = float(value[1])
+                if (soweek < soweek_last):
+                    w_last = w_last + 1
+                soweek = soweek + w_last*604800
+                soweek_last = soweek
+                #soweek = hour + minute/60.0 + second/3600.0
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+                XYZ = tr.blh2xyz(float(value[3])*glv.deg,float(value[4])*glv.deg,float(value[5]))
+                all_data[soweek]['X'] = XYZ[0]
+                all_data[soweek]['Y'] = XYZ[1]
+                all_data[soweek]['Z'] = XYZ[2]           
+                all_data[soweek]['AMB'] = 1
+                
     return all_data
