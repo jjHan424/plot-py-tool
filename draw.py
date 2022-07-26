@@ -1467,12 +1467,16 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
         ymax = ylim
 
         
-        figP,axP = plt.subplots(N_plot,1,figsize=(12,10),sharey=False,sharex=True)
-        axP[N_plot-1].set_xlabel('Time' + '(' + time + ')')
+        figP,axP = plt.subplots(N_plot,1,figsize=(12,9),sharey=False,sharex=True)
+        font = {'family': 'Times new roman',
+         'weight': 600,
+         'size': 20,
+                }
         font2 = {'family' : 'Times new roman',
             'weight' : 600,
             'size'   : 15,
                 }
+        axP[N_plot - 1].set_xlabel('Time' + '(' + time + ')',font2)
         for i in range(N_plot):
             axP[i].set_ylabel(type[i],font2)
             #axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
