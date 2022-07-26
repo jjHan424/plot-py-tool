@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-07-26 10:15:18
+LastEditTime: 2022-07-26 20:42:22
 Description: read data file
 '''
 import numpy as np
@@ -959,7 +959,7 @@ def open_epo_file_rtppp(filename):
     
     return all_data
 
-def open_gpgga_file(gpgga):
+def open_gpgga_file(gpgga,year=2022,mon=7,day=26):
     t,X,Y,Z,nsat,hdop,state=[],[],[],[],[],[],[]
     count=0
     all_data={}
@@ -967,11 +967,15 @@ def open_gpgga_file(gpgga):
         for line in f:
             value=line.split(',')
             if(value[0] != '$GPGGA'):
-                continue
+                if (value[0] != '$GNGGA'):
+                    continue
             hour=float(value[1][0:2])
             min=float(value[1][2:4])
             sec=float(value[1][4:])
-            sec_all = hour*3600+min*60+sec
+            [w,sec_all] = tr.ymd2gpst(year,mon,day,hour,min,sec)
+            # if (soweek < min_sow):
+            #     soweek = soweek + 604800
+            # sec_all = hour*3600+min*60+sec
             if(value[2]==''):
                 continue
             b_deg=float(value[2][0:2])
@@ -983,11 +987,14 @@ def open_gpgga_file(gpgga):
             l_min=float(value[4][3:])
             l=(l_deg+l_min/60)
             h=float(value[9])+float(value[11])
+            sec_all = sec_all - 18
             if sec_all not in all_data.keys():
                 all_data[sec_all]={}
-                all_data[sec_all]["X"]=b
-                all_data[sec_all]["Y"]=l
-                all_data[sec_all]["Z"]=h
+                XYZ = tr.blh2xyz(b*glv.deg,l*glv.deg,h)
+                all_data[sec_all]["X"]=XYZ[0]
+                all_data[sec_all]["Y"]=XYZ[1]
+                all_data[sec_all]["Z"]=XYZ[2]
+                all_data[sec_all]['AMB'] = 1
             if(float(value[6])!=4):
                 count=count+1
                 continue

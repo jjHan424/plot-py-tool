@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2022-03-07 10:03:20
-LastEditTime: 2022-07-25 21:34:40
+LastEditTime: 2022-07-26 20:15:52
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_mapgrid.py
@@ -122,8 +122,9 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 #                 }
 
 mark_point_xyz = rf.open_crd_gridmap("/Volumes/H_GREAT/2Project/Allystar/SZ-AUG.crd")
-# Lines_xyz1 = rf.open_flt_pos_rtpppfile("/Volumes/SAMSUNG USB/NUC/2022_0725Dynamic/AUG1/SZK2_20220725_SGG_CLK01_K_GEC.pppar.pos")
-Lines_xyz1 = rf.open_gpgga_file("/Users/hjj/Desktop/COM118_2022-07-21_11.00.26_NORTK.cyno")
+Lines_xyz2 = rf.open_flt_pos_rtpppfile("/Volumes/H_GREAT/2Project/Allystar/2022_0726_Dynamic/CLK01/AUG3/SZK3_20220726_SGG_CLK01_K_GEC.pppar.pos")
+Lines_xyz1 = rf.open_gpgga_file("/Volumes/H_GREAT/2Project/Allystar/2022_0726_Dynamic/novatel.txt",year=2022,mon=7,day=26)
+
 #Lines_xyz2 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-comp/SEPT-GEC.flt")
 #Lines_xyz2 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-comp/SEPT-GEC.flt")
 # mark_point_xyz = {'2006':[-2430340.3590,5359921.7657,2450575.0220],
@@ -173,14 +174,16 @@ for site in mark_point_xyz.keys():
 
 
 for time in Lines_xyz1:
-    # blh = tr.xyz2blh(Lines_xyz1[time]["X"],Lines_xyz1[time]["Y"],Lines_xyz1[time]["Z"])
-    # blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-    # blh_G = tr.wgs84togcj02(blh[0], blh[1])
-    Lines_blh1[time]=[Lines_xyz1[time]["X"],Lines_xyz1[time]["Y"],Lines_xyz1[time]["Z"]]
-# for time in Lines_xyz2:
-#     blh = tr.xyz2blh(Lines_xyz2[time]["X"],Lines_xyz2[time]["Y"],Lines_xyz2[time]["Z"])
-#     blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-#     Lines_blh2[time]=[blh[0],blh[1],blh[2]]
+    blh = tr.xyz2blh(Lines_xyz1[time]["X"],Lines_xyz1[time]["Y"],Lines_xyz1[time]["Z"])
+    blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+    blh_G = tr.wgs84togcj02(blh[0], blh[1])
+    # Lines_blh1[time]=[Lines_xyz1[time]["X"],Lines_xyz1[time]["Y"],Lines_xyz1[time]["Z"]]
+    Lines_blh1[time]=[blh[0],blh[1],blh[2]]
+
+for time in Lines_xyz2:
+    blh = tr.xyz2blh(Lines_xyz2[time]["X"],Lines_xyz2[time]["Y"],Lines_xyz2[time]["Z"])
+    blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+    Lines_blh2[time]=[blh[0],blh[1],blh[2]]
 
 
 # minLat = int(minLat)
@@ -292,8 +295,8 @@ folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_L
 # plot lines
 for time in Lines_blh1:
     folium.Circle(radius=50,location=[Lines_blh1[time][0],Lines_blh1[time][1]],color="Blue",fill=True,fill_color="#3186cc").add_to(m)
-# for time in Lines_blh2:
-#     folium.Circle(radius=50,location=[Lines_blh2[time][0],Lines_blh2[time][1]],color="Red",fill=True,fill_color="#3186cc").add_to(m)
+for time in Lines_blh2:
+    folium.Circle(radius=50,location=[Lines_blh2[time][0],Lines_blh2[time][1]],color="Red",fill=True,fill_color="#DA70D6").add_to(m)
 
 # plot triangle
 # xyz = mark_point_xyz["SWHF"]

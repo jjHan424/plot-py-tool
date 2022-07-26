@@ -1,7 +1,7 @@
 '''
 Author: HanJunjie
 Date: 2021-11-29 21:26:38
-LastEditTime: 2022-07-24 15:09:22
+LastEditTime: 2022-07-25 10:15:12
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_flt.py
@@ -43,9 +43,9 @@ REF_XYZ = {"A010":[ -2175297.0269,4330326.0624,4133584.2257 ],
            "SZK01":[ -2401848.6451,5379319.6152,2436510.7506]}
 Y=2022
 M=7
-D=23
-S=0 #21
-L=24
+D=24
+S=19 #21
+L=5
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
 mode_list = ["SZK1","SZK2","SZK3"]
@@ -55,9 +55,9 @@ mode="/Volumes/H_GREAT/2Project/Allystar/2022_0720EPO/"
 path_dir1 = "res/20220720/SZK1_20220720_epo_K_GEC.pppar.pos"
 path_dir2 = "res/20220720/SZK1_20220720_epo_K_GEC.pppar.pos"
 path_dir3 = "res/20220720/SZK3_20220720_epo_K_GEC.pppar.pos"
-filename_list=["/Volumes/H_GREAT/2Project/Allystar/2022_0723SZ_SZK/AUG4/SZK1_20220723_SGG_CLK01_K_GEC.pppar.pos",
-                "/Volumes/H_GREAT/2Project/Allystar/2022_0723SZ_SZK/AUG4/SZK2_20220723_SGG_CLK01_K_GEC.pppar.pos",
-                "/Volumes/H_GREAT/2Project/Allystar/2022_0723SZ_SZK/AUG4/SZK3_20220723_SGG_CLK01_K_GEC.pppar.pos"]
+filename_list=["/Volumes/H_GREAT/2Project/Allystar/2022_0724_SZK/CLK06/AUG3/SZK1_20220724_SGG_CLK06_K_GEC.pppar.pos",
+                "/Volumes/H_GREAT/2Project/Allystar/2022_0724_SZK/CLK06/AUG3/SZK2_20220724_SGG_CLK06_K_GEC.pppar.pos",
+                "/Volumes/H_GREAT/2Project/Allystar/2022_0724_SZK/CLK06/AUG3/SZK3_20220724_SGG_CLK06_K_GEC.pppar.pos"]
 # filename_list = [mode+"AUG3/"+path_dir1,
 #                 mode+"AUG3/"+path_dir2,
 #                 mode+"AUG3/"+path_dir3,

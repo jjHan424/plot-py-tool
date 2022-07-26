@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-07-26 10:23:53
+LastEditTime: 2022-07-26 20:20:55
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -1476,8 +1476,8 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
         for i in range(N_plot):
             axP[i].set_ylabel(type[i],font2)
             #axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-            if type[i] == "E" or type[i] == "N" or type[i] == "U":
-                axP[i].set_ylim(ymin,ymax)
+            # if type[i] == "E" or type[i] == "N" or type[i] == "U":
+            #     axP[i].set_ylim(ymin,ymax)
             if type[i] == "E":
                 if N_plot==3:
                     axP[i].set_title("Positioning Errors(m)",font,y=1.1)
@@ -1710,8 +1710,8 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                             temp = np.std(data_plot[cur_type][j])
                             #STD_enu[cur_type].append(temp)
                             time_temp = time[j]
-                            if cur_type!="NSAT":
-                                data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
+                            # if cur_type!="NSAT":
+                            #     data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
                             temp_M = np.mean(data_plot[cur_type][j])
                             MEAN_enu[cur_type].append(temp_M)
                             temp = dp.rms(data_plot[cur_type][j])
@@ -2547,7 +2547,7 @@ def plot_aug_NSAT(data = {},mode = {},type = "NSAT",freq = 1,ylim = 1,starttime 
         for j in range(num_mode):
             # axP[j].plot(time_R[j],data_R[j])
             axP[j].scatter(time_R[j],data_R[j])
-            # axP[j].set_xticks(XTick)
+            axP[j].set_xticks(XTick)
             mean_Sat_G[mode[j]]=np.mean(data_G[j])
             mean_Sat_E[mode[j]]=np.mean(data_E[j])
             mean_Sat_C[mode[j]]=np.mean(data_C[j])
@@ -2557,7 +2557,7 @@ def plot_aug_NSAT(data = {},mode = {},type = "NSAT",freq = 1,ylim = 1,starttime 
 		'weight' : 500,
 		'size'   : 15,
                 }
-        # axP[j].set_xticklabels(XLabel)
+        axP[j].set_xticklabels(XLabel)
     
     
     
