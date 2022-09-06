@@ -1,7 +1,7 @@
 '''
 Author: Han Junjie
 Date: 2021-11-23 20:07:41
-LastEditTime: 2022-07-07 16:23:36
+LastEditTime: 2022-08-28 20:58:51
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_upd.py
@@ -22,7 +22,7 @@ import trans as tr
 
 file_nl = {}
 file_wl = {}
-file_nl[0] = '/Volumes/H_GREAT/2Project/MeiTuan/MEITUAN_data/upd_nl'
+file_nl[0] = '/Volumes/H_GREAT/4Master_2/Paper_Grid/Data_GNSS/UPD_WithDCB/upd_nl_2021339_GEC'
 
 file_wl[0] = '/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/GERAT_UPDLSQ/ambupd/upd_wl_2020001_G_UC'
 week,sec = tr.ymd2gpst(2017,7,20,0,0,0)

@@ -2,7 +2,7 @@
 Author: HanJunjie HanJunjie@whu.edu.cn
 Date: 2022-05-13 12:56:14
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
-LastEditTime: 2022-06-06 12:15:03
+LastEditTime: 2022-09-01 22:28:07
 FilePath: /plot-py-tool/main/hjj_draw_sigma_ion.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -19,12 +19,12 @@ import draw as dr
 #import seaborn as sns
 import trans as tr
 
-path_G = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-grid/GPS.txt"
-sigma_G= rf.H_open_sigma_grid(path_G)
-path_E = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-grid/GAL.txt" 
-sigma_E= rf.H_open_sigma_grid(path_E)
-path_C = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-grid/BDS.txt" 
-sigma_C= rf.H_open_sigma_grid(path_C)
+path_G = "/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/Sigma.txt"
+sigma_G= rf.H_open_sigma_grid(path_G,"G")
+path_E = "/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/Sigma.txt" 
+sigma_E= rf.H_open_sigma_grid(path_E,"E")
+path_C = "/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/Sigma.txt" 
+sigma_C= rf.H_open_sigma_grid(path_C,"C")
 
 all_data = {}
 all_data["GPS"] = sigma_G
@@ -67,9 +67,9 @@ axP[1].set_ylabel('Sigma of DCB observation/m')
 axP[0].set_title('G')
 axP[1].set_title('E')
 axP[2].set_title('C')
-# axP[0].set_ylim(0,0.08)
-# axP[1].set_ylim(0,0.06)
-# axP[2].set_ylim(0,0.07)
+# axP[0].set_ylim(0,0.05)
+# axP[1].set_ylim(0,0.05)
+# axP[2].set_ylim(0,0.05)
 for i in range(3):
     axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
     # axP[i].set_ylim(0,0.06)

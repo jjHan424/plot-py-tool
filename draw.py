@@ -1,7 +1,7 @@
 '''
 Author: Junjie Han
 Date: 2021-09-23 10:14:18
-LastEditTime: 2022-07-26 20:20:55
+LastEditTime: 2022-08-30 20:26:43
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
@@ -295,8 +295,15 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
             for j in range(2):
                 axP[i][j].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
                 axP[i][j].set_ylim(ymin,ymax)
-        type1="L1"
-        type2="L2"
+        sys_type["C"] = {}
+        sys_type["G"] = {}
+        sys_type["E"] = {}
+        sys_type["C"]["1"] = "L2"
+        sys_type["G"]["1"] = "L1"
+        sys_type["E"]["1"] = "L1"  
+        sys_type["C"]["2"]  = "L7"
+        sys_type["G"]["2"]  = "L2"
+        sys_type["E"]["2"]  = "L5" 
     elif type == 'ION':
         f1=5
         ymin = -ylim
@@ -330,7 +337,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP.set_xlabel('Time' + '(' + time + ')')
         axP.set_ylabel('Difference of Troposphere Delay correction/m',font)
         axP.grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-        axP.set_ylim(ymin,ymax)
+        # axP.set_ylim(ymin,ymax)
         sys_type["C"]="TRP1"
         sys_type["G"]="TRP1"
         sys_type["E"]="TRP1"
@@ -397,16 +404,16 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
                     prn = int(sat[1:3])
                     # if abs(data[time][sat][sys_type[sat[0]]]) > -1:
                     if sat[0] == "C":
-                        data_C[prn-1].append(data[time][sat][type1])
-                        data_C1[prn-1].append(data[time][sat][type2])
+                        data_C[prn-1].append(data[time][sat][sys_type[sat[0]]["1"]])
+                        data_C1[prn-1].append(data[time][sat][sys_type[sat[0]]["2"]])
                         time_C[prn-1].append(plot_time)
                     if sat[0] == "G":
-                        data_G[prn-1].append(data[time][sat][type1])
-                        data_G1[prn-1].append(data[time][sat][type2])
+                        data_G[prn-1].append(data[time][sat][sys_type[sat[0]]["1"]])
+                        data_G1[prn-1].append(data[time][sat][sys_type[sat[0]]["2"]])
                         time_G[prn-1].append(plot_time)
                     if sat[0] == "E":
-                        data_E[prn-1].append(data[time][sat][type1])
-                        data_E1[prn-1].append(data[time][sat][type2])
+                        data_E[prn-1].append(data[time][sat][sys_type[sat[0]]["1"]])
+                        data_E1[prn-1].append(data[time][sat][sys_type[sat[0]]["2"]])
                         time_E[prn-1].append(plot_time)
     
     if type == "ION":
@@ -1313,7 +1320,7 @@ def plot_upd_nl_GEC(all_data={},savedir='save_fig_path',mode = 'upd_nl',show = F
     std_G,std_E,std_C = [],[],[]
     G_L,E_L,C_L = [],[],[]
     
-    figP,axP = plt.subplots(3,1,figsize=(23,15),sharey=False,sharex=True)
+    figP,axP = plt.subplots(3,1,figsize=(12,9),sharey=False,sharex=True)
     
     axP[2].set_xlabel('Time:Hour of GPS Week(hour)')
     axP[0].set_ylabel(mode+'(Cycles)')
@@ -1399,27 +1406,27 @@ def plot_upd_nl_GEC(all_data={},savedir='save_fig_path',mode = 'upd_nl',show = F
     axP[1].grid()
     axP[2].grid()
 
-    # savedir1 = savedir + mode + ".png" 
-    # plt.savefig(savedir1)
-    # figS,axS = plt.subplots(3,1,figsize=(20,15),sharey=True,sharex=False)
-    # axS[0].set_ylabel('UPD STD(Cycles)')
-    # axS[1].set_ylabel('UPD STD(Cycles)')
-    # axS[2].set_ylabel('UPD STD(Cycles)')
-    # axS[0].set_title('G-STD-NL')
-    # axS[1].set_title('E-STD-NL')
-    # axS[2].set_title('C-STD-NL')
-    # axS[0].set_ylim(0,0.1)
-    # axS[0].bar(range(len(std_G)),std_G,tick_label=G_L)
-    # axS[1].bar(range(len(std_E)),std_E,tick_label=E_L)
-    # axS[2].bar(range(len(std_C)),std_C,tick_label=C_L)
-    # axS[0].grid(axis = "y")
-    # axS[1].grid(axis = "y")
-    # axS[2].grid(axis = "y")
-    # axS[0].set_axisbelow(True)
-    # axS[1].set_axisbelow(True)
-    # axS[2].set_axisbelow(True)
-    # savedir2 = savedir + mode + "std.png" 
-    # plt.savefig(savedir2)
+    savedir1 = savedir + mode + ".png" 
+    plt.savefig(savedir1)
+    figS,axS = plt.subplots(3,1,figsize=(20,15),sharey=True,sharex=False)
+    axS[0].set_ylabel('UPD STD(Cycles)')
+    axS[1].set_ylabel('UPD STD(Cycles)')
+    axS[2].set_ylabel('UPD STD(Cycles)')
+    axS[0].set_title('G-STD-NL')
+    axS[1].set_title('E-STD-NL')
+    axS[2].set_title('C-STD-NL')
+    axS[0].set_ylim(0,0.5)
+    axS[0].bar(range(len(std_G)),std_G,tick_label=G_L)
+    axS[1].bar(range(len(std_E)),std_E,tick_label=E_L)
+    axS[2].bar(range(len(std_C)),std_C,tick_label=C_L)
+    axS[0].grid(axis = "y")
+    axS[1].grid(axis = "y")
+    axS[2].grid(axis = "y")
+    axS[0].set_axisbelow(True)
+    axS[1].set_axisbelow(True)
+    axS[2].set_axisbelow(True)
+    savedir2 = savedir + mode + "std.png" 
+    plt.savefig(savedir2)
     if show:
         plt.show()
 
@@ -1480,8 +1487,8 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
         for i in range(N_plot):
             axP[i].set_ylabel(type[i],font2)
             #axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-            # if type[i] == "E" or type[i] == "N" or type[i] == "U":
-            #     axP[i].set_ylim(ymin,ymax)
+            if type[i] == "E" or type[i] == "N" or type[i] == "U":
+                axP[i].set_ylim(ymin,ymax)
             if type[i] == "E":
                 if N_plot==3:
                     axP[i].set_title("Positioning Errors(m)",font,y=1.1)
@@ -1646,19 +1653,19 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                     index_5_U=[]
                     index_10_U=[]
                     for ii in range(len(time[j])):
-                        if math.sqrt((data_plot["E"][j][ii] - mean_E) * (data_plot["E"][j][ii] - mean_E) + (data_plot["N"][j][ii] - mean_N) * (data_plot["N"][j][ii] - mean_N)) < 0.03:
-                            index_3_EN.append(ii)
                         if math.sqrt((data_plot["E"][j][ii] - mean_E) * (data_plot["E"][j][ii] - mean_E) + (data_plot["N"][j][ii] - mean_N) * (data_plot["N"][j][ii] - mean_N)) < 0.05:
+                            index_3_EN.append(ii)
+                        if math.sqrt((data_plot["E"][j][ii] - mean_E) * (data_plot["E"][j][ii] - mean_E) + (data_plot["N"][j][ii] - mean_N) * (data_plot["N"][j][ii] - mean_N)) < 0.10:
                             index_5_EN.append(ii)
-                        if math.sqrt((data_plot["U"][j][ii] - mean_U) * (data_plot["U"][j][ii] - mean_U)) < 0.05:
-                            index_5_U.append(ii)
                         if math.sqrt((data_plot["U"][j][ii] - mean_U) * (data_plot["U"][j][ii] - mean_U)) < 0.10:
+                            index_5_U.append(ii)
+                        if math.sqrt((data_plot["U"][j][ii] - mean_U) * (data_plot["U"][j][ii] - mean_U)) < 0.15:
                             index_10_U.append(ii)
                     print(mode[j])
-                    print("Horizon(<3cm)    " + '{:.2f}%'.format(len(index_3_EN)/len(time[j])*100))
-                    print("Horizon(<5cm)    " + '{:.2f}%'.format(len(index_5_EN)/len(time[j])*100))
-                    print("Altitude(<5cm)   " + '{:.2f}%'.format(len(index_5_U)/len(time[j])*100))
-                    print("Altitude(<10cm)  " + '{:.2f}%'.format(len(index_10_U)/len(time[j])*100))
+                    print("Horizon(<5cm)    " + '{:.2f}%'.format(len(index_3_EN)/len(time[j])*100))
+                    print("Horizon(<10cm)    " + '{:.2f}%'.format(len(index_5_EN)/len(time[j])*100))
+                    print("Altitude(<10cm)   " + '{:.2f}%'.format(len(index_5_U)/len(time[j])*100))
+                    print("Altitude(<15cm)  " + '{:.2f}%'.format(len(index_10_U)/len(time[j])*100))
                             
                     # rms_E = dp.rms(data_plot["E"][j]-mean_E)
                     # rms_N = dp.rms(data_plot["N"][j]-mean_N)
@@ -1714,10 +1721,12 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                             temp = np.std(data_plot[cur_type][j])
                             #STD_enu[cur_type].append(temp)
                             time_temp = time[j]
-                            # if cur_type!="NSAT":
-                            #     data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
                             temp_M = np.mean(data_plot[cur_type][j])
                             MEAN_enu[cur_type].append(temp_M)
+                            # if cur_type!="NSAT":
+                            #     data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
+                            # temp_M = np.mean(data_plot[cur_type][j])
+                            # MEAN_enu[cur_type].append(temp_M)
                             temp = dp.rms(data_plot[cur_type][j])
                             RMS_enu[cur_type].append(temp)
                             temp = np.std(data_plot[cur_type][j])
@@ -1769,9 +1778,9 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                 #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
                 axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:7*N_mode+3],font_text)
 
-        # if not all:
-            # axP[N_plot-1].set_xticks(XTick)
-            # axP[N_plot-1].set_xticklabels(XLabel)
+        if not all:
+            axP[N_plot-1].set_xticks(XTick)
+            axP[N_plot-1].set_xticklabels(XLabel)
 
 
         # axP[0].legend(mode,

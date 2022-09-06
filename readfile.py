@@ -1,7 +1,7 @@
 '''
 Author: JunjieHan
 Date: 2021-09-06 19:24:38
-LastEditTime: 2022-07-26 20:42:22
+LastEditTime: 2022-09-01 22:28:11
 Description: read data file
 '''
 import numpy as np
@@ -195,8 +195,8 @@ def open_upd_nl_file(filename_list,sys="G"):
             for line in f:
                 value = line.split()
                 if value[0] == '%':
-                    if value[4] != 'upd_NL':
-                        return 0
+                    # if value[4] != 'upd_NL' or value[4] != 'upd_WL':
+                    #     return 0
                     continue
                 if value[0]=='EPOCH-TIME':
                     day = (float(value[1]))
@@ -300,7 +300,7 @@ def open_flt_pvtflt_file(filename):
                 all_data[soweek]['Z'] = float(value[3])
                 all_data[soweek]['NSAT'] = float(value[13])
                 all_data[soweek]['PDOP'] = float(value[14])
-                if value[17] == 'Fixed':
+                if value[16] == 'Fixed':
                     all_data[soweek]['AMB'] = 1
                 else:
                     all_data[soweek]['AMB'] = 0
@@ -450,7 +450,7 @@ def open_crd_gridmap(filename):
     return all_data
 
 
-def H_open_sigma_grid(filename):
+def H_open_sigma_grid(filename,sys="G"):
     all_data={}
     soweek_last = 0
     w_last = 0
@@ -473,11 +473,54 @@ def H_open_sigma_grid(filename):
             if (w_last==0):
                     w_last = w
             soweek = soweek + (w-w_last)*604800
-            sat = value[3]
+            sat = value[4]
+            if (sat[0] != sys):
+                continue
             if soweek not in all_data.keys():
                 all_data[soweek]={}
-            all_data[soweek][sat] = abs(float(value[4]))
+            all_data[soweek][sat] = abs(float(value[5]))
     return all_data
+
+def H_open_residual_grid(filename):
+    all_data_res={}
+    all_data_dis={}
+    all_data_num={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if (len(value) <= 2):
+                continue
+            ymd = value[1]
+            hms = value[2]
+            year = float(ymd[0:4])
+            month = float(ymd[5:7])
+            day = float(ymd[8:10])
+            hour = float(hms[0:2])
+            minute = float(hms[3:5])
+            second = float(hms[6:8])
+            [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+            if (w_last==0):
+                    w_last = w
+            soweek = soweek + (w-w_last)*604800
+            sat = value[4]
+            site_site = value[3]
+            dis = value[5]
+            if soweek not in all_data_res.keys():
+                all_data_res[soweek]={}
+            all_data_dis[site_site] = dis
+            if site_site not in all_data_num.keys():
+                all_data_num[site_site] = {}
+                all_data_num[site_site]["G"] = 1
+                all_data_num[site_site]["E"] = 1
+                all_data_num[site_site]["C"] = 1
+            else:
+                all_data_num[site_site][sat[0]] = all_data_num[site_site][sat[0]] + 1
+            all_data_res[soweek][sat + ":" + site_site] = abs(float(value[6]))
+    return (all_data_res,all_data_dis,all_data_num)
 
 def open_ltt_file(filename,Fixed=True,SPP=True):
     if not SPP:
@@ -971,7 +1014,7 @@ def open_gpgga_file(gpgga,year=2022,mon=7,day=26):
                     continue
             hour=float(value[1][0:2])
             min=float(value[1][2:4])
-            sec=float(value[1][4:])
+            sec=float(value[1][4:]) + 18
             [w,sec_all] = tr.ymd2gpst(year,mon,day,hour,min,sec)
             # if (soweek < min_sow):
             #     soweek = soweek + 604800
@@ -987,7 +1030,7 @@ def open_gpgga_file(gpgga,year=2022,mon=7,day=26):
             l_min=float(value[4][3:])
             l=(l_deg+l_min/60)
             h=float(value[9])+float(value[11])
-            sec_all = sec_all - 18
+            # sec_all = sec_all - 18
             if sec_all not in all_data.keys():
                 all_data[sec_all]={}
                 XYZ = tr.blh2xyz(b*glv.deg,l*glv.deg,h)

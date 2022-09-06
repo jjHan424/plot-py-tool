@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2022-04-13 21:37:11
-LastEditTime: 2022-06-06 12:08:04
+LastEditTime: 2022-09-03 20:00:02
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_bias.py
@@ -19,7 +19,7 @@ import dataprocess as dp
 import draw as dr
 
 #path = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/060/client-rank//GREAT-GEC-S.bias"
-path = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-grid/GREAT-GEC-5.bias"
+path = "/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/AUG_vs_Grid_2021339/client-WH-Grid-ResEdit/GREAT-GEC-5.bias"
 
 site_list = ["HKCL","HKFN","HKKS","HKKT",
             "HKLT","HKMW","HKNP","HKOH",
@@ -29,8 +29,10 @@ site_list = ["HKCL","HKFN","HKKS","HKKT",
 site_list = ["2008","2017","2006","2010",
             "2014"]
 
-site_list = ["WHXZ","WHDS","XGXN","N028",
-            "N047","N068","WHYJ","WHSP","N062"]
+# site_list = ["WHXZ","WHDS","XGXN","N028",
+#             "N047","N068","WHYJ","WHSP","N062"]
+
+site_list = ["WHXZ","WHDS","WHYJ"]
 alldata = rf.open_bias_file_grid(path)
 data_plot = dp.pre_Bias(alldata,INT = 5)
 #begTime = 10

@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2022-03-07 10:03:20
-LastEditTime: 2022-07-26 20:15:52
+LastEditTime: 2022-08-25 21:09:04
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_mapgrid.py
@@ -14,6 +14,7 @@ from turtle import width
 from numpy import size
 sys.path.insert(0,os.path.dirname(__file__)+'/..')
 import folium
+from folium.features import DivIcon
 import webbrowser
 import trans as tr
 import glv
@@ -121,9 +122,9 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 #               'T430':[-2411015.2264,5380265.7133,2425132.7008]
 #                 }
 
-mark_point_xyz = rf.open_crd_gridmap("/Volumes/H_GREAT/2Project/Allystar/SZ-AUG.crd")
-Lines_xyz2 = rf.open_flt_pos_rtpppfile("/Volumes/H_GREAT/2Project/Allystar/2022_0726_Dynamic/CLK01/AUG3/SZK3_20220726_SGG_CLK01_K_GEC.pppar.pos")
-Lines_xyz1 = rf.open_gpgga_file("/Volumes/H_GREAT/2Project/Allystar/2022_0726_Dynamic/novatel.txt",year=2022,mon=7,day=26)
+mark_point_xyz = rf.open_crd_gridmap("/Users/hjj/Documents/HJJ/Master_2/Paper_Grid/crd/2021/AUG_GZ.crd")
+# Lines_xyz1 = rf.open_flt_pos_rtpppfile("/Volumes/H_GREAT/2Project/Allystar/2022_0725_Dynamic/CLK06/AUG4/SZK3_20220725_SGG_CLK06_K_GEC.pppar.pos")
+# Lines_xyz1 = rf.open_gpgga_file("/Volumes/H_GREAT/2Project/Allystar/2022_0726_Dynamic/novatel.txt",year=2022,mon=7,day=26)
 
 #Lines_xyz2 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-comp/SEPT-GEC.flt")
 #Lines_xyz2 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-comp/SEPT-GEC.flt")
@@ -161,29 +162,30 @@ for site in mark_point_xyz.keys():
     if blh[1] > maxLon:
         maxLon = blh[1]
     mark_point_blh[site]=[blh[0],blh[1],blh[2]]
-    if site=="DGXG" or site == "HZHY":
-        # folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='green'),tooltip="click").add_to(m)
-        k=1
-    else:
-        if site[1:2] == "0" or site[1:2] == "1":
-            folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
-        else:
-            folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='red'),tooltip="click").add_to(m)
+    folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='blue', icon="info-sign"),tooltip="click").add_to(m)
+    # if site=="DGXG" or site == "HZHY":
+    #     # folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='green'),tooltip="click").add_to(m)
+    #     k=1
+    # else:
+    #     if site[1:2] == "0" or site[1:2] == "1":
+    #         folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
+    #     else:
+    #         folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='red'),tooltip="click").add_to(m)
 
 
 
 
-for time in Lines_xyz1:
-    blh = tr.xyz2blh(Lines_xyz1[time]["X"],Lines_xyz1[time]["Y"],Lines_xyz1[time]["Z"])
-    blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-    blh_G = tr.wgs84togcj02(blh[0], blh[1])
-    # Lines_blh1[time]=[Lines_xyz1[time]["X"],Lines_xyz1[time]["Y"],Lines_xyz1[time]["Z"]]
-    Lines_blh1[time]=[blh[0],blh[1],blh[2]]
+# for time in Lines_xyz1:
+#     blh = tr.xyz2blh(Lines_xyz1[time]["X"],Lines_xyz1[time]["Y"],Lines_xyz1[time]["Z"])
+#     blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+#     blh_G = tr.wgs84togcj02(blh[0], blh[1])
+#     # Lines_blh1[time]=[Lines_xyz1[time]["X"],Lines_xyz1[time]["Y"],Lines_xyz1[time]["Z"]]
+#     Lines_blh1[time]=[blh[0],blh[1],blh[2]]
 
-for time in Lines_xyz2:
-    blh = tr.xyz2blh(Lines_xyz2[time]["X"],Lines_xyz2[time]["Y"],Lines_xyz2[time]["Z"])
-    blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-    Lines_blh2[time]=[blh[0],blh[1],blh[2]]
+# for time in Lines_xyz2:
+#     blh = tr.xyz2blh(Lines_xyz2[time]["X"],Lines_xyz2[time]["Y"],Lines_xyz2[time]["Z"])
+#     blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
+#     Lines_blh2[time]=[blh[0],blh[1],blh[2]]
 
 
 # minLat = int(minLat)
@@ -198,13 +200,15 @@ if delta < (maxLon - minLon):
 print(delta)
 if delta>10:
     space = delta/5
+    # space = 10
     count = 5
 else:
-    space = 0.2
+    space = 0.3
     count = 0
 if count==0:
     maxLat = maxLat + space/2
     minLon = minLon - space/2
+    # minLat = minLat + space
 #maxLat = maxLat + space/2
 #minLat = minLat - space/2
 #maxLon = maxLon + space/2
@@ -291,12 +295,18 @@ while cur_Lat < maxLat:
     folium.PolyLine(locations=[[cur_Lat,minLon],[cur_Lat + space,minLon]],color=c,weight=3).add_to(m)
     cur_Lat = cur_Lat + space
 # text ref
-folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space),show=True),icon=folium.Icon(color='blue'),tooltip="click").add_to(m)
+folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space),show=True),icon=folium.Icon(color='red',icon="info-sign"),tooltip="click").add_to(m)
+# text only text
+# folium.Marker(location=[maxLat,minLon], icon=DivIcon(
+#         icon_size=(150,36),
+#         icon_anchor=(7,20),
+#         html='<div style="font-size: 18pt; color : black">'+"Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space)+'</div>',
+#         )).add_to(m)
 # plot lines
-for time in Lines_blh1:
-    folium.Circle(radius=50,location=[Lines_blh1[time][0],Lines_blh1[time][1]],color="Blue",fill=True,fill_color="#3186cc").add_to(m)
-for time in Lines_blh2:
-    folium.Circle(radius=50,location=[Lines_blh2[time][0],Lines_blh2[time][1]],color="Red",fill=True,fill_color="#DA70D6").add_to(m)
+# for time in Lines_blh1:
+#     folium.Circle(radius=50,location=[Lines_blh1[time][0],Lines_blh1[time][1]],color="Blue",fill=True,fill_color="#3186cc").add_to(m)
+# for time in Lines_blh2:
+#     folium.Circle(radius=50,location=[Lines_blh2[time][0],Lines_blh2[time][1]],color="Red",fill=True,fill_color="#DA70D6").add_to(m)
 
 # plot triangle
 # xyz = mark_point_xyz["SWHF"]
@@ -382,5 +392,6 @@ for time in Lines_blh2:
 # folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
 # folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
 # folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
-m.save('/Users/hjj/Desktop/SZ-AUG.html')
+
+m.save('/Users/hjj/Documents/HJJ/Master_2/Paper_Grid/crd/2021/AUG_GZ.html')
 # webbrowser.open('/Users/hjj/Desktop/HongKongGridS.html')

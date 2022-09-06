@@ -1,7 +1,7 @@
 '''
 Author: HanJunjie
 Date: 2021-11-29 21:26:38
-LastEditTime: 2022-07-16 14:18:54
+LastEditTime: 2022-09-02 11:04:15
 LastEditors: HanJunjie HanJunjie@whu.edu.cn
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: /plot-py-tool/main/draw_flt.py
@@ -27,40 +27,30 @@ REF_XYZ = {"HKLM":[-2414046.6433,5391602.1169,2396878.6436],
            "E033":[-2340806.3005,4922578.8973,3302011.7872],
            "N047":[-2350716.9401,4955782.5397,3244265.6251],
            "2017":[-2424178.5320,5365092.3806,2445506.8814],
-           '2010':[-2419056.7812,5364365.3435,2452055.3961]}
+           '2010':[-2419056.7812,5364365.3435,2452055.3961],
+           "SGGW":[ -2267804.6138,5009342.3946,3220991.8459],
+           "N032":[-2141844.0741,5071953.6087,3209315.6359]}
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
 #mode_list = ["GEC","G","E","C","GE"]#,"4 Sites Grid","3 Sites MLCM"]
-mode_list = ["HKSC"]#,"Omc","Rank"]
+mode_list = ["Grid","AUG"]#,"Omc","Rank"]
 #mode_list = ["GRID"]#,"Omc","Rank"]
 #site_list = ["HKLM","HKSC","HKTK"]
 #site_list = ["WUDA","WUDA","WUDA"]
-site_list = ["HKSC","E033","E033"]
+# site = "WUDA"
+site_list = ["WUDA","WUDA","WUDA"]
 #site_list = "HKSC"
 Y=2021
-M=11
-D=1
-S=4
+M=12
+D=5
+S=6
 L=18
-Direct1 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/100"
-Direct2 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/305"
-Direct3 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result"
+Direct1="/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/AUG_vs_Grid_2021339/client-WH-Grid/"
+Direct2="/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/AUG_vs_Grid_2021339/client-WH-Grid-ResEdit/"
 # HongKong
 filename_list = [
-                # "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/HKSC-GEC.flt",
-                # "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/HKSC-GEC.flt",
-                #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client-aug/HKSC-GEC-corObs.flt",
-                #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client-aug/HKSC-GEC.flt",
-                #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientGrid/HKST-HKSC-GEC-corObs.flt",
-                #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientGrid/HKST-HKSC-GEC.flt",
-                #Direct1 + "/client-comp/"  + "HKSC-GEC.flt",
-                #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client-aug/HKLM-GEC-ion.flt",
-                #Direct1 + "/client-aug/"  + "HKSC-GEC-corObs.flt",
-                "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-AR-2.flt",
-                Direct2 + "/client-upd-aug/"  + "HKSC-GEC-corObs.flt",
-                Direct1 + "/client-rank/"  + "HKSC-GEC.flt",
-                #Direct2 + "/" + "client_Rank/" + "HKSC-GEC.flt",
-                #Direct1 + "/" + "client_2/" + "HKLM-GEC.flt"
+                Direct1 + "WUDA-GEC-5-5.flt",
+                Direct2 + "WUDA-GEC-5-5.flt"
                 ]
 # China
 # filename_list = [
@@ -80,7 +70,7 @@ filename_list = [
 for i in range(len(mode_list)):
     data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
     # data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
-    data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = site_list[i])
+    data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = site_list[0])
     ENU_ALL[mode_list[i]] = data_ENU
     
 # path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKLM/5-MW.aug"
@@ -91,6 +81,6 @@ for i in range(len(mode_list)):
 # ENU_ALL["ION"] = data
 #begTime = 10
 #while (begTime < 31):
-dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 1,starttime=S,LastT=L,deltaT=1,time = "UTC",all=False,Fixed=False,delta_data = 30,year = Y,mon=M,day=D,Sigma=3,Sigma_num=0)
+dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.5,starttime=S,LastT=L,deltaT=2,time = "UTC+8",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=0)
     #begTime = begTime + 2
 
