@@ -29,28 +29,43 @@ REF_XYZ = {"HKLM":[-2414046.6433,5391602.1169,2396878.6436],
            "2017":[-2424178.5320,5365092.3806,2445506.8814],
            '2010':[-2419056.7812,5364365.3435,2452055.3961],
            "SGGW":[ -2267804.6138,5009342.3946,3220991.8459],
-           "N032":[-2141844.0741,5071953.6087,3209315.6359]}
+           "N032":[-2141844.0741,5071953.6087,3209315.6359],
+           "HKMW":[-2402484.8349,5395262.2042,2400726.7169]}
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
 #mode_list = ["GEC","G","E","C","GE"]#,"4 Sites Grid","3 Sites MLCM"]
-mode_list = ["Gri","AUG"]#,"Omc","Rank"]
+mode_list = ["1","3"]#,"Omc","Rank"]
 #mode_list = ["GRID"]#,"Omc","Rank"]
 #site_list = ["HKLM","HKSC","HKTK"]
 #site_list = ["WUDA","WUDA","WUDA"]
-# site = "WUDA"
-site_list = ["WUDA","WUDA","WUDA"]
+site = "HKMW"
+site_list = [site,"E033","WUDA"]
 #site_list = "HKSC"
 Y=2021
 M=12
 D=5
-S=6
-L=18
-Direct1="/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/AUG_vs_Grid_2021339/client-WH-Grid/"
-Direct2="/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/AUG_vs_Grid_2021339/client-WH-Grid-ResEdit/"
+# S=2
+# L=22
+S=14
+L=4
+# WUHAN
+# Direct1=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Grid_2021339\client-Wgt-WUDA"
+# Direct2=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Grid_2021339\client-Wgt-WHDS-WHXZ"
+# Direct3=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Grid_2021339\client-WH-Grid-SigWgt"
+# Direct4=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Grid_2021339\client-WH-Aug"
 # HongKong
+Direct1=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Wgt_2021339_HK\client-Aug"
+Direct2=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Wgt_2021339_HK\client-Wgt-HKMW"
+Direct3=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Wgt_2021339_HK\client-Wgt-HKNP-HKPC-HKLM"
+Direct4=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Grid_2021339\client-Wgt-WHDS-WHXZ"
+
 filename_list = [
-                Direct1 + "WUDA-GEC-5-5.flt",
-                Direct2 + "WUDA-GEC-5-5.flt"
+                # Direct1 + "\\" + site + "-GEC-5-5.flt",
+                # Direct2 + "\\" + site + "-GEC-5-5.flt"
+                Direct1 + "\\" + site + "-GEC.flt",
+                # Direct2 + "\\" + site + "-GEC.flt",
+                Direct3 + "\\" + site +"-GEC.flt",
+                # Direct4 + "\\" + site +"-GEC.flt"
                 ]
 # China
 # filename_list = [
@@ -80,7 +95,8 @@ for i in range(len(mode_list)):
 # data = dp.pre_aug_new(head_I,data_I,data_S)
 # ENU_ALL["ION"] = data
 #begTime = 10
-#while (begTime < 31):
-dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.5,starttime=S,LastT=L,deltaT=2,time = "UTC+8",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=0)
-    #begTime = begTime + 2
+# while (S <= 23):
+dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.2,starttime=S,LastT=L,deltaT=1,time = "UTC+8",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=0)
+    # print("Time:%d",S+1)
+    # S = S + 1
 

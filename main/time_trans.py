@@ -12,12 +12,12 @@ sys.path.insert(0,os.path.dirname(__file__)+'/..')
 
 import trans as tr
 
-year=2022
-mon=6
-day=26
+year=2020
+mon=9
+day=6
 
 print("GPST(Week Sow): ",tr.ymd2gpst(year,mon,day,9,31,0))
 print("Day of Year: ",tr.ymd2doy(year,mon,day,0,0,00))
 [week,sow]=tr.ymd2gpst(year,mon,day,0,0,00)
 print("GPST(Day of Week): ",sow/3600/24)
-print(tr.mjd2gpst(51544,0))
+print(tr.mjd2gpst(59098,0))

@@ -320,8 +320,8 @@ def open_flt_pos_rtpppfile(filename):
                 soweek = float(value[1])
                 if (soweek < soweek_last):
                     w_last = w_last + 1
-                soweek = soweek + w_last*604800
                 soweek_last = soweek
+                soweek = soweek + w_last*604800
                 #soweek = hour + minute/60.0 + second/3600.0
                 if soweek not in all_data.keys():
                     all_data[soweek]={}
@@ -646,6 +646,8 @@ def open_aug_file_rtppp(filename):
     with open(filename,'rt') as f:
         for line in f:
             value = line.split()
+            if len(value) <= 0:
+                continue
             if value[0] == "%" or value[0] == "##" or value[0] == "amb":
                 epoch_flag = False
                 continue               

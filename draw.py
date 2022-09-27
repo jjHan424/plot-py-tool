@@ -298,12 +298,18 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         sys_type["C"] = {}
         sys_type["G"] = {}
         sys_type["E"] = {}
-        sys_type["C"]["1"] = "L2"
+        # sys_type["C"]["1"] = "L2"
+        # sys_type["G"]["1"] = "L1"
+        # sys_type["E"]["1"] = "L1"  
+        # sys_type["C"]["2"]  = "L7"
+        # sys_type["G"]["2"]  = "L2"
+        # sys_type["E"]["2"]  = "L5" 
+        sys_type["C"]["1"] = "L1"
         sys_type["G"]["1"] = "L1"
         sys_type["E"]["1"] = "L1"  
-        sys_type["C"]["2"]  = "L7"
+        sys_type["C"]["2"]  = "L2"
         sys_type["G"]["2"]  = "L2"
-        sys_type["E"]["2"]  = "L5" 
+        sys_type["E"]["2"]  = "L2" 
     elif type == 'ION':
         f1=5
         ymin = -ylim
@@ -649,7 +655,8 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP[2][1].set_xticklabels(XLabel)
     
     # figP.suptitle(mode)
-    #plt.savefig(savedir)
+    savedir = save + ".jpg"
+    plt.savefig(savedir)
     if show:
         plt.show()  
 
@@ -1637,7 +1644,7 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                         rms_N = dp.rms(data_plot["N"][j])
                         rms_U = dp.rms(data_plot["U"][j])
                         time[j]
-                        #data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M
+                        # data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M
                         print(len(time[j]))
                         for ii in range(len(time[j])):
                             if abs(data_plot["E"][j][ii] - mean_E) > Sigma * std_E or abs(data_plot["N"][j][ii] - mean_N) >  Sigma * std_N or abs(data_plot["U"][j][ii] - mean_U) >  Sigma * std_U:
@@ -1723,8 +1730,8 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                             time_temp = time[j]
                             temp_M = np.mean(data_plot[cur_type][j])
                             MEAN_enu[cur_type].append(temp_M)
-                            # if cur_type!="NSAT":
-                            #     data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
+                            if cur_type!="NSAT":
+                                data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
                             # temp_M = np.mean(data_plot[cur_type][j])
                             # MEAN_enu[cur_type].append(temp_M)
                             temp = dp.rms(data_plot[cur_type][j])

@@ -93,12 +93,10 @@ import draw as dr
 # path_S = "/Volumes/SAMSUNG USB/20220626Static302/2022_0626AUG06/res/20220626/NOVA_20220626_SGG_CLK06_S_GEC.aug"   # PPPAR算的改正数
 # path_I = "/Volumes/SAMSUNG USB/20220626Static302/2022_0626Static06/res/20220626/NOVA_20220626_SGG_CLK06_K_GEC.aug"# 内插改正数
 
-path_S = [r"E:\Allystar\2022_0721_AUGALL\CLK06\DGCA_20220721_SGG_CLK06_S_GEC.aug" ,
-          r"E:\Allystar\2022_0721_AUGALL\CLK06\DGDC_20220721_SGG_CLK06_S_GEC.aug" ,
-          r"E:\Allystar\2022_0721_AUGALL\CLK06\HCLH_20220721_SGG_CLK06_S_GEC.aug" ,
-          r"E:\Allystar\2022_0721_AUGALL\CLK06\HZAD_20220721_SGG_CLK06_S_GEC.aug" ,
-          r"E:\Allystar\2022_0721_AUGALL\CLK06\SWHF_20220721_SGG_CLK06_S_GEC.aug" ,
-          r"E:\Allystar\2022_0721_AUGALL\CLK06\SZYT_20220721_SGG_CLK06_S_GEC.aug" ,]  # PPPAR算的改正数
+path_S = [r"F:\Data_20220923_CLK06\AUG_GRT3\res\20220923\GRT3_20220923_SGG_CLK06_S_GEC.aug",
+            r"F:\Data_20220923_CLK06\AUG_GRT3\res\20220923\N004_20220923_SGG_CLK06_S_GEC.aug"
+            # r"E:\0Project\NORINCO\0Project\Epo_post_CLK01\WUH2_20220922_SGG_CLK01_S_GEC.aug"
+          ]  # PPPAR算的改正数
 
 # path_S = [r"D:\GREAT\GREAT_Project\Allystar/20220720\CLK06\DGCA_20220720_SGG_CLK06_S_GEC.aug" ,
 #           r"D:\GREAT\GREAT_Project\Allystar/20220720\CLK06\DGDC_20220720_SGG_CLK06_S_GEC.aug" ,
@@ -131,7 +129,7 @@ path_I = "E:\Tencent/20220719\Tencent\PPP-RTK_CLK01_SGGW/res/20220719\SGGW_20220
 
 for i in range(len(path_S)):
     [head_S, data_S] = rf.open_aug_file_rtppp(path_S[i])
-    dr.plot_aug_GEC_new(data_S, head_S, type="NSAT", freq=1, starttime=15, time="UTC", show=False, deltaT=2, ylim=0.2, LastT=9, year=2022, mon=7, day=21,save=path_S[i])
+    dr.plot_aug_GEC_new(data_S, head_S, type="NSAT", freq=1, starttime=11, time="UTC", show=False, deltaT=2, ylim=0.2, LastT=13, year=2022, mon=9, day=23,save=path_S[i])
 
 
 

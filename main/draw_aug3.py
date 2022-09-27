@@ -17,12 +17,12 @@ import matplotlib.pyplot as plt
 import dataprocess as dp
 import draw as dr
 
-Y=2021
-M=12
-D=5
+Y=2022
+M=9
+D=26
 #all 
-S=1 #21
-L=3
+S=10 #21
+L=25
 #open
 # S=8+43/60 #21
 # L=8/60
@@ -34,17 +34,24 @@ L=3
 # L=34/60
 
 # mode_list = ["DGDC","DGCA","SZYT","HZAD","SWHF"]
-mode_list = ["30","5"]
-file_list = ["/Volumes/H_software/1Master_2/Paper-Grid/20211205-339/server-30-new/N028-GEC-5.aug",
-            "/Volumes/H_software/1Master_2/Paper-Grid/20211205-339/server-5-new/N028-GEC-5.aug",
-            "/Volumes/SAMSUNG USB/NUC/2022_0726Dynamic/CLK01/HZAD_20220726_SGG_CLK01_S_GEC.aug",
-            "/Volumes/H_GREAT/2Project/Allystar/2022_0723SZ_SZK/HZAD_20220723_SGG_CLK06_S_GEC.aug",
-            "/Volumes/H_GREAT/2Project/Allystar/2022_0723SZ_SZK/SWHF_20220723_SGG_CLK06_S_GEC.aug"]
+mode_list = ["GRT3","N004","N047","3-Same"]
+# file_list = [
+#             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\GRT3_20220924_SGG_CLK06_S_GEC.aug",
+#             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\N004_20220924_SGG_CLK06_S_GEC.aug",
+#             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\N047_20220924_SGG_CLK06_S_GEC.aug",
+#             r"E:\0Project\NORINCO\0Project\20220923AUG_GRT3_414_CLK06\res\20220925\N004_20220925_SGG_CLK06_S_GEC.aug"
+# ]
+file_list = [
+            r"E:\0Project\NORINCO\0Project\CLK06\AUG\20220926\GRT3_20220926_SGG_CLK06_S_GEC.aug",
+            r"E:\0Project\NORINCO\0Project\CLK06\AUG\20220926\N004_20220926_SGG_CLK06_S_GEC.aug",
+            r"E:\0Project\NORINCO\0Project\CLK06\AUG\20220926\N047_20220926_SGG_CLK06_S_GEC.aug",
+            r"E:\0Project\NORINCO\0Project\CLK06\PPPRTK-WUH2\20220926\WUH2_20220926_SGG_CLK06_K_GEC.aug"
+]
 data_all = {}
 for i in range(len(mode_list)):
-    # [head,data] = rf.open_aug_file_rtppp(file_list[i])
-    [head,data] = rf.open_aug_file_new(file_list[i])
+    [head,data] = rf.open_aug_file_rtppp(file_list[i])
+    # [head,data] = rf.open_aug_file_new(file_list[i])
     # data = rf.open_epo_file_rtppp(file_list[i])
     data_all[mode_list[i]] = data
 
-dr.plot_aug_NSAT(data_all,mode_list,type = "NSAT",freq = 1,starttime = S,time = "UTC+8",show = True,deltaT=1,ylim=0.5,LastT=L,year = Y,mon=M,day=D,deltaData=5)
+dr.plot_aug_NSAT(data_all,mode_list,type = "NSAT",freq = 1,starttime = S,time = "UTC+8",show = True,deltaT=2,ylim=0.5,LastT=L,year = Y,mon=M,day=D,deltaData=5)

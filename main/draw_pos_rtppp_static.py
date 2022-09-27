@@ -32,7 +32,7 @@ REF_XYZ = {"A010":[ -2175297.0269,4330326.0624,4133584.2257 ],
            'JFNG':[-2279829.1055,5004706.4425,3219777.3643],
            "N028":[-2191056.9238,5053129.9326,3205815.9701],
            "107":[ -2267808.9916,5009350.0812,3220969.7384],
-           "ZHD":[-2267775.3665,5009356.0078,3220980.7585],
+           "ZHD":[-2267776.6995,5009356.8116,3220981.5595],
            "WUH2":[-2267750.2523,5009154.5652,3221294.4287],
            "302":[-2267824.8799,5009330.7127,3220987.9427],
            "HK02":[-2094676.8787,5634981.6694,2123731.8825],
@@ -42,27 +42,23 @@ REF_XYZ = {"A010":[ -2175297.0269,4330326.0624,4133584.2257 ],
            "SZK06":[ -2401848.6826,5379319.6028,2436510.7536],
            "SZK01":[ -2401848.6451,5379319.6152,2436510.7506]}
 Y=2022
-M=7
-D=24
-<<<<<<< HEAD
-S=19 #21
-L=5
-=======
-S=0 #21
-L=23
->>>>>>> eb82d1b71e15d00a9089e262824b643f4217a292
+M=9
+D=26
+S=10 #21
+L=25
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
-mode_list = ["SZK1","SZK2","SZK3"]
+# mode_list = ["SIX","WUH2","ZHD"]
+mode_list = ["WHU2","ZHD"]
 #site_list = ["HKLM","HKSC","HKTK"]
-site_list = ["SZK01","SZK01","SZK01","SZK","SZK","SZK"]
+site_list = ["WUH2","ZHD","ZHD","SZK","SZK","SZK"]
 mode="/Volumes/H_GREAT/2Project/Allystar/2022_0720EPO/"
 path_dir1 = "res/20220720/SZK1_20220720_epo_K_GEC.pppar.pos"
 path_dir2 = "res/20220720/SZK1_20220720_epo_K_GEC.pppar.pos"
 path_dir3 = "res/20220720/SZK3_20220720_epo_K_GEC.pppar.pos"
-filename_list=["/Volumes/H_GREAT/2Project/Allystar/2022_0724_SZK/CLK06/AUG3/SZK1_20220724_SGG_CLK06_K_GEC.pppar.pos",
-                "/Volumes/H_GREAT/2Project/Allystar/2022_0724_SZK/CLK06/AUG3/SZK2_20220724_SGG_CLK06_K_GEC.pppar.pos",
-                "/Volumes/H_GREAT/2Project/Allystar/2022_0724_SZK/CLK06/AUG3/SZK3_20220724_SGG_CLK06_K_GEC.pppar.pos"]
+filename_list=[ #r"E:\0Project\NORINCO\0Project\CLK01\PPPRTK-GRT2\20220926\GRT2_20220926_SGG_CLK01_K_GEC.pppar.pos",
+                r"E:\0Project\NORINCO\0Project\CLK01\PPPRTK-WUH2\20220926\WUH2_20220926_SGG_CLK01_K_GEC.pppar.pos",
+                r"E:\0Project\NORINCO\0Project\CLK01\PPPRTK-ZHD\20220926\SGG__20220926_SGG_CLK01_K_GEC.pppar.pos"]
 # filename_list = [mode+"AUG3/"+path_dir1,
 #                 mode+"AUG3/"+path_dir2,
 #                 mode+"AUG3/"+path_dir3,
@@ -82,5 +78,5 @@ for i in range(len(mode_list)):
     ENU_ALL[mode_list[i]] = data_ENU
 
 
-dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim =0.5,starttime=S,LastT=L,all=False,deltaT=1,year=Y,mon=M,day=D,time = "UTC+8",Fixed=True,delta_data = 5,Sigma=3,Sigma_num=1)
+dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim =0.5,starttime=S,LastT=L,all=False,deltaT=2,year=Y,mon=M,day=D,time = "UTC+8",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=1)
 

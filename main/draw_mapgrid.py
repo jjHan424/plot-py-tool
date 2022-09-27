@@ -122,7 +122,7 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 #               'T430':[-2411015.2264,5380265.7133,2425132.7008]
 #                 }
 
-mark_point_xyz = rf.open_crd_gridmap("/Users/hjj/Documents/HJJ/Master_2/Paper_Grid/crd/2021/AUG_GZ.crd")
+mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\AUG_WH.crd")
 # Lines_xyz1 = rf.open_flt_pos_rtpppfile("/Volumes/H_GREAT/2Project/Allystar/2022_0725_Dynamic/CLK06/AUG4/SZK3_20220725_SGG_CLK06_K_GEC.pppar.pos")
 # Lines_xyz1 = rf.open_gpgga_file("/Volumes/H_GREAT/2Project/Allystar/2022_0726_Dynamic/novatel.txt",year=2022,mon=7,day=26)
 
@@ -203,7 +203,7 @@ if delta>10:
     # space = 10
     count = 5
 else:
-    space = 0.3
+    space = 0.5
     count = 0
 if count==0:
     maxLat = maxLat + space/2
@@ -393,5 +393,5 @@ folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_L
 # folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
 # folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
 
-m.save('/Users/hjj/Documents/HJJ/Master_2/Paper_Grid/crd/2021/AUG_GZ.html')
-# webbrowser.open('/Users/hjj/Desktop/HongKongGridS.html')
+m.save(r'E:\1Master_2\Paper_Grid\crd\AUG_WH_WUH2.html')
+webbrowser.open(r'E:\1Master_2\Paper_Grid\crd\AUG_WH_WUH2.html')

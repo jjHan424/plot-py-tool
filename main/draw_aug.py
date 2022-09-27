@@ -90,8 +90,8 @@ import draw as dr
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/server-ion/HKSC-GEC-S.aug"
 # path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/client-aug/HKSC-GEC-I.aug"
 
-path_S = "/Volumes/H_software/1Master_2/Paper-Grid/20211205-339/server-30-new/N028-GEC-5.aug"   # PPPAR算的改正数
-path_I = "/Volumes/H_software/1Master_2/Paper-Grid/20211205-339/server-5-new/N028-GEC-5.aug"# 内插改正数
+path_S = r"E:\0Project\NORINCO\0Project\20220920AUG_WUH2\res\20220921\WUH2_20220921_SGG_CLK01_S_GEC.aug"   # PPPAR算的改正数
+path_I = r"E:\0Project\NORINCO\0Project\20220920AUG_WUH2_WL\res\20220921\WUH2_20220921_SGG_CLK01_S_GEC.aug"# 内插改正数
 
 # path_S = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-S-2.aug"   # PPPAR算的改正数
 # path_I = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-I.aug"# 内插改正数
@@ -108,14 +108,14 @@ path_I = "/Volumes/H_software/1Master_2/Paper-Grid/20211205-339/server-5-new/N02
 # #path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKLM-GEC-I-ion.aug"
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/server_ion/HKLM-GEC-S.aug"
 
-# [head_I,data_I] = rf.open_aug_file_rtppp(path_I)
-# [head_S,data_S] = rf.open_aug_file_rtppp(path_S)
+[head_I,data_I] = rf.open_aug_file_rtppp(path_I)
+[head_S,data_S] = rf.open_aug_file_rtppp(path_S)
 # [head_I,data_I] = rf.open_aug_file_rtppp(path_I)
 # [head_S,data_S] = rf.open_aug_file_rtppp(path_S)
 
 
-[head_I,data_I] = rf.open_aug_file_new(path_I)
-[head_S,data_S] = rf.open_aug_file_new(path_S)
+# [head_I,data_I] = rf.open_aug_file_new(path_I)
+# [head_S,data_S] = rf.open_aug_file_new(path_S)
 data = dp.pre_aug_new(head_I,data_I,data_S)
 #starttime 数据在UTC下的开始时间
 #begT 画图起始时间，在time的设置下
@@ -127,7 +127,7 @@ data = dp.pre_aug_new(head_I,data_I,data_S)
 # begTime = 10
 # while (begTime < 31):
 # dr.plot_aug_GEC_new(data,head_I,type = "P",freq = 1,starttime = 17,time = "UTC",show = True,deltaT=2,ylim=1.5,LastT=7,year = 2022,mon=6,day=20)
-dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 2,time = "UTC+8",show = True,deltaT=2,ylim=0.5,LastT=22,year = 2021,mon=12,day=5)
+dr.plot_aug_GEC_new(data,head_I,type = "L",freq = 1,starttime = 0,time = "UTC+8",show = True,deltaT=2,ylim=0.5,LastT=24,year = 2022,mon=9,day=21)
 #########
 #year mon day starttime 为开始时间
 #ylim 为y坐标范围

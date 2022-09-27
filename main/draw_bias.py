@@ -19,7 +19,7 @@ import dataprocess as dp
 import draw as dr
 
 #path = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/060/client-rank//GREAT-GEC-S.bias"
-path = "/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/AUG_vs_Grid_2021339/client-WH-Grid-ResEdit/GREAT-GEC-5.bias"
+path = r'E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Grid_2021339\client-WH-Grid-SigWgt-bias\GREAT-GEC-5.bias'
 
 site_list = ["HKCL","HKFN","HKKS","HKKT",
             "HKLT","HKMW","HKNP","HKOH",
@@ -29,13 +29,13 @@ site_list = ["HKCL","HKFN","HKKS","HKKT",
 site_list = ["2008","2017","2006","2010",
             "2014"]
 
-# site_list = ["WHXZ","WHDS","XGXN","N028",
-#             "N047","N068","WHYJ","WHSP","N062"]
+site_list = ["WHXZ","WHDS","XGXN","N028",
+            "N047","N068","WHYJ","WHSP","N062"]
 
-site_list = ["WHXZ","WHDS","WHYJ"]
+# site_list = ["WHXZ","WHDS","WHYJ"]
 alldata = rf.open_bias_file_grid(path)
 data_plot = dp.pre_Bias(alldata,INT = 5)
 #begTime = 10
 #while (begTime < 31):
-dr.plot_bias_grid(data = data_plot,type = ["G","E","C","STD"],mode=site_list,ylim = 0.1,starttime = 2,year=2021,mon=12,day=5,LastT=22,time="UTC")
+dr.plot_bias_grid(data = data_plot,type = ["G","E","C","STD"],mode=site_list,ylim = 0.1,starttime = 1,year=2021,mon=12,day=5,LastT=23,time="UTC")
 #begTime = begTime+2
