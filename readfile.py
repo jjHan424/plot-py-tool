@@ -292,6 +292,7 @@ def open_flt_pvtflt_file(filename):
                     w_last = w_last + 1
                 soweek = soweek + w_last*604800
                 soweek_last = soweek
+                
                 #soweek = hour + minute/60.0 + second/3600.0
                 if soweek not in all_data.keys():
                     all_data[soweek]={}
@@ -1071,3 +1072,66 @@ def open_pos_ref_HDBD(filename):
                 all_data[soweek]['AMB'] = 1
                 
     return all_data
+
+
+def open_diff_file_new(filename):
+    all_data={}
+    head_info={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = False
+    num_sat = 0
+    last_day = 0
+    day=0
+    file_exist = os.path.exists(filename)
+    if (not file_exist):
+        return all_data
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if "SYS / # / AUG TYPES" in line:
+                head_end = True
+                head_index = 1
+                for cur_value in value:
+                    if (cur_value == "SYS"):
+                        break
+                    if (len(cur_value) != 1):
+                        if line[0] not in head_info.keys():
+                            head_info[line[0]]={}
+                        head_info[line[0]][cur_value] = head_index
+                        head_index = head_index + 1                   
+            if ">" in line:
+                value=line.split()
+                year=(float(value[1]))
+                month=(float(value[2]))
+                day=(float(value[3]))
+                hour=(float(value[4]))
+                minute=(float(value[5]))
+                second=(float(value[6]))
+                [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+                if (not epoch_flag):
+                    min_sow = soweek
+                if (soweek < min_sow):
+                    soweek = soweek + 604800
+                epoch_flag = True
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+            if ((value[0][0] == "C" or value[0][0] == "E" or value[0][0] == "G") and epoch_flag):
+                if (len(line) <= 4):
+                    continue
+                sat = value[0]
+                if (sat not in all_data[soweek].keys()):
+                    all_data[soweek][sat] = {}
+                i = 1
+                for type in head_info[sat[0]].keys():
+                    if 12*i-9 > len(line) - 1 or 12*i+3 > len(line) - 1:
+                        break
+                    # cur_value = line[12*i-9:12*i+3].strip()
+                    cur_value = line[12*i-8:12*i+4].strip()
+                    if (len(cur_value) > 1):
+                        all_data[soweek][sat][type] = float(cur_value)
+                    i = i+1
+
+
+    return (head_info,all_data)

@@ -90,8 +90,8 @@ import draw as dr
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/server-ion/HKSC-GEC-S.aug"
 # path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/client-aug/HKSC-GEC-I.aug"
 
-path_S = r"E:\0Project\NORINCO\0Project\20220920AUG_WUH2\res\20220921\WUH2_20220921_SGG_CLK01_S_GEC.aug"   # PPPAR算的改正数
-path_I = r"E:\0Project\NORINCO\0Project\20220920AUG_WUH2_WL\res\20220921\WUH2_20220921_SGG_CLK01_S_GEC.aug"# 内插改正数
+path_S = r"E:\1Master_2\Paper_Grid\Pro_20211205-339\server-Aug\WUDA-GEC.aug"   # PPPAR算的改正数
+path_I = r"E:\1Master_2\Paper_Grid\Pro_20211205-339\server-Aug\WUDA-GEC.aug"# 内插改正数
 
 # path_S = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-S-2.aug"   # PPPAR算的改正数
 # path_I = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-I.aug"# 内插改正数
@@ -108,14 +108,14 @@ path_I = r"E:\0Project\NORINCO\0Project\20220920AUG_WUH2_WL\res\20220921\WUH2_20
 # #path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/client/HKLM-GEC-I-ion.aug"
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/server_ion/HKLM-GEC-S.aug"
 
-[head_I,data_I] = rf.open_aug_file_rtppp(path_I)
-[head_S,data_S] = rf.open_aug_file_rtppp(path_S)
+# [head_I,data_I] = rf.open_aug_file_rtppp(path_I)
+# [head_S,data_S] = rf.open_aug_file_rtppp(path_S)
 # [head_I,data_I] = rf.open_aug_file_rtppp(path_I)
 # [head_S,data_S] = rf.open_aug_file_rtppp(path_S)
 
 
-# [head_I,data_I] = rf.open_aug_file_new(path_I)
-# [head_S,data_S] = rf.open_aug_file_new(path_S)
+[head_I,data_I] = rf.open_aug_file_new(path_I)
+[head_S,data_S] = rf.open_aug_file_new(path_S)
 data = dp.pre_aug_new(head_I,data_I,data_S)
 #starttime 数据在UTC下的开始时间
 #begT 画图起始时间，在time的设置下

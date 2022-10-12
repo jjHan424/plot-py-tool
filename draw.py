@@ -1730,8 +1730,8 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                             time_temp = time[j]
                             temp_M = np.mean(data_plot[cur_type][j])
                             MEAN_enu[cur_type].append(temp_M)
-                            if cur_type!="NSAT":
-                                data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
+                            # if cur_type!="NSAT":
+                            #     data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
                             # temp_M = np.mean(data_plot[cur_type][j])
                             # MEAN_enu[cur_type].append(temp_M)
                             temp = dp.rms(data_plot[cur_type][j])
