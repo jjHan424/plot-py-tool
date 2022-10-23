@@ -24,37 +24,39 @@ import draw as dr
 import seaborn as sns
 import trans as tr
 #path set
-path_list = [r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\E0332021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKCL2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKFN2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKKS2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKKT2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKLM2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKLT2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKMW2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKNP2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKOH2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKPC2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKSC2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKSL2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKSS2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKST2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKTK2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\HKWS2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\N0042021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\N0102021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\N0282021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\N0322021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\N0472021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\N0622021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\N0682021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\T4302021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\WHDS2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\WHSP2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\WHXZ2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\WHYJ2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\WUDA2021339_GEC.ismr",
-r"E:\1Master_2\Paper_Grid\Data_Obs\ROTI-20211205-339\XGXN2021339_GEC.ismr",]
+path_list = [#r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\E0332021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKCL2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKFN2021339_GEC.ismr",
+r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKKS2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKKT2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKLM2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKLT2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKMW2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKNP2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKOH2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKPC2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKSC2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKSL2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKSS2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKST2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKTK2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKWS2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\N0042021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\N0102021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\N0282021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\N0322021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\N0472021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\N0622021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\N0682021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\T4302021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\WHDS2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\WHSP2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\WHXZ2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\WHYJ2021339_GEC.ismr",
+# r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\WUDA2021339_GEC.ismr",
+r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\XGXN2021339_GEC.ismr",]
+# path_list = [r"E:\1Master_2\Paper_Grid\Pro_20211205-339\roti\WHYJ2021339_GEC.ismr"]
+path_list = [r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI-5s\2021305\HKNP2021305_GEC.ismr"]
 for i in range(len(path_list)):
 
     path_roti = path_list[i]
@@ -67,8 +69,8 @@ for i in range(len(path_list)):
     t=time
     starttime=0
     year = 2021
-    mon=12
-    day=5
+    mon=11
+    day=1
     LastT=24
     deltaT=2
     all=False
@@ -174,13 +176,13 @@ for i in range(len(path_list)):
     axP[1].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
     axP[2].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
 
-    axP[0].set_ylim(0,1)
-    axP[1].set_ylim(0,1)
-    axP[2].set_ylim(0,1)
+    # axP[0].set_ylim(0,1)
+    # axP[1].set_ylim(0,1)
+    # axP[2].set_ylim(0,1)
 
     axP[0].grid(False)
     axP[1].grid(False)
     axP[2].grid(False)
 
-    plt.savefig(path_roti+'.png')
-    # plt.show()
+    # plt.savefig(path_roti+'.png')
+    plt.show()

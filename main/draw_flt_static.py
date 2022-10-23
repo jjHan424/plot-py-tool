@@ -30,24 +30,26 @@ REF_XYZ = {"HKLM":[-2414046.6433,5391602.1169,2396878.6436],
            '2010':[-2419056.7812,5364365.3435,2452055.3961],
            "SGGW":[ -2267804.6138,5009342.3946,3220991.8459],
            "N032":[-2141844.0708,5071953.6039,3209315.6304],
-           "HKMW":[-2402484.8351,5395262.2062,2400726.7172]}
+           "HKMW":[-2402484.8351,5395262.2062,2400726.7172],
+           "WHYJ":[-2252813.6375,4973121.8230,3286531.2991],
+           "N028":[-2191056.9474,5053129.9334,3205815.9843]}
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
 #mode_list = ["GEC","G","E","C","GE"]#,"4 Sites Grid","3 Sites MLCM"]
 # mode_list = ["MLCM","Grid","Grid-Self","Grid-2"]#,"Omc","Rank"]
-mode_list = ["MLCM","Grid","Grid-Self","Grid-Ele"]
+mode_list = ["MLCM","Grid","Grid-Self"]
 # mode_list = ["Grid","Grid-Self","Grid-2"]
 #mode_list = ["GRID"]#,"Omc","Rank"]
 #site_list = ["HKLM","HKSC","HKTK"]
 #site_list = ["WUDA","WUDA","WUDA"]
-site = "N032"
+site = "WUDA"
 site_list = [site,"E033","WUDA"]
 #site_list = "HKSC"
 Y=2021
 M=12
 D=5
 S=2
-L=22
+L=1
 # S=9
 # L=3
 # WUHAN
@@ -74,15 +76,20 @@ Direct4=r"E:\1Master_2\Paper_Grid\Res_FromServer\Grid_Sig_Ele_Ave\client-Wgt-N03
 #                 # Direct6 + "\\" + site +"-GEC.flt"
 #                 ]
 
+# filename_list = [
+#                 Direct1 + "\\" + site + "-GEC-5-5.flt",
+#                 Direct2 + "\\" + site + "-GEC.flt",
+#                 Direct3 + "\\" + site + "-GEC.flt",
+#                 # Direct4 + "\\" + site +"-GEC.flt"
+#                 r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client" +"\\" + site + "-GEC.flt"
+#                 ]
+
 filename_list = [
-                Direct1 + "\\" + site + "-GEC-5-5.flt",
-                Direct2 + "\\" + site + "-GEC.flt",
-                Direct3 + "\\" + site + "-GEC.flt",
-                Direct4 + "\\" + site +"-GEC.flt",
-                # Direct5 + "\\" + site +"-GEC.flt"
-                # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-GEC.flt"
-                # Direct6 + "\\" + site +"-GEC.flt"
+                r"E:\1Master_2\Paper_Grid\Res_FromServer\Grid_Wgt_dIon\client-Wgt-WUDA-phase\WUDA-GEC.flt",
+                r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-GEC-old.flt",
+                r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-GEC.flt"
                 ]
+
 # China
 # filename_list = [
 #                 #Direct3 + "/client-comp/"  + "E033-GEC.flt",

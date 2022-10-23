@@ -359,6 +359,26 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP[1].set_title('E')
         axP[2].set_title('C')
         # axP.set_xlabel('Time' + '(' + time + ')')
+    elif type == "diffIon":
+        f1=5
+        ymin = -ylim
+        ymax = ylim
+        col = 1
+        figP,axP = plt.subplots(3,1,figsize=(12,10),sharey=True,sharex=True)
+        axP[2].set_xlabel('Time' + '(' + time + ')')
+        axP[1].set_ylabel('Difference of Ionosphere Delay correction/m',font)
+        axP[0].set_title('G')
+        axP[1].set_title('E')
+        axP[2].set_title('C')
+        for i in range(3):
+                axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
+                axP[i].set_ylim(ymin,ymax)
+                box = axP[i].get_position()
+                axP[i].set_position([box.x0, box.y0, box.width*0.99, box.height])
+        if freq==1:
+            sys_type["C"] = "dION2"
+            sys_type["G"] = "dION1"
+            sys_type["E"] = "dION1"  
         
     else:
         print("Wrong mode")
@@ -422,13 +442,15 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
                         data_E1[prn-1].append(data[time][sat][sys_type[sat[0]]["2"]])
                         time_E[prn-1].append(plot_time)
     
-    if type == "ION":
+    if type == "ION" or type == "diffIon":
         for time in data.keys():
             plot_time = (time - cov_Time) / 3600
             if (plot_time > begT and plot_time < begT + LastT):
                 for sat in data[time].keys():
                     prn = int(sat[1:3])
                     if sys_type[sat[0]] not in data[time][sat].keys():
+                        continue
+                    if abs(data[time][sat][sys_type[sat[0]]]) == 0:
                         continue
                     if abs(data[time][sat][sys_type[sat[0]]]) > -1:
                         if sat[0] == "C" and sys_type[sat[0]] in data[time][sat].keys():
@@ -484,7 +506,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP[1].set_xticks(XTick)
         axP[0].set_xticks(XTick)
         axP[2].set_xticklabels(XLabel)
-    if type == "ION":
+    if type == "ION" or type == "diffIon":
         for i in range(100):
                 G,E,C = True,True,True
                 num = len(time_G[i])
@@ -655,8 +677,8 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP[2][1].set_xticklabels(XLabel)
     
     # figP.suptitle(mode)
-    savedir = save + ".jpg"
-    plt.savefig(savedir)
+    # savedir = save + ".jpg"
+    # plt.savefig(savedir)
     if show:
         plt.show()  
 

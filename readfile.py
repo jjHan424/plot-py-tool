@@ -942,6 +942,9 @@ def open_ismr(filename):
     w_last = 0
     head_end = False
     epoch_flag = True
+    file_exist = os.path.exists(filename)
+    if (not file_exist):
+        return all_data
     with open(filename,'rt') as f:
         for line in f:
             value = line.split()

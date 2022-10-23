@@ -19,7 +19,12 @@ import webbrowser
 import trans as tr
 import glv
 import readfile as rf
-
+from shapely.ops import triangulate
+from shapely import wkt
+from shapely.geometry import MultiPoint
+import shapely.geometry
+import math
+import matplotlib as mpl
 # all_truexyz = {
 #          'WHXZ':[-2299689.3404, 4975638.9432, 3250284.4043], 'N062':[-2193162.1236, 4996265.6098, 3291753.9553],
 #          'XGXN':[-2220831.1149, 5007544.3002, 3256075.5112], 'N010':[-2281398.4103, 5046329.8462, 3153471.3945],
@@ -60,7 +65,9 @@ import readfile as rf
 # m.save('/Users/hjj/Desktop/example.html')
 # webbrowser.open('example.html')
 
-
+nbin=16
+# cmap4 = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'lightred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'darkpurple', 'white', 'pink', 'lightblue', 'lightgreen', 'gray', 'black', 'lightgray']
+cmap4 = ['red','cyan','blue','purple','yellow','lime','magenta','orange','green','black','red','cyan','blue','purple','yellow','lime','magenta','orange','green','black']
 center_bl = [22.320048,114.1733] #HK
 grid_space = [0.1,0.1]
 # grid_count = [10,10]
@@ -122,7 +129,7 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 #               'T430':[-2411015.2264,5380265.7133,2425132.7008]
 #                 }
 
-mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\AUG_WH.crd")
+mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_WH.crd")
 # Lines_xyz1 = rf.open_flt_pos_rtpppfile("/Volumes/H_GREAT/2Project/Allystar/2022_0725_Dynamic/CLK06/AUG4/SZK3_20220725_SGG_CLK06_K_GEC.pppar.pos")
 # Lines_xyz1 = rf.open_gpgga_file("/Volumes/H_GREAT/2Project/Allystar/2022_0726_Dynamic/novatel.txt",year=2022,mon=7,day=26)
 
@@ -142,6 +149,7 @@ title='http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style
 # title='https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}' #卫星
 m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11.2, tiles=title, attr='高德-卫星影像图')
 mark_point_blh={}
+points = []
 Lines_blh1={}
 Lines_blh2={}
 minLat = 90
@@ -162,6 +170,7 @@ for site in mark_point_xyz.keys():
     if blh[1] > maxLon:
         maxLon = blh[1]
     mark_point_blh[site]=[blh[0],blh[1],blh[2]]
+    points.append(shapely.geometry.Point(blh[0],blh[1]))
     folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='blue', icon="info-sign"),tooltip="click").add_to(m)
     # if site=="DGXG" or site == "HZHY":
     #     # folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='green'),tooltip="click").add_to(m)
@@ -239,8 +248,10 @@ cur_Lon = minLon - space
 i=0
 
 #---
+count_lon = 1
 while cur_Lon < maxLon - space:
     cur_Lon = cur_Lon + space
+    count_lon = count_lon+1
     if i==0:
         c = 'white'
         i=1
@@ -252,8 +263,10 @@ while cur_Lon < maxLon - space:
 #   |
 #   |
 #   |
+count_lat = 1
 while cur_Lat > minLat + space:
     cur_Lat = cur_Lat - space
+    count_lat = count_lat +1
     if i==0:
         c = 'white'
         i=1
@@ -308,90 +321,202 @@ folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_L
 # for time in Lines_blh2:
 #     folium.Circle(radius=50,location=[Lines_blh2[time][0],Lines_blh2[time][1]],color="Red",fill=True,fill_color="#DA70D6").add_to(m)
 
-# plot triangle
-# xyz = mark_point_xyz["SWHF"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["DGCA"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["SZYT"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# c="green"
-# folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
-# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
-# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
+#==================Denauly Triangle===========================#
+# multipoint = MultiPoint(points)
+# triangles = triangulate(multipoint,tolerance=0.001,edges=False)
+# triangle = {}
+# for index,t in enumerate(triangles):
+#     ell_list = []
+#     value = t.wkt.split(",")
+#     value[3] = value[3][:len(value[3])-2] + "  " + value[3][len(value[3])-2:len(value[3])]
+#     for i in range(len(value)):
+#         if i == 0:
+#             continue
+#         ell_list.append(float(value[i].split(" ")[1]))
+#         ell_list.append(float(value[i].split(" ")[2]))
+#     triangle[index] = ell_list
+# tri_dis = {}
+# for index in triangle.keys():
+#     cur_tri = []
+#     blh1 = [triangle[index][0],triangle[index][1]]
+#     blh2 = [triangle[index][2],triangle[index][3]]
+#     blh3 = [triangle[index][4],triangle[index][5]]
+#     for site in mark_point_blh.keys():
+#         if mark_point_blh[site][0] == blh1[0] and mark_point_blh[site][1] == blh1[1] :
+#             cur_tri.append(site)
+#         if mark_point_blh[site][0] == blh2[0] and mark_point_blh[site][1] == blh2[1] :
+#             cur_tri.append(site)
+#         if mark_point_blh[site][0] == blh3[0] and mark_point_blh[site][1] == blh3[1] :
+#             cur_tri.append(site)
+#     c="blue"
+#     line1 = cur_tri[0] + cur_tri[1]
+#     line2 = cur_tri[1] + cur_tri[0]
+#     if line1 not in tri_dis.keys() and line2 not in tri_dis.keys():
+#         tri_dis[line1] = 1
+#         blh1 = [mark_point_blh[cur_tri[0]][0],mark_point_blh[cur_tri[0]][1]]
+#         blh2 = [mark_point_blh[cur_tri[1]][0],mark_point_blh[cur_tri[1]][1]]
+#         folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=1).add_to(m)
+#         b=(mark_point_blh[cur_tri[0]][0] + mark_point_blh[cur_tri[1]][0])/2
+#         l=(mark_point_blh[cur_tri[0]][1] + mark_point_blh[cur_tri[1]][1])/2
+#         dx=mark_point_xyz[cur_tri[0]][0]/1000 - mark_point_xyz[cur_tri[1]][0]/1000
+#         dy=mark_point_xyz[cur_tri[0]][1]/1000 - mark_point_xyz[cur_tri[1]][1]/1000
+#         dz=mark_point_xyz[cur_tri[0]][2]/1000 - mark_point_xyz[cur_tri[1]][2]/1000
+#         dis = math.sqrt(dx*dx+dy*dy+dz*dz)
+#         folium.Marker(location=[b,l], icon=DivIcon(
+#             icon_size=(150,36),
+#             icon_anchor=(7,20),
+#             html='<div style="font-size: 10pt; color : red">'+"{:.2f}km".format(dis)+'</div>',
+#             )).add_to(m)
+#     line1 = cur_tri[0] + cur_tri[2]
+#     line2 = cur_tri[2] + cur_tri[0]
+#     if line1 not in tri_dis.keys() and line2 not in tri_dis.keys():
+#         tri_dis[line1] = 1
+#         blh1 = [mark_point_blh[cur_tri[0]][0],mark_point_blh[cur_tri[0]][1]]
+#         blh2 = [mark_point_blh[cur_tri[2]][0],mark_point_blh[cur_tri[2]][1]]
+#         folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=1).add_to(m)
+#         b=(mark_point_blh[cur_tri[0]][0] + mark_point_blh[cur_tri[2]][0])/2
+#         l=(mark_point_blh[cur_tri[0]][1] + mark_point_blh[cur_tri[2]][1])/2
+#         dx=mark_point_xyz[cur_tri[0]][0]/1000 - mark_point_xyz[cur_tri[2]][0]/1000
+#         dy=mark_point_xyz[cur_tri[0]][1]/1000 - mark_point_xyz[cur_tri[2]][1]/1000
+#         dz=mark_point_xyz[cur_tri[0]][2]/1000 - mark_point_xyz[cur_tri[2]][2]/1000
+#         dis = math.sqrt(dx*dx+dy*dy+dz*dz)
+#         folium.Marker(location=[b,l], icon=DivIcon(
+#             icon_size=(150,36),
+#             icon_anchor=(7,20),
+#             html='<div style="font-size: 10pt; color : red">'+"{:.2f}km".format(dis)+'</div>',
+#             )).add_to(m)
+#     line1 = cur_tri[1] + cur_tri[2]
+#     line2 = cur_tri[2] + cur_tri[1]
+#     if line1 not in tri_dis.keys() and line2 not in tri_dis.keys():
+#         tri_dis[line1] = 1
+#         blh1 = [mark_point_blh[cur_tri[1]][0],mark_point_blh[cur_tri[1]][1]]
+#         blh2 = [mark_point_blh[cur_tri[2]][0],mark_point_blh[cur_tri[2]][1]]
+#         folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=1).add_to(m)
+#         b=(mark_point_blh[cur_tri[1]][0] + mark_point_blh[cur_tri[2]][0])/2
+#         l=(mark_point_blh[cur_tri[1]][1] + mark_point_blh[cur_tri[2]][1])/2
+#         dx=mark_point_xyz[cur_tri[1]][0]/1000 - mark_point_xyz[cur_tri[2]][0]/1000
+#         dy=mark_point_xyz[cur_tri[1]][1]/1000 - mark_point_xyz[cur_tri[2]][1]/1000
+#         dz=mark_point_xyz[cur_tri[1]][2]/1000 - mark_point_xyz[cur_tri[2]][2]/1000
+#         dis = math.sqrt(dx*dx+dy*dy+dz*dz)
+#         folium.Marker(location=[b,l], icon=DivIcon(
+#             icon_size=(150,36),
+#             icon_anchor=(7,20),
+#             html='<div style="font-size: 10pt; color : red">'+"{:.2f}km".format(dis)+'</div>',
+#             )).add_to(m)
 
-# xyz = mark_point_xyz["DGCA"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["SWHF"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["HZAD"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# c="red"
-# folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
-# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
-# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
+#==================Min Distance===========================#
+# line_mindis = {}
+# line_mindis1 = {}
+# for cur_site in mark_point_xyz.keys():
+#     for cur_site1 in mark_point_xyz.keys():
+#         if cur_site == cur_site1:
+#             continue
+#         line1 = cur_site + cur_site1
+#         line2 = cur_site1 + cur_site
+#         dx = mark_point_xyz[cur_site][0] - mark_point_xyz[cur_site1][0]
+#         dy = mark_point_xyz[cur_site][1] - mark_point_xyz[cur_site1][1]
+#         dz = mark_point_xyz[cur_site][2] - mark_point_xyz[cur_site1][2]
+#         dis = math.sqrt(dx*dx+dy*dy+dz*dz) / 1000
+#         if cur_site not in line_mindis.keys():
+#             line_mindis[cur_site] = {}
+#             line_mindis1[cur_site] = []
+#         line_mindis[cur_site][dis] = cur_site1
+#         line_mindis1[cur_site].append(dis)
+# line_mindis2 = {}
+# for cur_site in line_mindis1.keys():
+#     min_list = sorted(line_mindis1[cur_site])
+#     min1,min2,min3 = min_list[0],min_list[1],min_list[2]
+#     if cur_site not in line_mindis2.keys():
+#         line_mindis2[cur_site] = {}
+#     line_mindis2[cur_site][line_mindis[cur_site][min1]] = min1
+#     line_mindis2[cur_site][line_mindis[cur_site][min2]] = min2
+#     line_mindis2[cur_site][line_mindis[cur_site][min3]] = min3
+# line_plot = []
+# i = 0
+# for cur_site in line_mindis2.keys():
+#     c=cmap4[i]
+#     i = i+1
+#     for cur_site1 in line_mindis2[cur_site].keys():
+#         line1 = cur_site + cur_site1
+#         line2 = cur_site1 + cur_site
+#         blh1 = [mark_point_blh[cur_site][0],mark_point_blh[cur_site][1]]
+#         blh2 = [mark_point_blh[cur_site1][0],mark_point_blh[cur_site1][1]]
+#         b=(mark_point_blh[cur_site][0] + mark_point_blh[cur_site1][0])/2
+#         l=(mark_point_blh[cur_site][1] + mark_point_blh[cur_site1][1])/2
+#         if line1 not in line_plot and line2 not in line_plot:
+#             line_plot.append(line1)
+#             folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=2).add_to(m)
+#             folium.Marker(location=[b,l], icon=DivIcon(
+#                 icon_size=(150,36),
+#                 icon_anchor=(7,20),
+#                 html='<div style="font-size: 10pt; color : red">'+"{:.2f}km".format(line_mindis2[cur_site][cur_site1])+'</div>',
+#                 )).add_to(m)
+#         else:
+#             folium.PolyLine(locations=[[blh1[0],blh1[1]],[b,l]],color=c,weight=2).add_to(m)
 
-# xyz = mark_point_xyz["SZYT"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["DGCA"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["SWHF"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# c="blue"
-# folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
-# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
-# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
+#========================Min Dis Grid ===============#
+line_mindis = {}
+line_mindis1 = {}
+index_grid = 0
+print(range(count_lat))
 
-# xyz = mark_point_xyz["HNPP"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["HNSY"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["HSY1"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# c="green"
-# folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
-# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
-# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
-
-# xyz = mark_point_xyz["HNPP"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["HNDF"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["HNSY"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# c="green"
-# folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
-# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
-# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
-
-# xyz = mark_point_xyz["HNHK"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh1 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["HNPP"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh2 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# xyz = mark_point_xyz["HNQZ"]
-# blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-# blh3 = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
-# c="green"
-# folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
-# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh2[0],blh2[1]]],color=c,weight=3).add_to(m)
-# folium.PolyLine(locations=[[blh3[0],blh3[1]],[blh1[0],blh1[1]]],color=c,weight=3).add_to(m)
-
-m.save(r'E:\1Master_2\Paper_Grid\crd\AUG_WH_WUH2.html')
-webbrowser.open(r'E:\1Master_2\Paper_Grid\crd\AUG_WH_WUH2.html')
+for i in range(count_lat):
+    for j in range(count_lon):
+        for cur_site in mark_point_xyz.keys():
+            b=maxLat - i*space
+            l=minLon + j*space
+            h=0.0
+            mark_point_blh['%02d' % (index_grid)] = [b,l,h]
+            xyz = tr.blh2xyz(b* glv.deg,l* glv.deg,h)
+            line1 = cur_site + '%02d' % (index_grid)
+            line2 =  '%02d' % (index_grid) + cur_site
+            dx = mark_point_xyz[cur_site][0] - xyz[0]
+            dy = mark_point_xyz[cur_site][1] - xyz[1]
+            dz = mark_point_xyz[cur_site][2] - xyz[2]
+            dis = math.sqrt(dx*dx+dy*dy+dz*dz) / 1000
+            if '%02d' % (index_grid) not in line_mindis.keys():
+                line_mindis['%02d' % (index_grid)] = {}
+                line_mindis1['%02d' % (index_grid)] = []
+            line_mindis['%02d' % (index_grid)][dis] = cur_site
+            line_mindis1['%02d' % (index_grid)].append(dis)
+        index_grid = index_grid +1
+line_mindis2 = {}
+cofe_grid = []
+for cur_site in line_mindis1.keys():
+    min_list = sorted(line_mindis1[cur_site])
+    min1,min2,min3 = min_list[0],min_list[1],min_list[2]
+    if cur_site not in line_mindis2.keys():
+        line_mindis2[cur_site] = {}
+    line_mindis2[cur_site][line_mindis[cur_site][min1]] = min1
+    line_mindis2[cur_site][line_mindis[cur_site][min2]] = min2
+    line_mindis2[cur_site][line_mindis[cur_site][min3]] = min3
+    cofe_grid.append(1/min1+1/min2+1/min3)
+    folium.Marker(location=[mark_point_blh[cur_site][0],mark_point_blh[cur_site][1]], icon=DivIcon(
+                icon_size=(150,36),
+                icon_anchor=(7,20),
+                html='<div style="font-size: 10pt; color : red">'+"{:.2f}".format(1/min1+1/min2+1/min3)+'</div>',
+                )).add_to(m)
+# line_plot = []
+# i = 0
+# for cur_site in line_mindis2.keys():
+#     c='blue'
+#     i = i+1
+#     for cur_site1 in line_mindis2[cur_site].keys():
+#         line1 = cur_site + cur_site1
+#         line2 = cur_site1 + cur_site
+#         blh1 = [mark_point_blh[cur_site][0],mark_point_blh[cur_site][1]]
+#         blh2 = [mark_point_blh[cur_site1][0],mark_point_blh[cur_site1][1]]
+#         b=(mark_point_blh[cur_site][0] + mark_point_blh[cur_site1][0])/2
+#         l=(mark_point_blh[cur_site][1] + mark_point_blh[cur_site1][1])/2
+#         if line1 not in line_plot and line2 not in line_plot:
+#             line_plot.append(line1)
+#             folium.PolyLine(locations=[[blh1[0],blh1[1]],[blh2[0],blh2[1]]],color=c,weight=2).add_to(m)
+#             folium.Marker(location=[b,l], icon=DivIcon(
+#                 icon_size=(150,36),
+#                 icon_anchor=(7,20),
+#                 html='<div style="font-size: 10pt; color : red">'+"{:.2f}km".format(line_mindis2[cur_site][cur_site1])+'</div>',
+#                 )).add_to(m)
+#         else:
+#             folium.PolyLine(locations=[[blh1[0],blh1[1]],[b,l]],color=c,weight=2).add_to(m)
+m.save(r'E:\1Master_2\Paper_Grid\crd\2021\AUG_WH2.html')
+# webbrowser.open(r'E:\1Master_2\Paper_Grid\crd\AUG_HK2.html')
