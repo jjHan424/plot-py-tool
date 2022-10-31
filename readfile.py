@@ -1140,3 +1140,24 @@ def open_diff_file_new(filename):
 
 
     return (head_info,all_data)
+
+def H_open_rms(filename,index=1):
+    all_data={}
+    file_exist = os.path.exists(filename)
+    if (not file_exist):
+        return all_data
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if value[0] == "Doy":
+                continue
+            doy = int(value[0])
+            if doy not in all_data.keys():
+                all_data[doy]={}
+            Fix = value[4+index][0:len(value[4+index])-1]
+            all_data[doy]["Fixed"] = float(Fix)
+            all_data[doy]["E"] = float(value[8+index])
+            all_data[doy]["N"] = float(value[12+index])
+            all_data[doy]["U"] = float(value[16+index])
+    
+    return all_data
