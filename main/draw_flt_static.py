@@ -37,93 +37,85 @@ ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
 #mode_list = ["GEC","G","E","C","GE"]#,"4 Sites Grid","3 Sites MLCM"]
 # mode_list = ["MLCM","Grid","Grid-Self","Grid-2"]#,"Omc","Rank"]
-mode_list = ["MLCM","Grid","Grid-Self"]
+mode_list = ["MLCM","Grid","Grid-Chk","Grid_Ele"]
+# mode_list = ["MLCM","Grid","Grid-Chk"]
 # mode_list = ["Grid","Grid-Self","Grid-2"]
 #mode_list = ["GRID"]#,"Omc","Rank"]
 #site_list = ["HKLM","HKSC","HKTK"]
 #site_list = ["WUDA","WUDA","WUDA"]
-site = "WUDA"
-site_list = [site,"E033","WUDA"]
-#site_list = "HKSC"
-Y=2021
-M=12
-D=5
-S=2
-L=1
-# S=9
-# L=3
-# WUHAN
-# Direct1=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Grid_2021339\client-Wgt-WUDA"
-# Direct2=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Grid_2021339\client-Wgt-WHDS-WHXZ"
-# Direct3=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Grid_2021339\client-WH-Grid-SigWgt"
-# Direct4=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Grid_2021339\client-WH-Aug"
-# HongKong
-Direct1=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Grid_2021339\client-WH-Aug"
-Direct2=r"E:\1Master_2\Paper_Grid\Res_FromServer\Grid_Wgt_dIon\client-Grid-WH"
-# Direct1=r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Wgt_2021339_HK\client-Aug"
-# Direct2=r"E:\1Master_2\Paper_Grid\Res_FromServer\Grid_Wgt_dIon\client-Grid-HK"
-Direct3=r"E:\1Master_2\Paper_Grid\Res_FromServer\Grid_Sig_Wgt_dIon_New\client-Wgt-N032"
-Direct4=r"E:\1Master_2\Paper_Grid\Res_FromServer\Grid_Sig_Ele_Ave\client-Wgt-N032"
-# Direct5=r"E:\1Master_2\Paper_Grid\Res_FromServer\Gird_Wgt_dIon\client-Wgt-HKSC-phase"
-# Direct6=r"E:\1Master_2\Paper_Grid\Res_FromServer\Gird_Wgt_dIon\client-Wgt-WHDS-WHXZ-phase"
-
-# filename_list = [
-#                 Direct1 + "\\" + site + "-GEC-near.flt",
-#                 # Direct2 + "\\" + site + "-GEC-5-5.flt",
-#                 Direct3 + "\\" + site + "-GEC.flt",
-#                 Direct4 + "\\" + site +"-GEC.flt",
-#                 Direct5 + "\\" + site +"-GEC.flt"
-#                 # Direct6 + "\\" + site +"-GEC.flt"
-#                 ]
-
-# filename_list = [
-#                 Direct1 + "\\" + site + "-GEC-5-5.flt",
-#                 Direct2 + "\\" + site + "-GEC.flt",
-#                 Direct3 + "\\" + site + "-GEC.flt",
-#                 # Direct4 + "\\" + site +"-GEC.flt"
-#                 r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client" +"\\" + site + "-GEC.flt"
-#                 ]
-
-filename_list = [
-                r"E:\1Master_2\Paper_Grid\Res_FromServer\Grid_Wgt_dIon\client-Wgt-WUDA-phase\WUDA-GEC.flt",
-                r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-GEC-old.flt",
-                r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-GEC.flt"
-                ]
-
-# China
-# filename_list = [
-#                 #Direct3 + "/client-comp/"  + "E033-GEC.flt",
-#                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/client/WUDA-GEC.flt",
-#                 Direct3 + "/client-grid/"  + "E033-GEC.flt",
-#                 Direct3 + "/client-grid-corObs002/"  + "E033-GEC.flt",
-#                 Direct3 + "/client-grid/"  + "E033-GEC.flt"
-#                 ]
-# filename_list = [
-#     r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\HKSC-GEC.flt",
-#     r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\HKSC-GEC_com.flt",
-#                  r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\HKSC-GEC_code.flt",
-#                  r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\HKSC-GEC_phase.flt"]
-                 
-# filename_list = [
-#                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKTK/5.flt",
-#                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKTK/6.flt",
-#                 "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKTK/3.flt"
-#                  ]
-for i in range(len(mode_list)):
-    data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
-    # data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
-    data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = site_list[0])
-    ENU_ALL[mode_list[i]] = data_ENU
+# Site = "WUDA"
+site_list = ["WUDA","WHYJ","N028","HKSC","HKMW","HKTK"]
+# site_list = ["HKSC"]
+# site_list = "HKSC"
+# Y=2021
+# M=10
+# D=28
+# S=2
+# L=22
+# count = 11
+Sig = 0
+SavePath=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos4-New-3"
+if (not os.path.exists(SavePath)):
+    os.mkdir(SavePath)
+for j in range(len(site_list)):
     
-# path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKLM/5-MW.aug"
-# path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/server_ion/HKLM-GEC-S.aug"
-# [head_I,data_I] = rf.open_aug_file_new(path_I)
-# [head_S,data_S] = rf.open_aug_file_new(path_S)
-# data = dp.pre_aug_new(head_I,data_I,data_S)
-# ENU_ALL["ION"] = data
-#begTime = 10
-# while (S <= 23):
-dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.2,starttime=S,LastT=L,deltaT=1,time = "UTC+8",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=1)
-    # print("Time:%d",S+1)
-    # S = S + 1
+    SavePathSite = SavePath + "\\" + site_list[j] + "-Sigma-"+"{:0>1}".format(Sig)+".txt"
+    with open(SavePathSite,'a') as file:
+        file.write("Doy    ")
+        for i in range(len(mode_list)):
+            file.write("Fix1-{}     ".format(mode_list[i]))
+        for i in range(len(mode_list)):
+            file.write("Fix2-{}     ".format(mode_list[i]))
+        file.write("       ")
+        for i in range(len(mode_list)):
+            file.write("E-{}        ".format(mode_list[i]))
+        for i in range(len(mode_list)):
+            file.write("N-{}          ".format(mode_list[i]))
+        for i in range(len(mode_list)):
+            file.write("U-{}          ".format(mode_list[i]))
+        file.write("\n")
 
+for j in range(len(site_list)):
+    Site = site_list[j]
+    Y=2021
+    M=10
+    D=28
+    S=2
+    L=22
+    count = 11
+    Direct=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-New"
+    
+    while count > 0:
+        D = D + 1
+        count = count - 1
+        if (D > 31):
+            D = 1
+            M = M + 1
+        doy = tr.ymd2doy(Y,M,D,0,0,00)
+        cdoy = "{:0>3}".format(doy)
+        filename_list = [
+            Direct + "\\client-Aug-" + cdoy + "\\" + Site + "-GEC.flt",
+            Direct + "\\client-Grid-" + cdoy + "\\" + Site + "-GEC.flt", 
+            Direct + "\\client-Grid_Chk-" + cdoy + "\\" + Site + "-GEC.flt",
+            Direct + "\\client-Grid_Ele-3-" + cdoy + "\\" + Site + "-GEC.flt"
+            # Direct + "\\client-New-Grid-" + cdoy + "\\" + Site + "-GEC.flt", 
+            # Direct + "\\client-New-Grid_Chk-" + cdoy + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-New-Grid_Ele-" + cdoy + "\\" + Site + "-GEC.flt"
+            # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\HKSC-GEC-1.flt",
+                        ]
+        # filename_list = [
+        #     r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\HKSC-GEC-1.flt",
+        #     r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\HKSC-GEC-2.flt",
+        #     r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\HKSC-GEC-3.flt"
+        #                 ]
+        for i in range(len(mode_list)):
+            data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
+            # data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
+            data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
+            ENU_ALL[mode_list[i]] = data_ENU
+            
+        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.2,starttime=S,LastT=L,deltaT=2,time = "UTC+8",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=False)
+        if (count == 0 and M!=12):
+            count = 1
+            M=12
+            D=4

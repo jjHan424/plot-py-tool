@@ -13,9 +13,10 @@ import trans as tr
 import math
 site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA","HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA"]
 # site_list = ["WHYJ","WHXZ","WHDS","WHSP","N004","N010","N028","N047","N062","N068","XGXN","WUDA","N032","E033"]
-count = 8
-Year,Mon,Day,Hour,LastT,deltaT = 2021,10,28,0,24,2
+count = 1
+Year,Mon,Day,Hour,LastT,deltaT = 2021,12,4,0,24,2
 while count > 0:
     Day = Day + 1
     count = count - 1
@@ -26,10 +27,10 @@ while count > 0:
         doy = tr.ymd2doy(Year,Mon,Day,0,0,00)
         yyyy = "{:0>4}".format(Year)
         cdoy = "{:0>3}".format(doy)
-        path_Diff = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Diff"+ "\\" +  yyyy + cdoy + "\\" + cur_site + "-GEC-5.diff"
+        path_Diff = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Diff-New"+ "\\" +  yyyy + cdoy + "\\" + cur_site + "-GEC-5.diff"
         path_Ele = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Server"+ "\\" +  yyyy + cdoy + "\\" + cur_site +"-GEC.aug"
-        path_ROTI = r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI-5s"+"\\"+ yyyy + cdoy + "\\" + cur_site + yyyy + cdoy + "_GEC.ismr"
-        Save_Dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Ele_Wgt"+"\\"+ yyyy + cdoy
+        path_ROTI = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI"+"\\"+ yyyy + cdoy + "\\" + cur_site + yyyy + cdoy + "_GEC.ismr"
+        Save_Dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Ele_Wgt-New"+"\\"+ yyyy + cdoy
         # Save_Dir = r"E:\1Master_2\Paper_Grid\Pro_20211205-339\Ele_Wgt\HK"
         if (not os.path.exists(Save_Dir)):
             os.mkdir(Save_Dir)
@@ -103,24 +104,24 @@ while count > 0:
                         Ele_C[prn-1].append(data_Ele[time][sat]["ELE"])
                         with open(Save_Dir + "\\" + cur_site + "_" + sat[0] + ".txt",'a') as file1:
                             file1.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
-                        with open(Save_Dir + "\\" + sat[0] + ".txt",'a') as file1:
-                            file1.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
+                        # with open(Save_Dir + "\\" + sat[0] + "-WH.txt",'a') as file1:
+                        #     file1.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
                         time_C[prn-1].append(plot_time)
                     if sat[0] == "G":
                         Diff_G[prn-1].append(abs(data_Diff[time][sat][sys_type[sat[0]]]))
                         Ele_G[prn-1].append(data_Ele[time][sat]["ELE"])
                         with open(Save_Dir + "\\" + cur_site + "_" + sat[0] + ".txt",'a') as file2:
                             file2.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
-                        with open(Save_Dir + "\\" + sat[0] + ".txt",'a') as file2:
-                            file2.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
+                        # with open(Save_Dir + "\\" + sat[0] + "-WH.txt",'a') as file2:
+                        #     file2.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
                         time_G[prn-1].append(plot_time)
                     if sat[0] == "E":
                         Diff_E[prn-1].append(abs(data_Diff[time][sat][sys_type[sat[0]]]))
                         Ele_E[prn-1].append(data_Ele[time][sat]["ELE"])
                         with open(Save_Dir + "\\" + cur_site + "_" + sat[0] + ".txt",'a') as file3:
                             file3.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
-                        with open(Save_Dir + "\\" + sat[0] + ".txt",'a') as file3:
-                            file3.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
+                        # with open(Save_Dir + "\\" + sat[0] + "-WH.txt",'a') as file3:
+                            # file3.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
                         time_E[prn-1].append(plot_time)
 
         Diff_plot,Ele_plot,Time_plot = {},{},{}

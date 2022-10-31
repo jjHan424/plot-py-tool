@@ -19,7 +19,7 @@ import draw as dr
 #import seaborn as sns
 import trans as tr
 
-path = "/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/Residual.txt"
+path = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ResSig\Residual_305.txt"
 [Residual,Dis,Num]= rf.H_open_residual_grid(path)
 
 all_data = {}

@@ -7,6 +7,7 @@ Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
 '''
 
+from asyncore import write
 from matplotlib.markers import MarkerStyle
 import numpy as np
 import matplotlib as mpl
@@ -255,7 +256,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     if type == 'P':
         f1=0
         f2=1
-        figP,axP = plt.subplots(3,2,figsize=(15,10),sharey=True,sharex=True)
+        figP,axP = plt.subplots(3,2,figsize=(13,8),sharey=True,sharex=True)
         ymin = -ylim
         ymax = ylim
         col = 2
@@ -315,7 +316,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         ymin = -ylim
         ymax = ylim
         col = 1
-        figP,axP = plt.subplots(3,1,figsize=(12,10),sharey=True,sharex=True)
+        figP,axP = plt.subplots(3,1,figsize=(15,8),sharey=True,sharex=True)
         axP[2].set_xlabel('Time' + '(' + time + ')')
         axP[1].set_ylabel('Difference of Ionosphere Delay correction/m',font)
         axP[0].set_title('G')
@@ -1494,157 +1495,174 @@ def plot_upd_wl_oneday_GEC(all_data={},savedir='save_fig_path',mode = 'upd_wl',s
     if show:
         plt.show()
 
-def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10,all=False,Sigma=3,Sigma_num=1):
+def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10,all=False,Sigma=3,Sigma_num=1):
     #with plt.style.context("science","grid"):
-        N_plot = len(type)
-        N_mode = len(mode)
-        f1=5
-        ymin = -ylim
-        ymax = ylim
+    
+    N_plot = len(type)
+    N_mode = len(mode)
+    f1=5
+    ymin = -ylim
+    ymax = ylim
 
-        
-        figP,axP = plt.subplots(N_plot,1,figsize=(12,9),sharey=False,sharex=True)
-        font = {'family': 'Times new roman',
-         'weight': 600,
-         'size': 20,
-                }
-        font2 = {'family' : 'Times new roman',
-            'weight' : 600,
-            'size'   : 15,
-                }
-        axP[N_plot - 1].set_xlabel('Time' + '(' + time + ')',font2)
-        for i in range(N_plot):
-            axP[i].set_ylabel(type[i],font2)
-            #axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-            if type[i] == "E" or type[i] == "N" or type[i] == "U":
-                axP[i].set_ylim(ymin,ymax)
-            if type[i] == "E":
-                if N_plot==3:
-                    axP[i].set_title("Positioning Errors(m)",font,y=1.1)
-                else:
-                    axP[i].set_title("Positioning Errors(m)",font)
-            if type[i] == "NSAT":
-                axP[i].set_title("Number of Satellite",font)
-            if type[i] == "ION":
-                axP[i].set_title("Difference of Ionosphere Delay correction/m",font)
-                #axP[i].set_ylim(-0.5,0.5)
-            if type[i] == "TRP":
-                axP[i].set_title("Difference of Tropsphere Delay correction/m",font)
-                axP[i].set_ylim(ymin,ymax)
-            box = axP[i].get_position()
-            if type[i] == "NSAT" or type[i] == "ION" or type[i] == "TRP":
-                axP[i].set_position([box.x0, box.y0*1.04, box.width, box.height])
-        
-        if "+" in time:
-            end_time = len(time)
-            delta_Time = int(time[3:end_time]) + starttime
-            begT = int(time[3:end_time]) + starttime
-        else:
-            delta_Time = starttime
-            begT=starttime
-        #for time in data[mode[0]].keys():
-        secow_start = tr.ymd2gpst(year,mon,day,0,00,00)
-        cov_Time = secow_start[1] - 0 * 3600
-        if "+" in time:
-            cov_Time = secow_start[1] - int(time[3:end_time]) * 3600
-        end_Time = begT + LastT
-        delta_X = math.ceil((LastT)/deltaT)
-        XLabel = []
-        XTick = []
-        starttime = begT - deltaT
-        for i in range(delta_X):
-            starttime = starttime + deltaT
-            cur_Str_X = '%02d' % (starttime % 24) + ":00"
-            XLabel.append(cur_Str_X)
-            XTick.append(int(starttime))       
-        while starttime < math.ceil(end_Time):
-            starttime = starttime + deltaT
-            cur_Str_X = '%02d' % (starttime % 24) + ":00"
-            XLabel.append(cur_Str_X)
-            XTick.append(int(starttime))
+    
+    figP,axP = plt.subplots(N_plot,1,figsize=(15,9),sharey=False,sharex=True)
+    font = {'family': 'Times new roman',
+        'weight': 600,
+        'size': 20,
+            }
+    font2 = {'family' : 'Times new roman',
+        'weight' : 600,
+        'size'   : 15,
+            }
+    axP[N_plot - 1].set_xlabel('Time' + '(' + time + ')',font2)
+    for i in range(N_plot):
+        axP[i].set_ylabel(type[i],font2)
+        #axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
+        if type[i] == "E" or type[i] == "N" or type[i] == "U":
+            axP[i].set_ylim(ymin,ymax)
+        if type[i] == "E":
+            if N_plot==3:
+                axP[i].set_title(site + "-Positioning Errors(m)",font,y=1.1)
+            else:
+                axP[i].set_title(site + "-Positioning Errors(m)",font)
+        if type[i] == "NSAT":
+            axP[i].set_title("Number of Satellite",font)
+        if type[i] == "ION":
+            axP[i].set_title("Difference of Ionosphere Delay correction/m",font)
+            #axP[i].set_ylim(-0.5,0.5)
+        if type[i] == "TRP":
+            axP[i].set_title("Difference of Tropsphere Delay correction/m",font)
+            axP[i].set_ylim(ymin,ymax)
+        box = axP[i].get_position()
+        if type[i] == "NSAT" or type[i] == "ION" or type[i] == "TRP":
+            axP[i].set_position([box.x0, box.y0*1.04, box.width, box.height])
+    
+    if "+" in time:
+        end_time = len(time)
+        delta_Time = int(time[3:end_time]) + starttime
+        begT = int(time[3:end_time]) + starttime
+    else:
+        delta_Time = starttime
+        begT=starttime
+    #for time in data[mode[0]].keys():
+    secow_start = tr.ymd2gpst(year,mon,day,0,00,00)
+    doy = tr.ymd2doy(year,mon,day,0,00,00)
+    SaveTextFile = save + "\\" + site + "-" "Sigma-" + "{:0>1}".format(Sigma_num) + ".txt"
+    if not show:
+        with open(SaveTextFile,'a') as file:
+            file.write("{:0>3}    ".format(doy))
+    cov_Time = secow_start[1] - 0 * 3600
+    if "+" in time:
+        cov_Time = secow_start[1] - int(time[3:end_time]) * 3600
+    end_Time = begT + LastT
+    delta_X = math.ceil((LastT)/deltaT)
+    XLabel = []
+    XTick = []
+    starttime = begT - deltaT
+    for i in range(delta_X):
+        starttime = starttime + deltaT
+        cur_Str_X = '%02d' % (starttime % 24) + ":00"
+        XLabel.append(cur_Str_X)
+        XTick.append(int(starttime))       
+    while starttime < math.ceil(end_Time):
+        starttime = starttime + deltaT
+        cur_Str_X = '%02d' % (starttime % 24) + ":00"
+        XLabel.append(cur_Str_X)
+        XTick.append(int(starttime))
 
 
-        time = [[] for i in range(N_mode)]
-        data_plot = {}
-        data_E = [[] for i in range(N_mode)]
-        data_N = [[] for i in range(N_mode)]
-        data_U = [[] for i in range(N_mode)]
-        data_S = [[] for i in range(N_mode)]
-        Fixed_NUM = [[] for i in range(N_mode)]
-        Float_NUM = [[] for i in range(N_mode)]
-        ALL_NUM = [[] for i in range(N_mode)]
+    time = [[] for i in range(N_mode)]
+    data_plot = {}
+    data_E = [[] for i in range(N_mode)]
+    data_N = [[] for i in range(N_mode)]
+    data_U = [[] for i in range(N_mode)]
+    data_S = [[] for i in range(N_mode)]
+    Fixed_NUM = [[] for i in range(N_mode)]
+    Float_NUM = [[] for i in range(N_mode)]
+    ALL_NUM = [[] for i in range(N_mode)]
 
-        for i in range(N_mode):
-            Fixed_NUM[i] = 0
-            Float_NUM[i] = 0
-            ALL_NUM[i] = (LastT*3600) / delta_data + 1
+    for i in range(N_mode):
+        Fixed_NUM[i] = 0
+        Float_NUM[i] = 0
+        ALL_NUM[i] = (LastT*3600) / delta_data + 1
 
-        RMS_enu,STD_enu,MEAN_enu = {},{},{}
-        
-        time_sG = [[] for i in range(100)]
-        time_sE = [[] for i in range(100)]
-        time_sC = [[] for i in range(100)]
-        time_TRP = []
-        data_sG = [[] for i in range(100)]
-        data_sE = [[] for i in range(100)]
-        data_sC = [[] for i in range(100)]
-        data_TRP = []
+    RMS_enu,STD_enu,MEAN_enu = {},{},{}
+    
+    time_sG = [[] for i in range(100)]
+    time_sE = [[] for i in range(100)]
+    time_sC = [[] for i in range(100)]
+    time_TRP = []
+    data_sG = [[] for i in range(100)]
+    data_sE = [[] for i in range(100)]
+    data_sC = [[] for i in range(100)]
+    data_TRP = []
 
-        for i in range(N_mode):
-            for cur_time in data[mode[i]].keys():
-                plot_time = (cur_time-cov_Time) / 3600
-                if ((plot_time >= begT and plot_time <= (begT + LastT)) or all):
-                    if data[mode[i]][cur_time]["AMB"] == 0:
-                        Float_NUM[i] = Float_NUM[i] + 1
-                    elif data[mode[i]][cur_time]["AMB"] == 1:
-                        Fixed_NUM[i] = Fixed_NUM[i] + 1
-                    if (Fixed and data[mode[i]][cur_time]["AMB"] == 0):
-                        continue
-                    time[i].append(plot_time)
-                    data_E[i].append(data[mode[i]][cur_time]["E"])
-                    data_N[i].append(data[mode[i]][cur_time]["N"])
-                    data_U[i].append(data[mode[i]][cur_time]["U"])
-                    data_S[i].append(data[mode[i]][cur_time]["NSAT"])
-                    if "ION" in type and cur_time in data["ION"].keys():
-                        for sat in data["ION"][cur_time].keys():
-                            prn = int(sat[1:3])
-                            if sat[0] == "C":
-                                data_sC[prn-1].append(data["ION"][cur_time][sat]["ION2"])
-                                time_sC[prn-1].append(plot_time)
-                            if sat[0] == "G":
-                                data_sG[prn-1].append(data["ION"][cur_time][sat]["ION1"])
-                                time_sG[prn-1].append(plot_time)
-                            if sat[0] == "E":
-                                data_sE[prn-1].append(data["ION"][cur_time][sat]["ION1"])
-                                time_sE[prn-1].append(plot_time)
-                    if "TRP" in type and cur_time in data["ION"].keys():
-                        for sat in data["ION"][cur_time].keys():
-                            prn = int(sat[1:3])
-                            data_TRP.append(data["ION"][cur_time][sat]["TRP1"])
-                            time_TRP.append(plot_time)
-                            break
+    for i in range(N_mode):
+        for cur_time in data[mode[i]].keys():
+            plot_time = (cur_time-cov_Time) / 3600
+            if ((plot_time >= begT and plot_time <= (begT + LastT)) or all):
+                if data[mode[i]][cur_time]["AMB"] == 0:
+                    Float_NUM[i] = Float_NUM[i] + 1
+                elif data[mode[i]][cur_time]["AMB"] == 1:
+                    Fixed_NUM[i] = Fixed_NUM[i] + 1
+                if (Fixed and data[mode[i]][cur_time]["AMB"] == 0):
+                    continue
+                time[i].append(plot_time)
+                data_E[i].append(data[mode[i]][cur_time]["E"])
+                data_N[i].append(data[mode[i]][cur_time]["N"])
+                data_U[i].append(data[mode[i]][cur_time]["U"])
+                data_S[i].append(data[mode[i]][cur_time]["NSAT"])
+                if "ION" in type and cur_time in data["ION"].keys():
+                    for sat in data["ION"][cur_time].keys():
+                        prn = int(sat[1:3])
+                        if sat[0] == "C":
+                            data_sC[prn-1].append(data["ION"][cur_time][sat]["ION2"])
+                            time_sC[prn-1].append(plot_time)
+                        if sat[0] == "G":
+                            data_sG[prn-1].append(data["ION"][cur_time][sat]["ION1"])
+                            time_sG[prn-1].append(plot_time)
+                        if sat[0] == "E":
+                            data_sE[prn-1].append(data["ION"][cur_time][sat]["ION1"])
+                            time_sE[prn-1].append(plot_time)
+                if "TRP" in type and cur_time in data["ION"].keys():
+                    for sat in data["ION"][cur_time].keys():
+                        prn = int(sat[1:3])
+                        data_TRP.append(data["ION"][cur_time][sat]["TRP1"])
+                        time_TRP.append(plot_time)
+                        break
 
-        data_plot["E"] = data_E
-        data_plot["N"] = data_N
-        data_plot["U"] = data_U
-        data_plot["NSAT"] = data_S
-        data_plot["TRP"] = data_TRP
+    data_plot["E"] = data_E
+    data_plot["N"] = data_N
+    data_plot["U"] = data_U
+    data_plot["NSAT"] = data_S
+    data_plot["TRP"] = data_TRP
 
-        if Sigma > 0:
-            cur_type = "E"
-            RMS_enu[cur_type] = []
-            STD_enu[cur_type] = []
-            MEAN_enu[cur_type] = []
-            cur_type = "N"
-            RMS_enu[cur_type] = []
-            STD_enu[cur_type] = []
-            MEAN_enu[cur_type] = []
-            cur_type = "U"
-            RMS_enu[cur_type] = []
-            STD_enu[cur_type] = []
-            MEAN_enu[cur_type] = []
-            for j in range(N_mode):
-                    Sigma_num_temp = Sigma_num
+    if Sigma > 0:
+        cur_type = "E"
+        RMS_enu[cur_type] = []
+        STD_enu[cur_type] = []
+        MEAN_enu[cur_type] = []
+        cur_type = "N"
+        RMS_enu[cur_type] = []
+        STD_enu[cur_type] = []
+        MEAN_enu[cur_type] = []
+        cur_type = "U"
+        RMS_enu[cur_type] = []
+        STD_enu[cur_type] = []
+        MEAN_enu[cur_type] = []
+        for j in range(N_mode):
+                Sigma_num_temp = Sigma_num
+                mean_E = np.mean(data_plot["E"][j])
+                mean_N = np.mean(data_plot["N"][j])
+                mean_U = np.mean(data_plot["U"][j])
+                std_E = np.std(data_plot["E"][j])
+                std_N = np.std(data_plot["N"][j])
+                std_U = np.std(data_plot["U"][j])
+                rms_E = dp.rms(data_plot["E"][j])
+                rms_N = dp.rms(data_plot["N"][j])
+                rms_U = dp.rms(data_plot["U"][j])
+                while Sigma_num_temp >= 1:
+                    indexs = []
                     mean_E = np.mean(data_plot["E"][j])
                     mean_N = np.mean(data_plot["N"][j])
                     mean_U = np.mean(data_plot["U"][j])
@@ -1654,210 +1672,232 @@ def plot_e_n_u(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,startt
                     rms_E = dp.rms(data_plot["E"][j])
                     rms_N = dp.rms(data_plot["N"][j])
                     rms_U = dp.rms(data_plot["U"][j])
-                    while Sigma_num_temp >= 1:
-                        indexs = []
-                        mean_E = np.mean(data_plot["E"][j])
-                        mean_N = np.mean(data_plot["N"][j])
-                        mean_U = np.mean(data_plot["U"][j])
-                        std_E = np.std(data_plot["E"][j])
-                        std_N = np.std(data_plot["N"][j])
-                        std_U = np.std(data_plot["U"][j])
-                        rms_E = dp.rms(data_plot["E"][j])
-                        rms_N = dp.rms(data_plot["N"][j])
-                        rms_U = dp.rms(data_plot["U"][j])
-                        time[j]
-                        # data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M
-                        print(len(time[j]))
-                        for ii in range(len(time[j])):
-                            if abs(data_plot["E"][j][ii] - mean_E) > Sigma * std_E or abs(data_plot["N"][j][ii] - mean_N) >  Sigma * std_N or abs(data_plot["U"][j][ii] - mean_U) >  Sigma * std_U:
-                                indexs.append(ii)
-                        data_plot["E"][j] = np.delete(data_plot["E"][j],indexs)
-                        data_plot["N"][j] = np.delete(data_plot["N"][j],indexs)
-                        data_plot["U"][j] = np.delete(data_plot["U"][j],indexs)
-                        time[j] = np.delete(time[j],indexs)
-                        data_plot["NSAT"][j] = np.delete(data_plot["NSAT"][j],indexs)
-                        Sigma_num_temp = Sigma_num_temp - 1
-                    index_3_EN = []
-                    index_5_EN = []
-                    index_5_U=[]
-                    index_10_U=[]
+                    time[j]
+                    # data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M
+                    print(len(time[j]))
                     for ii in range(len(time[j])):
-                        if math.sqrt((data_plot["E"][j][ii] - mean_E) * (data_plot["E"][j][ii] - mean_E) + (data_plot["N"][j][ii] - mean_N) * (data_plot["N"][j][ii] - mean_N)) < 0.05:
-                            index_3_EN.append(ii)
-                        if math.sqrt((data_plot["E"][j][ii] - mean_E) * (data_plot["E"][j][ii] - mean_E) + (data_plot["N"][j][ii] - mean_N) * (data_plot["N"][j][ii] - mean_N)) < 0.10:
-                            index_5_EN.append(ii)
-                        if math.sqrt((data_plot["U"][j][ii] - mean_U) * (data_plot["U"][j][ii] - mean_U)) < 0.10:
-                            index_5_U.append(ii)
-                        if math.sqrt((data_plot["U"][j][ii] - mean_U) * (data_plot["U"][j][ii] - mean_U)) < 0.15:
-                            index_10_U.append(ii)
-                    print(mode[j])
-                    print("Horizon(<5cm)    " + '{:.2f}%'.format(len(index_3_EN)/len(time[j])*100))
-                    print("Horizon(<10cm)    " + '{:.2f}%'.format(len(index_5_EN)/len(time[j])*100))
-                    print("Altitude(<10cm)   " + '{:.2f}%'.format(len(index_5_U)/len(time[j])*100))
-                    print("Altitude(<15cm)  " + '{:.2f}%'.format(len(index_10_U)/len(time[j])*100))
-                            
-                    # rms_E = dp.rms(data_plot["E"][j]-mean_E)
-                    # rms_N = dp.rms(data_plot["N"][j]-mean_N)
-                    # rms_U = dp.rms(data_plot["U"][j]-mean_U)
-                    mean_E = np.mean(data_plot["E"][j])
-                    mean_N = np.mean(data_plot["N"][j])
-                    mean_U = np.mean(data_plot["U"][j])
-                    std_E = np.std(data_plot["E"][j])
-                    std_N = np.std(data_plot["N"][j])
-                    std_U = np.std(data_plot["U"][j])
-                    rms_E = dp.rms(data_plot["E"][j])
-                    rms_N = dp.rms(data_plot["N"][j])
-                    rms_U = dp.rms(data_plot["U"][j])
-                    # data_plot["E"][j] = data_plot["E"][j]-mean_E
-                    # data_plot["N"][j] = data_plot["N"][j]-mean_N
-                    # data_plot["U"][j] = data_plot["U"][j]-mean_U
-                    # MEAN_enu["E"].append(mean_E)
-                    # MEAN_enu["N"].append(mean_N)
-                    # MEAN_enu["U"].append(mean_U)
-                    # print(len(time[j]))
-                    # RMS_enu["E"].append(rms_E)
-                    # RMS_enu["N"].append(rms_N)
-                    # RMS_enu["U"].append(rms_U)
-                    # STD_enu["E"].append(std_E)
-                    # STD_enu["N"].append(std_N)
-                    # STD_enu["U"].append(std_U)
-                    # axP[0].scatter(time[j],data_plot["E"][j]-mean_E,s=5)
-                    # axP[1].scatter(time[j],data_plot["N"][j]-mean_N,s=5)
-                    # axP[2].scatter(time[j],data_plot["U"][j]-mean_U,s=5)
+                        if abs(data_plot["E"][j][ii] - mean_E) > Sigma * std_E or abs(data_plot["N"][j][ii] - mean_N) >  Sigma * std_N or abs(data_plot["U"][j][ii] - mean_U) >  Sigma * std_U:
+                            indexs.append(ii)
+                    data_plot["E"][j] = np.delete(data_plot["E"][j],indexs)
+                    data_plot["N"][j] = np.delete(data_plot["N"][j],indexs)
+                    data_plot["U"][j] = np.delete(data_plot["U"][j],indexs)
+                    time[j] = np.delete(time[j],indexs)
+                    data_plot["NSAT"][j] = np.delete(data_plot["NSAT"][j],indexs)
+                    Sigma_num_temp = Sigma_num_temp - 1
+                index_3_EN = []
+                index_5_EN = []
+                index_5_U=[]
+                index_10_U=[]
+                for ii in range(len(time[j])):
+                    if math.sqrt((data_plot["E"][j][ii] - mean_E) * (data_plot["E"][j][ii] - mean_E) + (data_plot["N"][j][ii] - mean_N) * (data_plot["N"][j][ii] - mean_N)) < 0.05:
+                        index_3_EN.append(ii)
+                    if math.sqrt((data_plot["E"][j][ii] - mean_E) * (data_plot["E"][j][ii] - mean_E) + (data_plot["N"][j][ii] - mean_N) * (data_plot["N"][j][ii] - mean_N)) < 0.10:
+                        index_5_EN.append(ii)
+                    if math.sqrt((data_plot["U"][j][ii] - mean_U) * (data_plot["U"][j][ii] - mean_U)) < 0.10:
+                        index_5_U.append(ii)
+                    if math.sqrt((data_plot["U"][j][ii] - mean_U) * (data_plot["U"][j][ii] - mean_U)) < 0.15:
+                        index_10_U.append(ii)
+                print(mode[j])
+                print("Horizon(<5cm)    " + '{:.2f}%'.format(len(index_3_EN)/len(time[j])*100))
+                print("Horizon(<10cm)    " + '{:.2f}%'.format(len(index_5_EN)/len(time[j])*100))
+                print("Altitude(<10cm)   " + '{:.2f}%'.format(len(index_5_U)/len(time[j])*100))
+                print("Altitude(<15cm)  " + '{:.2f}%'.format(len(index_10_U)/len(time[j])*100))
+                # if not show:
+                #     with open(SaveTextFile,'a') as file:
+                        # file.write("       ###"+"Percent-"+mode[j]+"###       \n")
+                        # file.write("Horizon(<5cm)     " + '{:3.2f}%\n'.format(len(index_3_EN)/len(time[j])*100))
+                        # file.write("Horizon(<10cm)    " + '{:3.2f}%\n'.format(len(index_5_EN)/len(time[j])*100))
+                        # file.write("Altitude(<10cm)   " + '{:3.2f}%\n'.format(len(index_5_U)/len(time[j])*100))
+                        # file.write("Altitude(<15cm)   " + '{:3.2f}%\n'.format(len(index_10_U)/len(time[j])*100))
+                        # file.write('{:3.2f}%  '.format(len(index_3_EN)/len(time[j])*100))
+                        # file.write('{:3.2f}%  '.format(len(index_5_EN)/len(time[j])*100))
+                        # file.write('{:3.2f}%  '.format(len(index_5_U)/len(time[j])*100))
+                        # file.write('{:3.2f}%  '.format(len(index_10_U)/len(time[j])*100))
+                        
+                # rms_E = dp.rms(data_plot["E"][j]-mean_E)
+                # rms_N = dp.rms(data_plot["N"][j]-mean_N)
+                # rms_U = dp.rms(data_plot["U"][j]-mean_U)
+                mean_E = np.mean(data_plot["E"][j])
+                mean_N = np.mean(data_plot["N"][j])
+                mean_U = np.mean(data_plot["U"][j])
+                std_E = np.std(data_plot["E"][j])
+                std_N = np.std(data_plot["N"][j])
+                std_U = np.std(data_plot["U"][j])
+                rms_E = dp.rms(data_plot["E"][j])
+                rms_N = dp.rms(data_plot["N"][j])
+                rms_U = dp.rms(data_plot["U"][j])
+                # data_plot["E"][j] = data_plot["E"][j]-mean_E
+                # data_plot["N"][j] = data_plot["N"][j]-mean_N
+                # data_plot["U"][j] = data_plot["U"][j]-mean_U
+                # MEAN_enu["E"].append(mean_E)
+                # MEAN_enu["N"].append(mean_N)
+                # MEAN_enu["U"].append(mean_U)
+                # print(len(time[j]))
+                # RMS_enu["E"].append(rms_E)
+                # RMS_enu["N"].append(rms_N)
+                # RMS_enu["U"].append(rms_U)
+                # STD_enu["E"].append(std_E)
+                # STD_enu["N"].append(std_N)
+                # STD_enu["U"].append(std_U)
+                # axP[0].scatter(time[j],data_plot["E"][j]-mean_E,s=5)
+                # axP[1].scatter(time[j],data_plot["N"][j]-mean_N,s=5)
+                # axP[2].scatter(time[j],data_plot["U"][j]-mean_U,s=5)
 
-        if Sigma >= 0:
-            for i in range(N_plot):
-                cur_type = type[i]
-                RMS_enu[cur_type] = []
-                STD_enu[cur_type] = []
-                MEAN_enu[cur_type] = []
-                if (cur_type != "ION"):
-                    for j in range(N_mode):
-                        indexs = []
-                        if cur_type == "TRP":
-                            axP[i].scatter(time_TRP,data_plot[cur_type])
-                            temp = dp.rms(data_plot[cur_type])
-                            RMS_enu[cur_type].append(temp)
-                            temp = np.std(data_plot[cur_type])
-                            STD_enu[cur_type].append(temp)
-                            temp = np.mean(data_plot[cur_type])
-                            MEAN_enu[cur_type].append(temp)
-                        else:
-                            temp_M = np.mean(data_plot[cur_type][j])
-                            #MEAN_enu[cur_type].append(temp_M)
-                            temp = dp.rms(data_plot[cur_type][j])
-                            #RMS_enu[cur_type].append(temp)
-                            temp = np.std(data_plot[cur_type][j])
-                            #STD_enu[cur_type].append(temp)
-                            time_temp = time[j]
-                            temp_M = np.mean(data_plot[cur_type][j])
-                            MEAN_enu[cur_type].append(temp_M)
-                            # if cur_type!="NSAT":
-                            #     data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
-                            # temp_M = np.mean(data_plot[cur_type][j])
-                            # MEAN_enu[cur_type].append(temp_M)
-                            temp = dp.rms(data_plot[cur_type][j])
-                            RMS_enu[cur_type].append(temp)
-                            temp = np.std(data_plot[cur_type][j])
-                            STD_enu[cur_type].append(temp)
-                            axP[i].scatter(time_temp,data_plot[cur_type][j],s=5)
-                            
-                            
-                if (cur_type == "ION"):
-                    for sat_i in range(100):
-                        G,E,C = True,True,True
-                        num = len(time_sG[sat_i])
-                        if num < 1:
-                            G = False
-                        num = len(time_sE[sat_i])
-                        if num < 1:
-                            E = False
-                        num = len(time_sC[sat_i])
-                        if num < 1:
-                            C = False
-                        if G:
-                            axP[i].scatter(time_sG[sat_i],data_sG[sat_i])
-                        if E:
-                            axP[i].scatter(time_sE[sat_i],data_sE[sat_i])
-                        if C:
-                            axP[i].scatter(time_sC[sat_i],data_sC[sat_i])
-        
-
-        font_text = {'family' : 'Times new roman',
-            'weight' : 600,
-            'size'   : 15,
-                    }
+    if Sigma >= 0:
         for i in range(N_plot):
             cur_type = type[i]
-            RMS_str = "RMS:"
-            MEAN_str = "MEAN:"
-            for j in range(N_mode):
-                if cur_type == "E" or cur_type == "N" or cur_type == "U":
-                    RMS_str = RMS_str +'{:.4f}m, '.format(RMS_enu[cur_type][j])
-                if cur_type == "NSAT":
-                    MEAN_str = MEAN_str +'{:.2f}, '.format(MEAN_enu[cur_type][j])
-            if cur_type == "E" or cur_type == "N" or cur_type == "U":
-                ax_range = axP[i].axis()
-                #print(len(RMS_str))
-                #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
-                axP[i].text(ax_range[0],ax_range[3]+ylim/15,RMS_str[0:9*N_mode+2],font_text)
-            if cur_type == "NSAT":
-                ax_range = axP[i].axis()
-                #print(len(RMS_str))
-                #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
-                axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:7*N_mode+3],font_text)
-
-        if not all:
-            axP[N_plot-1].set_xticks(XTick)
-            axP[N_plot-1].set_xticklabels(XLabel)
-
-
-        # axP[0].legend(mode,
-        #         framealpha=1,facecolor='w',ncol=1,numpoints=5, markerscale=5, 
-        #         bbox_to_anchor=(1,1),loc=0,borderaxespad=0) 
-        
-            
-        for i in range(N_plot):
-            cur_type=type[i]
-            # if not all:
-            #     axP[i].set_xticks(XTick)
-            ax_range = axP[i].axis()
-            if (N_plot==3):
-                axP[i].legend(mode,prop=font_text,
-                framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=3, 
-                borderaxespad=0,bbox_to_anchor=(1,1.17),loc=1) 
-            if (N_plot==4):
-                axP[i].legend(mode,prop=font_text,
-                framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3,
-                borderaxespad=0,bbox_to_anchor=(1,1.16),loc=1) 
-            #axP[i].autoscale(tight=True)
-            if cur_type == "E" or cur_type == "N" or cur_type == "U":
-                print("\n"+cur_type)
+            RMS_enu[cur_type] = []
+            STD_enu[cur_type] = []
+            MEAN_enu[cur_type] = []
+            if (cur_type != "ION"):
                 for j in range(N_mode):
-                    print(mode[j] + ":")
-                    print('RMS={:.4f}cm,MEAN={:.4f}cm,STD={:.4f}cm'.format(RMS_enu[cur_type][j]*100,MEAN_enu[cur_type][j]*100,STD_enu[cur_type][j]*100))
-        
-        print("固定率(Fixed/Fixed+Float):")
-        for i in range(N_mode):
-            if ((Fixed_NUM[i]) == 0):
-                print(mode[i] + ':{:.2f}%'.format(0))
-            else:
-                print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (Fixed_NUM[i] + Float_NUM[i]) * 100))
-                
-        print("固定率(Fixed_Sigma/Fixed+Float):")
-        for i in range(N_mode):
-            if ((Fixed_NUM[i]) == 0):
-                print(mode[i] + ':{:.2f}%'.format(0))
-            else:
-                print(mode[i] + ':{:.2f}%'.format(len(time[i]) / (Fixed_NUM[i] + Float_NUM[i]) * 100))
-        print("完整率:")
-        for i in range(N_mode):
-            print(mode[i] + ':{:.2f}%'.format((Fixed_NUM[i] + Float_NUM[i]) / ALL_NUM[i] * 100))
-        print("固定率(Fixed/ALL):")
-        for i in range(N_mode):
-            print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (ALL_NUM[i]) * 100))
+                    indexs = []
+                    if cur_type == "TRP":
+                        axP[i].scatter(time_TRP,data_plot[cur_type])
+                        temp = dp.rms(data_plot[cur_type])
+                        RMS_enu[cur_type].append(temp)
+                        temp = np.std(data_plot[cur_type])
+                        STD_enu[cur_type].append(temp)
+                        temp = np.mean(data_plot[cur_type])
+                        MEAN_enu[cur_type].append(temp)
+                    else:
+                        temp_M = np.mean(data_plot[cur_type][j])
+                        #MEAN_enu[cur_type].append(temp_M)
+                        temp = dp.rms(data_plot[cur_type][j])
+                        #RMS_enu[cur_type].append(temp)
+                        temp = np.std(data_plot[cur_type][j])
+                        #STD_enu[cur_type].append(temp)
+                        time_temp = time[j]
+                        temp_M = np.mean(data_plot[cur_type][j])
+                        MEAN_enu[cur_type].append(temp_M)
+                        # if cur_type!="NSAT":
+                        #     data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
+                        # temp_M = np.mean(data_plot[cur_type][j])
+                        # MEAN_enu[cur_type].append(temp_M)
+                        temp = dp.rms(data_plot[cur_type][j])
+                        RMS_enu[cur_type].append(temp)
+                        temp = np.std(data_plot[cur_type][j])
+                        STD_enu[cur_type].append(temp)
+                        axP[i].scatter(time_temp,data_plot[cur_type][j],s=5)
+                        
+                        
+            if (cur_type == "ION"):
+                for sat_i in range(100):
+                    G,E,C = True,True,True
+                    num = len(time_sG[sat_i])
+                    if num < 1:
+                        G = False
+                    num = len(time_sE[sat_i])
+                    if num < 1:
+                        E = False
+                    num = len(time_sC[sat_i])
+                    if num < 1:
+                        C = False
+                    if G:
+                        axP[i].scatter(time_sG[sat_i],data_sG[sat_i])
+                    if E:
+                        axP[i].scatter(time_sE[sat_i],data_sE[sat_i])
+                    if C:
+                        axP[i].scatter(time_sC[sat_i],data_sC[sat_i])
+    
 
+    font_text = {'family' : 'Times new roman',
+        'weight' : 600,
+        'size'   : 15,
+                }
+    for i in range(N_plot):
+        cur_type = type[i]
+        RMS_str = "RMS:"
+        MEAN_str = "MEAN:"
+        for j in range(N_mode):
+            if cur_type == "E" or cur_type == "N" or cur_type == "U":
+                RMS_str = RMS_str +'{:.4f}m, '.format(RMS_enu[cur_type][j])
+            if cur_type == "NSAT":
+                MEAN_str = MEAN_str +'{:.2f}, '.format(MEAN_enu[cur_type][j])
+        if cur_type == "E" or cur_type == "N" or cur_type == "U":
+            ax_range = axP[i].axis()
+            #print(len(RMS_str))
+            #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
+            axP[i].text(ax_range[0],ax_range[3]+ylim/15,RMS_str[0:9*N_mode+2],font_text)
+        if cur_type == "NSAT":
+            ax_range = axP[i].axis()
+            #print(len(RMS_str))
+            #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
+            axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:7*N_mode+3],font_text)
+
+    if not all:
+        axP[N_plot-1].set_xticks(XTick)
+        axP[N_plot-1].set_xticklabels(XLabel)
+
+
+    # axP[0].legend(mode,
+    #         framealpha=1,facecolor='w',ncol=1,numpoints=5, markerscale=5, 
+    #         bbox_to_anchor=(1,1),loc=0,borderaxespad=0) 
+    E_str=""
+    for i in range(N_plot):
+        cur_type=type[i]
+        # if not all:
+        #     axP[i].set_xticks(XTick)
+        ax_range = axP[i].axis()
+        if (N_plot==3):
+            axP[i].legend(mode,prop=font_text,
+            framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=3, 
+            borderaxespad=0,bbox_to_anchor=(1,1.17),loc=1) 
+        if (N_plot==4):
+            axP[i].legend(mode,prop=font_text,
+            framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3,
+            borderaxespad=0,bbox_to_anchor=(1,1.16),loc=1) 
+        #axP[i].autoscale(tight=True)
+        if cur_type == "E" or cur_type == "N" or cur_type == "U":
+            print("\n"+cur_type)
+            for j in range(N_mode):
+                # E_str = E_str + "             ###{}-{}###       \n".format(cur_type,mode[j])
+                # E_str = E_str + 'RMS={:.4f}cm,MEAN={:.4f}cm,STD={:.4f}cm\n'.format(RMS_enu[cur_type][j]*100,MEAN_enu[cur_type][j]*100,STD_enu[cur_type][j]*100)
+                E_str = E_str + '{:.4f}           '.format(RMS_enu[cur_type][j]*100)
+                print(mode[j] + ":")
+                print('RMS={:.4f}cm,MEAN={:.4f}cm,STD={:.4f}cm'.format(RMS_enu[cur_type][j]*100,MEAN_enu[cur_type][j]*100,STD_enu[cur_type][j]*100))
+    
+    print("固定率(Fixed/Fixed+Float):")
+    for i in range(N_mode):
+        if ((Fixed_NUM[i]) == 0):
+            print(mode[i] + ':{:.2f}%'.format(0))
+        else:
+            print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (Fixed_NUM[i] + Float_NUM[i]) * 100))
+            
+    print("固定率(Fixed_Sigma/Fixed+Float):")
+    for i in range(N_mode):
+        if ((Fixed_NUM[i]) == 0):
+            print(mode[i] + ':{:.2f}%'.format(0))
+        else:
+            print(mode[i] + ':{:.2f}%'.format(len(time[i]) / (Fixed_NUM[i] + Float_NUM[i]) * 100))
+    print("完整率:")
+    for i in range(N_mode):
+        print(mode[i] + ':{:.2f}%'.format((Fixed_NUM[i] + Float_NUM[i]) / ALL_NUM[i] * 100))
+    print("固定率(Fixed/ALL):")
+    for i in range(N_mode):
+        print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (ALL_NUM[i]) * 100))
+    if show:
         plt.show()
+    else:
+        SaveFigFile = save + "\\" + site + "-" + "{:0>3}".format(doy) + "-" "Sigma-" + "{:0>1}".format(Sigma_num) + ".png"
+        plt.savefig(SaveFigFile)
+        with open(SaveTextFile,'a') as file:
+            # file.write("       ###"+"Fixed/Fixed+Float"+"###       \n")
+            for i in range(N_mode):
+                if ((Fixed_NUM[i]) == 0):
+                    file.write('{:>.2f}%           '.format(mode[i],0))
+                else:
+                    file.write('{:>.2f}%           '.format(Fixed_NUM[i] / (Fixed_NUM[i] + Float_NUM[i]) * 100))
+            # file.write("       ###"+"Fixed_Sigma/Fixed+Float"+"###       \n")
+            for i in range(N_mode):
+                if ((Fixed_NUM[i]) == 0):
+                    file.write('{:>.2f}%           '.format(mode[i],0))
+                else:
+                    file.write('{:>.2f}%           '.format(len(time[i]) / (Fixed_NUM[i] + Float_NUM[i]) * 100))
+            file.write(E_str+'\n')
+            # file.write("=========================="+"{:0>3}".format(doy)+"==========================\n")
+            # file.write("==========="+"{:0>3}".format(doy)+"===========\n")
+            # file1.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
 
 def plot_enu(data = {},type = ["ENU"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,begT = 0,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30):
     N_plot = len(mode)
@@ -2497,7 +2537,7 @@ def plot_aug_NSAT(data = {},mode = {},type = "NSAT",freq = 1,ylim = 1,starttime 
         f1=0
         f2=1
         num_mode = len(mode)
-        figP,axP = plt.subplots(num_mode,1,figsize=(15,10),sharey=True,sharex=True)
+        figP,axP = plt.subplots(num_mode,1,figsize=(12,8),sharey=True,sharex=True)
         ymin = -ylim
         ymax = ylim
         col = 2

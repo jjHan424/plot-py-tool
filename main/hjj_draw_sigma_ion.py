@@ -19,11 +19,11 @@ import draw as dr
 #import seaborn as sns
 import trans as tr
 
-path_G = "/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/Sigma.txt"
+path_G = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ResSig\Residual_312.txt"
 sigma_G= rf.H_open_sigma_grid(path_G,"G")
-path_E = "/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/Sigma.txt" 
+path_E = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ResSig\Residual_312.txt" 
 sigma_E= rf.H_open_sigma_grid(path_E,"E")
-path_C = "/Volumes/H_software/1Master_2/Paper-Grid/Res_FromServer/Sigma.txt" 
+path_C = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ResSig\Residual_312.txt" 
 sigma_C= rf.H_open_sigma_grid(path_C,"C")
 
 all_data = {}
@@ -62,14 +62,14 @@ for time in sigma_C:
         dataC[prn].append(sigma_C[time][sat])
 #scatter
 figP,axP = plt.subplots(3,1,figsize=(12,10),sharey=False,sharex=False)
-axP[2].set_xlabel('PRN')
-axP[1].set_ylabel('Sigma of DCB observation/m')
+axP[2].set_xlabel('Time')
+axP[1].set_ylabel('Residual of DCB observation/m')
 axP[0].set_title('G')
 axP[1].set_title('E')
 axP[2].set_title('C')
-# axP[0].set_ylim(0,0.05)
-# axP[1].set_ylim(0,0.05)
-# axP[2].set_ylim(0,0.05)
+axP[0].set_ylim(0,0.05)
+axP[1].set_ylim(0,0.05)
+axP[2].set_ylim(0,0.05)
 for i in range(3):
     axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
     # axP[i].set_ylim(0,0.06)
@@ -91,18 +91,20 @@ for i in range(60):
         boxG.append(dataG[i])
         sat = 'G'+'%02d' % (i)
         satG.append(sat)
-        #axP[0].scatter(timeG[i],dataG[i],s=1)
+        axP[0].scatter(timeG[i],dataG[i],s=1)
     if E:
         boxE.append(dataE[i])
         sat = 'E'+'%02d' % (i)
         satE.append(sat)
+        axP[1].scatter(timeE[i],dataE[i],s=1)
     if C:
         boxC.append(dataC[i])
         sat = 'C'+'%02d' % (i)
         satC.append(sat)
-axP[0].boxplot(boxG,labels=satG,meanline=True,showmeans=True,showfliers=False)
-axP[1].boxplot(boxE,labels=satE,meanline=True,showmeans=True,showfliers=False)
-axP[2].boxplot(boxC,labels=satC,meanline=True,showmeans=True,showfliers=False)
+        axP[2].scatter(timeC[i],dataC[i],s=1)
+# axP[0].boxplot(boxG,labels=satG,meanline=True,showmeans=True,showfliers=False)
+# axP[1].boxplot(boxE,labels=satE,meanline=True,showmeans=True,showfliers=False)
+# axP[2].boxplot(boxC,labels=satC,meanline=True,showmeans=True,showfliers=False)
 
 plt.show()
 

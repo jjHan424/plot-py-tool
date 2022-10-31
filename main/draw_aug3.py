@@ -17,12 +17,12 @@ import matplotlib.pyplot as plt
 import dataprocess as dp
 import draw as dr
 
-Y=2022
-M=10
-D=8
+Y=2021
+M=11
+D=6
 #all 
-S=0 #21
-L=22
+S=2 #21
+L=14
 #open
 # S=8+43/60 #21
 # L=8/60
@@ -34,28 +34,29 @@ L=22
 # L=34/60
 
 # mode_list = ["DGDC","DGCA","SZYT","HZAD","SWHF"]
-mode_list = ["N004","N047","GRT1"]
+mode_list = ["MLCM","Grid"]
 # file_list = [
 #             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\GRT3_20220924_SGG_CLK06_S_GEC.aug",
 #             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\N004_20220924_SGG_CLK06_S_GEC.aug",
 #             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\N047_20220924_SGG_CLK06_S_GEC.aug",
 #             r"E:\0Project\NORINCO\0Project\20220923AUG_GRT3_414_CLK06\res\20220925\N004_20220925_SGG_CLK06_S_GEC.aug"
 # ]
-file_list = [
-            # r"E:\1Master_2\Paper_Grid\Res_FromServer\Grid_Sig_Wgt_dIon_New\client-Wgt-WUDA\WUDA-GEC-I.aug",
-            r"E:\0Project\NORINCO\0Project\AUG_Fig\N004_20221008_SGG_CLK01_S_GEC.aug",
-            r"E:\0Project\NORINCO\0Project\AUG_Fig\N047_20221008_SGG_CLK01_S_GEC.aug",
-            r"E:\0Project\NORINCO\0Project\AUG_Fig\GRT1_20221008_SGG_CLK01_S_GEC.aug"
-            # r"E:\0Project\NORINCO\0Project\CLK06\PPPRTK-WUH2\20220926\WUH2_20220926_SGG_CLK06_K_GEC.aug"
-]
 # file_list = [
-#     r"E:\1Master_2\Paper_Grid\Res_FromServer\AUG_vs_Grid_2021339\client-WH-Aug\N032-GEC-I-5-5.aug",
-#     r"E:\1Master_2\Paper_Grid\Res_FromServer\Grid_Sig_Wgt_dIon_New\client-Wgt-N032\N032-GEC-I.aug"
+#             # r"E:\1Master_2\Paper_Grid\Res_FromServer\Grid_Sig_Wgt_dIon_New\client-Wgt-WUDA\WUDA-GEC-I.aug",
+#             r"E:\0Project\NORINCO\0Project\AUG_Fig\N004_20221008_SGG_CLK01_S_GEC.aug",
+#             r"E:\0Project\NORINCO\0Project\AUG_Fig\N047_20221008_SGG_CLK01_S_GEC.aug",
+#             r"E:\0Project\NORINCO\0Project\AUG_Fig\GRT1_20221008_SGG_CLK01_S_GEC.aug"
+#             # r"E:\0Project\NORINCO\0Project\CLK06\PPPRTK-WUH2\20220926\WUH2_20220926_SGG_CLK06_K_GEC.aug"
 # ]
+
+file_list = [
+    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client\client-Aug-310\WUDA-GEC-I.aug",
+    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client\client-Grid-310\WUDA-GEC-I.aug"
+]
 data_all = {}
 for i in range(len(mode_list)):
-    [head,data] = rf.open_aug_file_rtppp(file_list[i])
-    # [head,data] = rf.open_aug_file_new(file_list[i])
+    # [head,data] = rf.open_aug_file_rtppp(file_list[i])
+    [head,data] = rf.open_aug_file_new(file_list[i])
     # data = rf.open_epo_file_rtppp(file_list[i])
     data_all[mode_list[i]] = data
 

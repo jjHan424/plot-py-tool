@@ -479,7 +479,9 @@ def H_open_sigma_grid(filename,sys="G"):
                 continue
             if soweek not in all_data.keys():
                 all_data[soweek]={}
-            all_data[soweek][sat] = abs(float(value[5]))
+            if len(value) <=5:
+                continue
+            all_data[soweek][sat] = abs(float(value[6]))
     return all_data
 
 def H_open_residual_grid(filename):
