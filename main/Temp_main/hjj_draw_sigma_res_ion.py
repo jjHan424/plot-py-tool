@@ -9,6 +9,7 @@ Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查�
 import os
 import sys
 sys.path.insert(0,os.path.dirname(__file__)+'/..')
+sys.path.insert(0,os.path.dirname(__file__)+'/../..')
 import numpy as np
 import readfile as rf
 import matplotlib as mpl
@@ -18,24 +19,53 @@ import dataprocess as dp
 import draw as dr
 #import seaborn as sns
 import trans as tr
+import math
 
-path_G = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ResSig\Residual_312.txt"
-sigma_G= rf.H_open_sigma_grid(path_G,"G")
-path_E = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ResSig\Residual_312.txt" 
-sigma_E= rf.H_open_sigma_grid(path_E,"E")
-path_C = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ResSig\Residual_312.txt" 
-sigma_C= rf.H_open_sigma_grid(path_C,"C")
+path_G = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ResSig\HKMW-Sigma-312.txt"
+[sigma_G,sigma_E,sigma_C]= rf.H_open_sigma_grid(path_G,"G")
 
 all_data = {}
 all_data["GPS"] = sigma_G
 all_data["GAL"] = sigma_E
 all_data["BDS"] = sigma_C
+year=2021
+mon=11
+day=8
+starttime=2
+LastT=22
+deltaT=2
+time = "UTC+8"
 
-begT=8
-for time in sigma_G:
-    begsow = time
-    break
-convtime = time-8*3600
+
+if "+" in time:
+    end_time = len(time)
+    delta_Time = int(time[3:end_time]) + starttime
+    begT = int(time[3:end_time]) + starttime
+else:
+    delta_Time = starttime
+    begT=starttime
+#for time in data[mode[0]].keys():
+secow_start = tr.ymd2gpst(year,mon,day,0,00,00)
+doy = tr.ymd2doy(year,mon,day,0,00,00)
+cov_Time = secow_start[1] - 0 * 3600
+if "+" in time:
+    cov_Time = secow_start[1] - int(time[3:end_time]) * 3600
+end_Time = begT + LastT
+delta_X = math.ceil((LastT)/deltaT)
+XLabel = []
+XTick = []
+starttime = begT - deltaT
+for i in range(delta_X):
+    starttime = starttime + deltaT
+    cur_Str_X = '%02d' % (starttime % 24) + ":00"
+    XLabel.append(cur_Str_X)
+    XTick.append(int(starttime))       
+while starttime < math.ceil(end_Time):
+    starttime = starttime + deltaT
+    cur_Str_X = '%02d' % (starttime % 24) + ":00"
+    XLabel.append(cur_Str_X)
+    XTick.append(int(starttime))
+
 
 
 #plot
@@ -45,31 +75,37 @@ dataG,dataE,dataC=[[] for i in range(60)],[[] for i in range(60)],[[] for i in r
 
 timeG,timeE,timeC=[[] for i in range(60)],[[] for i in range(60)],[[] for i in range(60)]
 #data_convert
-for time in sigma_G:
-    for sat in sigma_G[time]:
-        prn = int(sat[1:3])
-        timeG[prn].append((time-convtime)/3600)
-        dataG[prn].append(sigma_G[time][sat])
-for time in sigma_E:
-    for sat in sigma_E[time]:
-        prn = int(sat[1:3])
-        timeE[prn].append((time-convtime)/3600)
-        dataE[prn].append(sigma_E[time][sat])
-for time in sigma_C:
-    for sat in sigma_C[time]:
-        prn = int(sat[1:3])
-        timeC[prn].append((time-convtime)/3600)
-        dataC[prn].append(sigma_C[time][sat])
+for cur_time in sigma_G:
+    plot_time = (cur_time-cov_Time) / 3600
+    if ((plot_time >= begT and plot_time <= (begT + LastT))):
+        for sat in sigma_G[cur_time]:
+            prn = int(sat[1:3])
+            timeG[prn].append(plot_time)
+            dataG[prn].append(sigma_G[cur_time][sat])
+for cur_time in sigma_E:
+    plot_time = (cur_time-cov_Time) / 3600
+    if ((plot_time >= begT and plot_time <= (begT + LastT))):
+        for sat in sigma_E[cur_time]:
+            prn = int(sat[1:3])
+            timeE[prn].append(plot_time)
+            dataE[prn].append(sigma_E[cur_time][sat])
+for cur_time in sigma_C:
+    plot_time = (cur_time-cov_Time) / 3600
+    if ((plot_time >= begT and plot_time <= (begT + LastT))):
+        for sat in sigma_C[cur_time]:
+            prn = int(sat[1:3])
+            timeC[prn].append(plot_time)
+            dataC[prn].append(sigma_C[cur_time][sat])
 #scatter
-figP,axP = plt.subplots(3,1,figsize=(12,10),sharey=False,sharex=False)
+figP,axP = plt.subplots(3,1,figsize=(12,10),sharey=False,sharex=True)
 axP[2].set_xlabel('Time')
 axP[1].set_ylabel('Residual of DCB observation/m')
 axP[0].set_title('G')
 axP[1].set_title('E')
 axP[2].set_title('C')
-axP[0].set_ylim(0,0.05)
-axP[1].set_ylim(0,0.05)
-axP[2].set_ylim(0,0.05)
+# axP[0].set_ylim(0,0.05)
+# axP[1].set_ylim(0,0.05)
+# axP[2].set_ylim(0,0.05)
 for i in range(3):
     axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
     # axP[i].set_ylim(0,0.06)
@@ -105,7 +141,8 @@ for i in range(60):
 # axP[0].boxplot(boxG,labels=satG,meanline=True,showmeans=True,showfliers=False)
 # axP[1].boxplot(boxE,labels=satE,meanline=True,showmeans=True,showfliers=False)
 # axP[2].boxplot(boxC,labels=satC,meanline=True,showmeans=True,showfliers=False)
-
+axP[2].set_xticks(XTick)
+axP[2].set_xticklabels(XLabel)
 plt.show()
 
 

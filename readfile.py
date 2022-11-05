@@ -452,7 +452,7 @@ def open_crd_gridmap(filename):
 
 
 def H_open_sigma_grid(filename,sys="G"):
-    all_data={}
+    all_data_G,all_data_E,all_data_C={},{},{}
     soweek_last = 0
     w_last = 0
     head_end = False
@@ -475,14 +475,25 @@ def H_open_sigma_grid(filename,sys="G"):
                     w_last = w
             soweek = soweek + (w-w_last)*604800
             sat = value[4]
-            if (sat[0] != sys):
-                continue
-            if soweek not in all_data.keys():
-                all_data[soweek]={}
-            if len(value) <=5:
-                continue
-            all_data[soweek][sat] = abs(float(value[6]))
-    return all_data
+            if (sat[0] == "G"):
+                if soweek not in all_data_G.keys():
+                    all_data_G[soweek]={}
+                if len(value) <=5:
+                    continue
+                all_data_G[soweek][sat] = abs(float(value[5]))
+            if (sat[0] == "E"):
+                if soweek not in all_data_E.keys():
+                    all_data_E[soweek]={}
+                if len(value) <=5:
+                    continue
+                all_data_E[soweek][sat] = abs(float(value[5]))
+            if (sat[0] == "C"):
+                if soweek not in all_data_C.keys():
+                    all_data_C[soweek]={}
+                if len(value) <=5:
+                    continue
+                all_data_C[soweek][sat] = abs(float(value[5]))
+    return (all_data_G,all_data_E,all_data_C)
 
 def H_open_residual_grid(filename):
     all_data_res={}

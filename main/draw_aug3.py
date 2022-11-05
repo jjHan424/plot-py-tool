@@ -19,10 +19,10 @@ import draw as dr
 
 Y=2021
 M=11
-D=6
+D=8
 #all 
-S=2 #21
-L=14
+S=11.5 #21
+L=1
 #open
 # S=8+43/60 #21
 # L=8/60
@@ -50,8 +50,8 @@ mode_list = ["MLCM","Grid"]
 # ]
 
 file_list = [
-    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client\client-Aug-310\WUDA-GEC-I.aug",
-    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client\client-Grid-310\WUDA-GEC-I.aug"
+    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-New\client-Aug-312\HKMW-GEC-I.aug",
+    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-New\client-Grid-312\HKMW-GEC-I.aug"
 ]
 data_all = {}
 for i in range(len(mode_list)):
@@ -60,4 +60,4 @@ for i in range(len(mode_list)):
     # data = rf.open_epo_file_rtppp(file_list[i])
     data_all[mode_list[i]] = data
 
-dr.plot_aug_NSAT(data_all,mode_list,type = "NSAT",freq = 1,starttime = S,time = "UTC+8",show = True,deltaT=2,ylim=0.5,LastT=L,year = Y,mon=M,day=D,deltaData=5)
+dr.plot_aug_NSAT(data_all,mode_list,type = "NSAT",freq = 1,starttime = S,time = "UTC+8",show = True,deltaT=1,ylim=0.5,LastT=L,year = Y,mon=M,day=D,deltaData=5)

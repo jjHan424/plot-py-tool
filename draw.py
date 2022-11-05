@@ -27,6 +27,45 @@ font = {'family' : 'Arial',
 		'size'   : 20,
 }
 
+def xtick(time,year,mon,day,starttime,LastT,deltaT):
+    if "+" in time:
+        end_time = len(time)
+        delta_Time = int(time[3:end_time]) + starttime
+        begT = int(time[3:end_time]) + starttime
+    else:
+        delta_Time = starttime
+        begT=starttime
+    #for time in data[mode[0]].keys():
+    secow_start = tr.ymd2gpst(year,mon,day,0,00,00)
+    doy = tr.ymd2doy(year,mon,day,0,00,00)
+    cov_Time = secow_start[1] - 0 * 3600
+    if "+" in time:
+        cov_Time = secow_start[1] - int(time[3:end_time]) * 3600
+    end_Time = begT + LastT
+    delta_X = math.ceil((LastT)/deltaT)
+    XLabel = []
+    XTick = []
+    starttime = begT - deltaT
+
+    # for i in range(delta_X):
+    #     starttime = starttime + deltaT
+    #     cur_Str_X = '%02d' % (starttime % 24) + ":{:0>2}".format(int((starttime-int(starttime))*60))
+    #     XLabel.append(cur_Str_X)
+    #     XTick.append((starttime))       
+    
+    while starttime < end_Time:
+        starttime = starttime + deltaT
+        if (starttime >= end_Time):
+            cur_Str_X = '%02d' % (end_Time % 24) + ":{:0>2}".format(round((end_Time-int(end_Time))*60))
+            XLabel.append(cur_Str_X)
+            XTick.append((end_Time))
+            break
+        cur_Str_X = '%02d' % (starttime % 24) + ":{:0>2}".format(round((starttime-int(starttime))*60))
+        XLabel.append(cur_Str_X)
+        XTick.append((starttime))
+    
+    return (XLabel,XTick,cov_Time,begT,LastT)
+
 
 def plot_aug_GEC(time_G = [], aug_G = [], time_E = [], aug_E = [], time_C = [], aug_C = [],mode = 'P' ,save='save_fig_path', show = False):
     RMS_G,MEAN_G,STD_G = [[],[]],[[],[]],[[],[]]
@@ -1537,39 +1576,14 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
         if type[i] == "NSAT" or type[i] == "ION" or type[i] == "TRP":
             axP[i].set_position([box.x0, box.y0*1.04, box.width, box.height])
     
-    if "+" in time:
-        end_time = len(time)
-        delta_Time = int(time[3:end_time]) + starttime
-        begT = int(time[3:end_time]) + starttime
-    else:
-        delta_Time = starttime
-        begT=starttime
-    #for time in data[mode[0]].keys():
-    secow_start = tr.ymd2gpst(year,mon,day,0,00,00)
+    
     doy = tr.ymd2doy(year,mon,day,0,00,00)
     SaveTextFile = save + "\\" + site + "-" "Sigma-" + "{:0>1}".format(Sigma_num) + ".txt"
     if not show:
         with open(SaveTextFile,'a') as file:
             file.write("{:0>3}    ".format(doy))
-    cov_Time = secow_start[1] - 0 * 3600
-    if "+" in time:
-        cov_Time = secow_start[1] - int(time[3:end_time]) * 3600
-    end_Time = begT + LastT
-    delta_X = math.ceil((LastT)/deltaT)
-    XLabel = []
-    XTick = []
-    starttime = begT - deltaT
-    for i in range(delta_X):
-        starttime = starttime + deltaT
-        cur_Str_X = '%02d' % (starttime % 24) + ":00"
-        XLabel.append(cur_Str_X)
-        XTick.append(int(starttime))       
-    while starttime < math.ceil(end_Time):
-        starttime = starttime + deltaT
-        cur_Str_X = '%02d' % (starttime % 24) + ":00"
-        XLabel.append(cur_Str_X)
-        XTick.append(int(starttime))
 
+    [XLabel,XTick,cov_Time,begT,LastT]=xtick(time,year,mon,day,starttime,LastT,deltaT)
 
     time = [[] for i in range(N_mode)]
     data_plot = {}
@@ -1607,6 +1621,8 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                     Fixed_NUM[i] = Fixed_NUM[i] + 1
                 if (Fixed and data[mode[i]][cur_time]["AMB"] == 0):
                     continue
+                # if (data[mode[0]][cur_time]["AMB"] == 0 or data[mode[1]][cur_time]["AMB"] == 0):
+                #     continue
                 time[i].append(plot_time)
                 data_E[i].append(data[mode[i]][cur_time]["E"])
                 data_N[i].append(data[mode[i]][cur_time]["N"])
