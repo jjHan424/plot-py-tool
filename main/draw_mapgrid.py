@@ -25,6 +25,16 @@ from shapely.geometry import MultiPoint
 import shapely.geometry
 import math
 import matplotlib as mpl
+import numpy as np
+
+def get_angel(blh1,blh2):
+    blh = [blh2[0] - blh1[0],blh2[1] - blh1[1]]
+    deg_tan = math.atan2(blh[0],blh[1]) / glv.deg
+    if deg_tan < 0:
+        deg_tan = deg_tan + 360
+    return deg_tan
+
+
 # all_truexyz = {
 #          'WHXZ':[-2299689.3404, 4975638.9432, 3250284.4043], 'N062':[-2193162.1236, 4996265.6098, 3291753.9553],
 #          'XGXN':[-2220831.1149, 5007544.3002, 3256075.5112], 'N010':[-2281398.4103, 5046329.8462, 3153471.3945],
@@ -129,7 +139,16 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 #               'T430':[-2411015.2264,5380265.7133,2425132.7008]
 #                 }
 
+# mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\AUG_HK.crd")
+# space_set = 0.1
+# savedir = r'E:\1Master_2\Paper_Grid\crd'
+# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# site_list = ["AUG-HK2"]
 mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_WH.crd")
+space_set = 0.5
+savedir = r'E:\1Master_2\Paper_Grid\crd'
+site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA"]
+# site_list = ["Aug-WH2"]
 # Lines_xyz1 = rf.open_flt_pos_rtpppfile("/Volumes/H_GREAT/2Project/Allystar/2022_0725_Dynamic/CLK06/AUG4/SZK3_20220725_SGG_CLK06_K_GEC.pppar.pos")
 # Lines_xyz1 = rf.open_gpgga_file("/Volumes/H_GREAT/2Project/Allystar/2022_0726_Dynamic/novatel.txt",year=2022,mon=7,day=26)
 
@@ -212,7 +231,7 @@ if delta>10:
     # space = 10
     count = 5
 else:
-    space = 0.5
+    space = space_set
     count = 0
 if count==0:
     maxLat = maxLat + space/2
@@ -459,10 +478,92 @@ line_mindis = {}
 line_mindis1 = {}
 index_grid = 0
 print(range(count_lat))
+for site_in_list in site_list:
+    line_mindis3={}
+    blh = mark_point_blh[site_in_list]
+    delta_Lat = int((maxLat-blh[0])/space)
+    delta_Lon = int((blh[1] - minLon)/space)
+    index_list = []
+    index_list.append('%02d' % (delta_Lat * count_lon + delta_Lon))
+    index_list.append('%02d' % (delta_Lat * count_lon + delta_Lon + 1))
+    index_list.append('%02d' % ((delta_Lat + 1) * count_lon + delta_Lon))
+    index_list.append('%02d' % ((delta_Lat + 1) * count_lon + delta_Lon + 1))
+    for i in range(count_lat):
+        for j in range(count_lon):
+            for cur_site in mark_point_xyz.keys():
+                if site_in_list == cur_site:
+                    continue
+                b=maxLat - i*space
+                l=minLon + j*space
+                h=0.0
+                mark_point_blh['%02d' % (index_grid)] = [b,l,h]
+                xyz = tr.blh2xyz(b* glv.deg,l* glv.deg,h)
+                line1 = cur_site + '%02d' % (index_grid)
+                line2 =  '%02d' % (index_grid) + cur_site
+                dx = mark_point_xyz[cur_site][0] - xyz[0]
+                dy = mark_point_xyz[cur_site][1] - xyz[1]
+                dz = mark_point_xyz[cur_site][2] - xyz[2]
+                dis = math.sqrt(dx*dx+dy*dy+dz*dz)
+                if '%02d' % (index_grid) not in line_mindis.keys():
+                    line_mindis['%02d' % (index_grid)] = {}
+                    line_mindis1['%02d' % (index_grid)] = []
+                line_mindis['%02d' % (index_grid)][dis] = cur_site
+                line_mindis1['%02d' % (index_grid)].append(dis)
+            index_grid = index_grid +1
+    line_mindis2 = {}
+    cofe_grid = []
+    for cur_site in line_mindis1.keys():
+        min_list = sorted(line_mindis1[cur_site])
+        min1,min2,min3 = min_list[0],min_list[1],min_list[2]
+        if cur_site not in line_mindis2.keys():
+            line_mindis2[cur_site] = {}
+        if cur_site not in line_mindis3.keys():
+            line_mindis3[cur_site] = [min1,min2,min3]
+        line_mindis2[cur_site][line_mindis[cur_site][min1]] = min1
+        line_mindis2[cur_site][line_mindis[cur_site][min2]] = min2
+        line_mindis2[cur_site][line_mindis[cur_site][min3]] = min3
+        cofe_grid.append((min1+min2+min3)/3)
+    # m.save(savedir+"\\"+site_in_list+".html")
+    site_dis_mean = []
+    site_dis_mean.append(np.mean(line_mindis3[index_list[0]]))
+    site_dis_mean.append(np.mean(line_mindis3[index_list[1]]))
+    site_dis_mean.append(np.mean(line_mindis3[index_list[2]]))
+    site_dis_mean.append(np.mean(line_mindis3[index_list[3]]))
+    angle = []
+    angle_mean = []
+    triangle = [
+    for index in index_list:
+        angle = [1,1,1]
+        site_3=[]
+        for site_mindis_index in line_mindis2[index].keys():
+            site_3.append(site_mindis_index)
+            blh_grid = mark_point_blh[index]
+            blh_site = mark_point_blh[site_mindis_index]
+            deg_tan = get_angel(blh_grid,blh_site)
+            if 0<=deg_tan<120:
+                angle[0] = angle[0] - 1
+            if 120<=deg_tan<240:
+                angle[1] = angle[1] - 1
+            if 240<=deg_tan<360:
+                angle[2] = angle[2] - 1
+        angle_mean.append(np.sum(np.abs(angle)))
 
+    folium.Marker(location=[mark_point_blh[site_in_list][0],mark_point_blh[site_in_list][1]], icon=DivIcon(
+                icon_size=(150,36),
+                icon_anchor=(7,20),
+                html='<div style="font-size: 15pt; color : black">'+"{:.2f},{:.0f}".format(np.mean(site_dis_mean),np.sum(angle_mean))+'</div>',
+                )).add_to(m)
+    print("{} : {:.2f} {:.0f}".format(site_in_list,np.mean(site_dis_mean),np.sum(angle_mean)))
+
+line_mindis = {}
+line_mindis1 = {}
+index_grid = 0
+print(range(count_lat))
 for i in range(count_lat):
     for j in range(count_lon):
         for cur_site in mark_point_xyz.keys():
+            if "HKTK" == cur_site:
+                continue
             b=maxLat - i*space
             l=minLon + j*space
             h=0.0
@@ -473,7 +574,7 @@ for i in range(count_lat):
             dx = mark_point_xyz[cur_site][0] - xyz[0]
             dy = mark_point_xyz[cur_site][1] - xyz[1]
             dz = mark_point_xyz[cur_site][2] - xyz[2]
-            dis = math.sqrt(dx*dx+dy*dy+dz*dz) / 1000
+            dis = math.sqrt(dx*dx+dy*dy+dz*dz)
             if '%02d' % (index_grid) not in line_mindis.keys():
                 line_mindis['%02d' % (index_grid)] = {}
                 line_mindis1['%02d' % (index_grid)] = []
@@ -487,15 +588,19 @@ for cur_site in line_mindis1.keys():
     min1,min2,min3 = min_list[0],min_list[1],min_list[2]
     if cur_site not in line_mindis2.keys():
         line_mindis2[cur_site] = {}
+    if cur_site not in line_mindis3.keys():
+        line_mindis3[cur_site] = [min1,min2,min3]
     line_mindis2[cur_site][line_mindis[cur_site][min1]] = min1
     line_mindis2[cur_site][line_mindis[cur_site][min2]] = min2
     line_mindis2[cur_site][line_mindis[cur_site][min3]] = min3
-    cofe_grid.append(1/min1+1/min2+1/min3)
+    cofe_grid.append((min1+min2+min3)/3)
     folium.Marker(location=[mark_point_blh[cur_site][0],mark_point_blh[cur_site][1]], icon=DivIcon(
                 icon_size=(150,36),
                 icon_anchor=(7,20),
-                html='<div style="font-size: 10pt; color : red">'+"{:.2f}".format(1/min1+1/min2+1/min3)+'</div>',
+                html='<div style="font-size: 10pt; color : red">'+"{:.2f}".format((min1+min2+min3)/3)+'</div>',
                 )).add_to(m)
+print("{}:{:.2f}".format("AUG",np.mean(cofe_grid)))
+
 # line_plot = []
 # i = 0
 # for cur_site in line_mindis2.keys():
@@ -518,5 +623,9 @@ for cur_site in line_mindis1.keys():
 #                 )).add_to(m)
 #         else:
 #             folium.PolyLine(locations=[[blh1[0],blh1[1]],[b,l]],color=c,weight=2).add_to(m)
-m.save(r'E:\1Master_2\Paper_Grid\crd\2021\AUG_WH2.html')
+m.save(savedir+"\\AUG-WH2.html")
 # webbrowser.open(r'E:\1Master_2\Paper_Grid\crd\AUG_HK2.html')
+
+
+
+
