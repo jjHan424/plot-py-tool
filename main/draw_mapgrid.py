@@ -33,7 +33,54 @@ def get_angel(blh1,blh2):
     if deg_tan < 0:
         deg_tan = deg_tan + 360
     return deg_tan
+def isintriangle(grid_blh,site_3):
+    p_1,p_2,p_3=site_3[0],site_3[1],site_3[2]
+    S_site_3 = 0.5 * abs(p_1[0]*p_3[1]+p_2[0]*p_1[1]+p_3[0]*p_2[1]-p_1[0]*p_2[1]-p_2[0]*p_3[1]-p_3[0]*p_1[1])
+    p_1,p_2,p_3=grid_blh,site_3[1],site_3[2]
+    S_1 = 0.5 * abs(p_1[0]*p_3[1]+p_2[0]*p_1[1]+p_3[0]*p_2[1]-p_1[0]*p_2[1]-p_2[0]*p_3[1]-p_3[0]*p_1[1])
+    p_1,p_2,p_3=site_3[0],grid_blh,site_3[2]
+    S_2 = 0.5 * abs(p_1[0]*p_3[1]+p_2[0]*p_1[1]+p_3[0]*p_2[1]-p_1[0]*p_2[1]-p_2[0]*p_3[1]-p_3[0]*p_1[1])
+    p_1,p_2,p_3=site_3[0],site_3[1],grid_blh
+    S_3 = 0.5 * abs(p_1[0]*p_3[1]+p_2[0]*p_1[1]+p_3[0]*p_2[1]-p_1[0]*p_2[1]-p_2[0]*p_3[1]-p_3[0]*p_1[1])
+    if abs(S_1 + S_2 +S_3 - S_site_3) < 1e-8:
+        return 1
+    else:
+        return 0
 
+def evenlyangle(grid_blh,site_3):
+    x,y = site_3[0],site_3[1]
+    p_a,p_b = [0,1],[0,1]
+    p_a[0] = x[0] - grid_blh[0]
+    p_a[1] = x[1] - grid_blh[1]
+    p_b[0] = y[0] - grid_blh[0]
+    p_b[1] = y[1] - grid_blh[1]
+    angle1 = math.acos((p_a[0]*p_b[0]+p_a[1]*p_b[1])/(math.sqrt(p_a[0]*p_a[0] + p_a[1]*p_a[1])*math.sqrt(p_b[0]*p_b[0] + p_b[1]*p_b[1])))
+    if angle1 > math.pi:
+        angle1 = 2*math.pi-angle1
+    x,y = site_3[0],site_3[2]
+    p_a[0] = x[0] - grid_blh[0]
+    p_a[1] = x[1] - grid_blh[1]
+    p_b[0] = y[0] - grid_blh[0]
+    p_b[1] = y[1] - grid_blh[1]
+    angle2 = math.acos((p_a[0]*p_b[0]+p_a[1]*p_b[1])/(math.sqrt(p_a[0]*p_a[0] + p_a[1]*p_a[1])*math.sqrt(p_b[0]*p_b[0] + p_b[1]*p_b[1])))
+    if angle2 >  math.pi:
+        angle2 = 2*math.pi-angle2
+    x,y = site_3[2],site_3[1]
+    p_a[0] = x[0] - grid_blh[0]
+    p_a[1] = x[1] - grid_blh[1]
+    p_b[0] = y[0] - grid_blh[0]
+    p_b[1] = y[1] - grid_blh[1]
+    angle3 = math.acos((p_a[0]*p_b[0]+p_a[1]*p_b[1])/(math.sqrt(p_a[0]*p_a[0] + p_a[1]*p_a[1])*math.sqrt(p_b[0]*p_b[0] + p_b[1]*p_b[1])))
+    if angle3 >  math.pi:
+        angle3 = 2*math.pi-angle3
+    angle_list = [angle1,angle2,angle3]
+    if (abs(angle1 + angle2 + angle3 - 2*math.pi) < 1e-8):
+        for i in range(len(angle_list)):
+            angle_list[i] = abs(120/180*math.pi-angle_list[i])
+        return np.mean(angle_list)
+    else:
+        max_angle = np.max(angle_list)
+        return abs(math.pi-max_angle) + 120/180*math.pi
 
 # all_truexyz = {
 #          'WHXZ':[-2299689.3404, 4975638.9432, 3250284.4043], 'N062':[-2193162.1236, 4996265.6098, 3291753.9553],
@@ -139,15 +186,15 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 #               'T430':[-2411015.2264,5380265.7133,2425132.7008]
 #                 }
 
-# mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\AUG_HK.crd")
-# space_set = 0.1
-# savedir = r'E:\1Master_2\Paper_Grid\crd'
-# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-# site_list = ["AUG-HK2"]
-mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_WH.crd")
-space_set = 0.5
+mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\AUG_HK_xml.crd")
+space_set = 0.1
 savedir = r'E:\1Master_2\Paper_Grid\crd'
-site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA"]
+site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# site_list = ["AUG-HK2"]
+# mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_WH.crd")
+# space_set = 0.5
+# savedir = r'E:\1Master_2\Paper_Grid\crd'
+# site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA"]
 # site_list = ["Aug-WH2"]
 # Lines_xyz1 = rf.open_flt_pos_rtpppfile("/Volumes/H_GREAT/2Project/Allystar/2022_0725_Dynamic/CLK06/AUG4/SZK3_20220725_SGG_CLK06_K_GEC.pppar.pos")
 # Lines_xyz1 = rf.open_gpgga_file("/Volumes/H_GREAT/2Project/Allystar/2022_0726_Dynamic/novatel.txt",year=2022,mon=7,day=26)
@@ -529,16 +576,27 @@ for site_in_list in site_list:
     site_dis_mean.append(np.mean(line_mindis3[index_list[1]]))
     site_dis_mean.append(np.mean(line_mindis3[index_list[2]]))
     site_dis_mean.append(np.mean(line_mindis3[index_list[3]]))
+    dis_site_in_list = []
+    for index_grid2 in index_list:
+        xyz_site = mark_point_xyz[site_in_list]
+        blh_grid = mark_point_blh[index_grid2]
+        xyz_grid = tr.blh2xyz(blh_grid[0]* glv.deg,blh_grid[1]* glv.deg,blh_grid[2])
+        dx = xyz_site[0] - xyz_grid[0]
+        dy = xyz_site[1] - xyz_grid[1]
+        dz = xyz_site[2] - xyz_grid[2]
+        dis = math.sqrt(dx*dx+dy*dy+dz*dz)
+        dis_site_in_list.append(dis)
+    dis_mean_wgt = dis_site_in_list[0] / np.sum(dis_site_in_list) * site_dis_mean[0] + dis_site_in_list[1] / np.sum(dis_site_in_list) * site_dis_mean[1] + dis_site_in_list[2] / np.sum(dis_site_in_list) * site_dis_mean[2] + dis_site_in_list[3] / np.sum(dis_site_in_list) * site_dis_mean[3]
     angle = []
     angle_mean = []
-    triangle = [
+    triangle = []
     for index in index_list:
         angle = [1,1,1]
         site_3=[]
         for site_mindis_index in line_mindis2[index].keys():
-            site_3.append(site_mindis_index)
             blh_grid = mark_point_blh[index]
             blh_site = mark_point_blh[site_mindis_index]
+            site_3.append(blh_site)
             deg_tan = get_angel(blh_grid,blh_site)
             if 0<=deg_tan<120:
                 angle[0] = angle[0] - 1
@@ -546,14 +604,20 @@ for site_in_list in site_list:
                 angle[1] = angle[1] - 1
             if 240<=deg_tan<360:
                 angle[2] = angle[2] - 1
-        angle_mean.append(np.sum(np.abs(angle)))
-
+        angle_mean.append(evenlyangle(mark_point_blh[index],site_3))
+        triangle.append(isintriangle(mark_point_blh[index],site_3))
+        # if tri == 1:
+        #     angle_mean.append(0.5*(np.sum(np.abs(angle))))
+        # else:
+        #     angle_mean.append(np.sum(np.abs(angle)))
+    angle_mean_wgt = dis_site_in_list[0] / np.sum(dis_site_in_list) * angle_mean[0] + dis_site_in_list[1] / np.sum(dis_site_in_list) * angle_mean[1] + dis_site_in_list[2] / np.sum(dis_site_in_list) * angle_mean[2] + dis_site_in_list[3] / np.sum(dis_site_in_list) * angle_mean[3]
     folium.Marker(location=[mark_point_blh[site_in_list][0],mark_point_blh[site_in_list][1]], icon=DivIcon(
                 icon_size=(150,36),
                 icon_anchor=(7,20),
                 html='<div style="font-size: 15pt; color : black">'+"{:.2f},{:.0f}".format(np.mean(site_dis_mean),np.sum(angle_mean))+'</div>',
                 )).add_to(m)
-    print("{} : {:.2f} {:.0f}".format(site_in_list,np.mean(site_dis_mean),np.sum(angle_mean)))
+    
+    print("{} : {:.2f} {:.2f}  {:.0f}  {:.2f} {:.2f}".format(site_in_list,np.mean(site_dis_mean),dis_mean_wgt,np.sum(triangle),np.mean(angle_mean),angle_mean_wgt))
 
 line_mindis = {}
 line_mindis1 = {}
@@ -623,7 +687,7 @@ print("{}:{:.2f}".format("AUG",np.mean(cofe_grid)))
 #                 )).add_to(m)
 #         else:
 #             folium.PolyLine(locations=[[blh1[0],blh1[1]],[b,l]],color=c,weight=2).add_to(m)
-m.save(savedir+"\\AUG-WH2.html")
+m.save(savedir+"\\AUG-HK3.html")
 # webbrowser.open(r'E:\1Master_2\Paper_Grid\crd\AUG_HK2.html')
 
 

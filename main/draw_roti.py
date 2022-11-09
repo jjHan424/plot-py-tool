@@ -71,8 +71,8 @@ while count > 0:
     for i in range(len(site_list)):
         cur_site = site_list[i]
         
-        path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
-        save_dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\ROTI" + "\\" + "{:0>4}".format(Year) + cdoy
+        path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI-30" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
+        save_dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\ROTI-30" + "\\" + "{:0>4}".format(Year) + cdoy
         if (not os.path.exists(save_dir)):
             os.mkdir(save_dir)
         # path_roti = r"D:\GREAT\GREAT_Project\Allystar\ROTI_20220722\30s\DGCA2022203_GEC.ismr"
@@ -187,9 +187,9 @@ while count > 0:
         axP[1].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
         axP[2].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
 
-        axP[0].set_ylim(0,10)
-        axP[1].set_ylim(0,10)
-        axP[2].set_ylim(0,10)
+        axP[0].set_ylim(0,1)
+        axP[1].set_ylim(0,1)
+        axP[2].set_ylim(0,1)
 
         axP[0].grid(False)
         axP[1].grid(False)

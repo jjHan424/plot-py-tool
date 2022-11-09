@@ -1166,7 +1166,9 @@ def H_open_rms(filename,index=1):
             if doy not in all_data.keys():
                 all_data[doy]={}
             Fix = value[4+index][0:len(value[4+index])-1]
-            all_data[doy]["Fixed"] = float(Fix)
+            all_data[doy]["FixSig"] = float(Fix)
+            Fix = value[index][0:len(value[index])-1]
+            all_data[doy]["FixRaw"] = float(Fix)
             all_data[doy]["E"] = float(value[8+index])
             all_data[doy]["N"] = float(value[12+index])
             all_data[doy]["U"] = float(value[16+index])

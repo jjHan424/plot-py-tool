@@ -46,11 +46,11 @@ ENU_ALL = {}
 # mode_list = ["Grid","Grid-Self","Grid-2"]
 #mode_list = ["GRID"]#,"Omc","Rank"]
 # site_list = ["WUDA","WHYJ","N028"]
-#site_list = ["WUDA","WUDA","WUDA"]
+# site_list = ["HKSC"]
 # Site = "WUDA"
-# site_list = ["WUDA","WHYJ","N028","HKSC","HKMW","HKTK"]
-mode_list = ["Grid","Chk","Ele-HK","Ele-WH"]
-site_list = ["HKMW"]
+site_list = ["WUDA","WHYJ","N028","HKSC","HKMW","HKTK"]
+mode_list = ["Aug","Grid","Chk","Coef"]
+#site_list = ["HKTK"]
 # site_list = "HKSC"
 # Y=2021
 # M=10
@@ -58,36 +58,36 @@ site_list = ["HKMW"]
 # S=2
 # L=22
 # count = 11
-Sig = 0
-SavePath=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos4-New-11_Sigma"
+Sig = 1
+SavePath=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-10"
 if (not os.path.exists(SavePath)):
     os.mkdir(SavePath)
-# for j in range(len(site_list)):
+for j in range(len(site_list)):
     
-#     SavePathSite = SavePath + "\\" + site_list[j] + "-Sigma-"+"{:0>1}".format(Sig)+".txt"
-#     with open(SavePathSite,'a') as file:
-#         file.write("Doy    ")
-#         for i in range(len(mode_list)):
-#             file.write("Fix1-{}     ".format(mode_list[i]))
-#         for i in range(len(mode_list)):
-#             file.write("Fix2-{}     ".format(mode_list[i]))
-#         file.write("       ")
-#         for i in range(len(mode_list)):
-#             file.write("E-{}        ".format(mode_list[i]))
-#         for i in range(len(mode_list)):
-#             file.write("N-{}          ".format(mode_list[i]))
-#         for i in range(len(mode_list)):
-#             file.write("U-{}          ".format(mode_list[i]))
-#         file.write("\n")
+    SavePathSite = SavePath + "\\" + site_list[j] + "-Sigma-"+"{:0>1}".format(Sig)+".txt"
+    with open(SavePathSite,'a') as file:
+        file.write("Doy    ")
+        for i in range(len(mode_list)):
+            file.write("Fix1-{}     ".format(mode_list[i]))
+        for i in range(len(mode_list)):
+            file.write("Fix2-{}     ".format(mode_list[i]))
+        file.write("       ")
+        for i in range(len(mode_list)):
+            file.write("E-{}        ".format(mode_list[i]))
+        for i in range(len(mode_list)):
+            file.write("N-{}          ".format(mode_list[i]))
+        for i in range(len(mode_list)):
+            file.write("U-{}          ".format(mode_list[i]))
+        file.write("\n")
 
 for j in range(len(site_list)):
     Site = site_list[j]
     Y=2021
-    M=11
-    D=7
-    S=17.5
-    L=1.5
-    count = 1
+    M=10
+    D=28
+    S=2
+    L=22
+    count = 11
     Direct=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-SetRef"
     
     while count > 0:
@@ -98,35 +98,37 @@ for j in range(len(site_list)):
             M = M + 1
         doy = tr.ymd2doy(Y,M,D,0,0,00)
         cdoy = "{:0>3}".format(doy)
-        # filename_list = [
-        #     # Direct + "\\client-Aug-" + cdoy + "\\" + Site + "-GEC.flt",
-        #     Direct + "\\client-Grid-" + cdoy + "\\" + Site + "-GEC.flt", 
-        #     Direct + "\\client-Grid_Chk-" + cdoy + "\\" + Site + "-GEC.flt",
-        #     Direct + "\\client-Grid_Ele-8-" + cdoy + "\\" + Site + "-GEC.flt",
-        #     # Direct + "\\client-Grid_Ele-9-" + cdoy + "\\" + Site + "-GEC.flt",
-        #     Direct + "\\client-Grid_Ele-10-" + cdoy + "\\" + Site + "-GEC.flt",
-        #     # Direct + "\\client-Grid_Ele-6-" + cdoy + "\\" + Site + "-GEC.flt",
-        #     # Direct + "\\client-Grid_Ele-7-" + cdoy + "\\" + Site + "-GEC.flt",
-        #     # Direct + "\\client-Grid_Ele-8-" + cdoy + "\\" + Site + "-GEC.flt"
-        #     # Direct + "\\client-New-Grid-" + cdoy + "\\" + Site + "-GEC.flt", 
-        #     # Direct + "\\client-New-Grid_Chk-" + cdoy + "\\" + Site + "-GEC.flt",
-        #     # Direct + "\\client-New-Grid_Ele-" + cdoy + "\\" + Site + "-GEC.flt"
-        #     # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\HKSC-GEC-1.flt",
-        #                 ]
         filename_list = [
-            r"E:\1Master_2\Paper_Grid\Pro_20211107-312\client_SetRef\HKMW-GEC-Grid.flt",
-            r"E:\1Master_2\Paper_Grid\Pro_20211107-312\client_SetRef\HKMW-GEC-Chk.flt",
-            r"E:\1Master_2\Paper_Grid\Pro_20211107-312\client_SetRef\HKMW-GEC-ELE-HKMW.flt",
-            r"E:\1Master_2\Paper_Grid\Pro_20211107-312\client_SetRef\HKMW-GEC-ELE-N028.flt",
+            Direct + "\\client-Aug-" + cdoy + "\\" + Site + "-GEC.flt",
+             Direct + "\\client-Grid-" + cdoy + "\\" + Site + "-GEC.flt", 
+            Direct + "\\client-Grid_Chk-" + cdoy + "\\" + Site + "-GEC.flt",
+           # Direct + "\\client-Grid_Ele-7-" + cdoy + "\\" + Site + "-GEC.flt",
+            Direct + "\\client-Grid_Coef-10-" + cdoy + "\\" + Site + "-GEC.flt",
+       #     Direct + "\\client-Grid_Ele-10-" + cdoy + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele-6-" + cdoy + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele-7-" + cdoy + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele-8-" + cdoy + "\\" + Site + "-GEC.flt"
+            # Direct + "\\client-New-Grid-" + cdoy + "\\" + Site + "-GEC.flt", 
+            # Direct + "\\client-New-Grid_Chk-" + cdoy + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-New-Grid_Ele-" + cdoy + "\\" + Site + "-GEC.flt"
+            # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\HKSC-GEC-1.flt",
                         ]
+        # Direct = r"E:\1Master_2\Paper_Grid\Pro_20211107-312\client_SetRef"
+        # filename_list = [
+        #     Direct+"\\HKMW-GEC-Grid.flt",
+        #     Direct+"\\HKMW-GEC-cofe.flt",
+        #     Direct+"\\HKMW-GEC-Chk.flt",
+        #     # Direct+"\\HKMW-GEC-ELE-HKMW.flt",
+        #     # Direct+"\\HKMW-GEC-ELE-N028.flt",
+        #                 ]
         for i in range(len(mode_list)):
             data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
             # data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
             data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
             ENU_ALL[mode_list[i]] = data_ENU
             
-        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 1,starttime=S,LastT=L,deltaT=0.25,time = "UTC",all=False,Fixed=False,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True)
-        # if (count == 0 and M!=12):
-        #     count = 1
-        #     M=12
-        #     D=4
+        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.2,starttime=S,LastT=L,deltaT=2,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=False)
+        if (count == 0 and M!=12):
+            count = 1
+            M=12
+            D=4
