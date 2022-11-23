@@ -58,14 +58,11 @@ r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\XGXN2021339_GEC.ismr",]
 # path_list = [r"E:\1Master_2\Paper_Grid\Pro_20211205-339\roti\WHYJ2021339_GEC.ismr"]
 path_list = [r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI\2021305\HKSC2021305_GEC.ismr"]
 site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA","HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+site_list = ["HKSC"]
 count = 1
-Year,Mon,Day,Hour,LastT,deltaT = 2021,12,4,0,24,2
+Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,0,24,2
 while count > 0:
-    Day = Day + 1
-    count = count - 1
-    if (Day > 31):
-        Day = 1
-        Mon = Mon + 1
+   
     doy = tr.ymd2doy(Year,Mon,Day,0,00,00)
     cdoy = "{:0>3}".format(doy)
     for i in range(len(site_list)):
@@ -187,13 +184,18 @@ while count > 0:
         axP[1].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
         axP[2].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
 
-        axP[0].set_ylim(0,1)
-        axP[1].set_ylim(0,1)
-        axP[2].set_ylim(0,1)
+        # axP[0].set_ylim(0,1)
+        # axP[1].set_ylim(0,1)
+        # axP[2].set_ylim(0,1)
 
         axP[0].grid(False)
         axP[1].grid(False)
         axP[2].grid(False)
 
-        plt.savefig(save_dir+"\\"+cur_site+'.png')
-        # plt.show()
+        # plt.savefig(save_dir+"\\"+cur_site+'.png')
+        plt.show()
+        Day = Day + 1
+        count = count - 1
+        if (Day > 31):
+            Day = 1
+            Mon = Mon + 1

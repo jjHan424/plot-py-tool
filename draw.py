@@ -363,7 +363,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP[2].set_title('C')
         for i in range(3):
                 axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-                axP[i].set_ylim(ymin,ymax)
+                # axP[i].set_ylim(ymin,ymax)
                 box = axP[i].get_position()
                 axP[i].set_position([box.x0, box.y0, box.width*0.99, box.height])
         if freq==1:
@@ -492,7 +492,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
                         continue
                     if abs(data[time][sat][sys_type[sat[0]]]) == 0:
                         continue
-                    if abs(data[time][sat][sys_type[sat[0]]]) > -1:
+                    if abs(data[time][sat][sys_type[sat[0]]]) < 1:
                         if sat[0] == "C" and sys_type[sat[0]] in data[time][sat].keys():
                             data_C[prn-1].append(data[time][sat][sys_type[sat[0]]])
                             time_C[prn-1].append(plot_time)
@@ -1557,7 +1557,9 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
     for i in range(N_plot):
         axP[i].set_ylabel(type[i],font2)
         #axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-        if type[i] == "E" or type[i] == "N" or type[i] == "U":
+        if type[i] == "E" or type[i] == "N":
+            axP[i].set_ylim(ymin,ymax)
+        if type[i] == "U":
             axP[i].set_ylim(ymin,ymax)
         if type[i] == "E":
             if N_plot==3:
@@ -1896,7 +1898,7 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
         plt.show()
     else:
         SaveFigFile = save + "\\" + site + "-" + "{:0>3}".format(doy) + "-" "Sigma-" + "{:0>1}".format(Sigma_num) + ".png"
-        plt.savefig(SaveFigFile)
+        # plt.savefig(SaveFigFile)
         with open(SaveTextFile,'a') as file:
             # file.write("       ###"+"Fixed/Fixed+Float"+"###       \n")
             for i in range(N_mode):

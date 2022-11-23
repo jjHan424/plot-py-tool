@@ -32,7 +32,8 @@ REF_XYZ = {"HKLM":[-2414046.6433,5391602.1169,2396878.6436],
            "N032":[-2141844.0708,5071953.6039,3209315.6304],
            "HKMW":[-2402484.8351,5395262.2062,2400726.7172],
            "WHYJ":[-2252813.6375,4973121.8230,3286531.2991],
-           "N028":[-2191056.9474,5053129.9334,3205815.9843]}
+           "N028":[-2191056.9474,5053129.9334,3205815.9843],
+           "N047":[-2350716.9276,4955782.5351,3244265.6257]}
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
 #mode_list = ["GEC","G","E","C","GE"]#,"4 Sites Grid","3 Sites MLCM"]
@@ -49,17 +50,11 @@ ENU_ALL = {}
 # site_list = ["HKSC"]
 # Site = "WUDA"
 site_list = ["WUDA","WHYJ","N028","HKSC","HKMW","HKTK"]
-mode_list = ["Aug","Grid","Chk","Coef"]
-#site_list = ["HKTK"]
-# site_list = "HKSC"
-# Y=2021
-# M=10
-# D=28
-# S=2
-# L=22
-# count = 11
-Sig = 1
-SavePath=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-10"
+# site_list = ["WUDA","WHYJ","N028"]
+mode_list = ["MLCM","Chk"]
+# mode_list = ["Grid-2","Coef-1","Coef-2","Coef-3"]
+Sig = 0
+SavePath=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-IonoWhite\Pos_Aug_Chk"
 if (not os.path.exists(SavePath)):
     os.mkdir(SavePath)
 for j in range(len(site_list)):
@@ -84,51 +79,44 @@ for j in range(len(site_list)):
     Site = site_list[j]
     Y=2021
     M=10
-    D=28
+    D=29
     S=2
     L=22
+    DDD = 2
     count = 11
-    Direct=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-SetRef"
+    Direct=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-IonoWhite"
     
     while count > 0:
-        D = D + 1
-        count = count - 1
-        if (D > 31):
-            D = 1
-            M = M + 1
         doy = tr.ymd2doy(Y,M,D,0,0,00)
         cdoy = "{:0>3}".format(doy)
         filename_list = [
-            Direct + "\\client-Aug-" + cdoy + "\\" + Site + "-GEC.flt",
-             Direct + "\\client-Grid-" + cdoy + "\\" + Site + "-GEC.flt", 
-            Direct + "\\client-Grid_Chk-" + cdoy + "\\" + Site + "-GEC.flt",
-           # Direct + "\\client-Grid_Ele-7-" + cdoy + "\\" + Site + "-GEC.flt",
-            Direct + "\\client-Grid_Coef-10-" + cdoy + "\\" + Site + "-GEC.flt",
-       #     Direct + "\\client-Grid_Ele-10-" + cdoy + "\\" + Site + "-GEC.flt",
-            # Direct + "\\client-Grid_Ele-6-" + cdoy + "\\" + Site + "-GEC.flt",
-            # Direct + "\\client-Grid_Ele-7-" + cdoy + "\\" + Site + "-GEC.flt",
-            # Direct + "\\client-Grid_Ele-8-" + cdoy + "\\" + Site + "-GEC.flt"
-            # Direct + "\\client-New-Grid-" + cdoy + "\\" + Site + "-GEC.flt", 
-            # Direct + "\\client-New-Grid_Chk-" + cdoy + "\\" + Site + "-GEC.flt",
-            # Direct + "\\client-New-Grid_Ele-" + cdoy + "\\" + Site + "-GEC.flt"
-            # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\HKSC-GEC-1.flt",
+            # Direct + "\\client-Grid-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid-" + cdoy + "-04" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid-" + cdoy + "-06" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid-" + cdoy + "-08" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid-" + cdoy + "-10" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele-" + cdoy + "-03" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele_R-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele_R-" + cdoy + "-03" + "\\" + Site + "-GEC.flt",
+            Direct + "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            Direct + "\\client-Grid_Chk-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
                         ]
-        # Direct = r"E:\1Master_2\Paper_Grid\Pro_20211107-312\client_SetRef"
-        # filename_list = [
-        #     Direct+"\\HKMW-GEC-Grid.flt",
-        #     Direct+"\\HKMW-GEC-cofe.flt",
-        #     Direct+"\\HKMW-GEC-Chk.flt",
-        #     # Direct+"\\HKMW-GEC-ELE-HKMW.flt",
-        #     # Direct+"\\HKMW-GEC-ELE-N028.flt",
-        #                 ]
         for i in range(len(mode_list)):
             data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
             # data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
             data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
             ENU_ALL[mode_list[i]] = data_ENU
             
-        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.2,starttime=S,LastT=L,deltaT=2,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=False)
+        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.2,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=False)
+        D = D + 1
+        count = count - 1
         if (count == 0 and M!=12):
             count = 1
             M=12
-            D=4
+            D=5
+        if (D > 31):
+            D = 1
+            M = M + 1

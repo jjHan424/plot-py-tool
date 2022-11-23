@@ -526,6 +526,9 @@ line_mindis1 = {}
 index_grid = 0
 print(range(count_lat))
 for site_in_list in site_list:
+    line_mindis = {}
+    line_mindis1 = {}
+    index_grid = 0
     line_mindis3={}
     blh = mark_point_blh[site_in_list]
     delta_Lat = int((maxLat-blh[0])/space)
@@ -571,6 +574,9 @@ for site_in_list in site_list:
         line_mindis2[cur_site][line_mindis[cur_site][min3]] = min3
         cofe_grid.append((min1+min2+min3)/3)
     # m.save(savedir+"\\"+site_in_list+".html")
+    mean_index_dis = []
+    for cur_index in line_mindis3.keys():
+        mean_index_dis.append(np.mean(line_mindis3[cur_index]))
     site_dis_mean = []
     site_dis_mean.append(np.mean(line_mindis3[index_list[0]]))
     site_dis_mean.append(np.mean(line_mindis3[index_list[1]]))
@@ -617,7 +623,7 @@ for site_in_list in site_list:
                 html='<div style="font-size: 15pt; color : black">'+"{:.2f},{:.0f}".format(np.mean(site_dis_mean),np.sum(angle_mean))+'</div>',
                 )).add_to(m)
     
-    print("{} : {:.2f} {:.2f}  {:.0f}  {:.2f} {:.2f}".format(site_in_list,np.mean(site_dis_mean),dis_mean_wgt,np.sum(triangle),np.mean(angle_mean),angle_mean_wgt))
+    print("{} : Mean: {:>10.2f} Wgt_Mean: {:>10.2f} Max3: {:>10.2f} Min: {:>10.2f} Mean_ALL: {:>10.2f}  {:.0f}  {:7.2f} {:7.2f}".format(site_in_list,np.mean(site_dis_mean),dis_mean_wgt,np.max(site_dis_mean),np.min(mean_index_dis),np.mean(mean_index_dis),np.sum(triangle),np.mean(angle_mean),angle_mean_wgt))
 
 line_mindis = {}
 line_mindis1 = {}

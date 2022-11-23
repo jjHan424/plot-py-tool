@@ -961,6 +961,8 @@ def open_ismr(filename):
     with open(filename,'rt') as f:
         for line in f:
             value = line.split()
+            if len(value) != 10:
+                continue
             if line[0] != "%":
                 soweek = float(value[1])
                 if (soweek < soweek_last):
@@ -1161,16 +1163,88 @@ def H_open_rms(filename,index=1):
         for line in f:
             value = line.split()
             if value[0] == "Doy":
+                Total = int((len(value) - 1)/5)
+                if index > Total:
+                    return all_data
+                
                 continue
             doy = int(value[0])
             if doy not in all_data.keys():
                 all_data[doy]={}
-            Fix = value[4+index][0:len(value[4+index])-1]
+            Fix = value[Total+index][0:len(value[Total+index])-1]
             all_data[doy]["FixSig"] = float(Fix)
             Fix = value[index][0:len(value[index])-1]
             all_data[doy]["FixRaw"] = float(Fix)
-            all_data[doy]["E"] = float(value[8+index])
-            all_data[doy]["N"] = float(value[12+index])
-            all_data[doy]["U"] = float(value[16+index])
+            all_data[doy]["E"] = float(value[Total*2+index])
+            all_data[doy]["N"] = float(value[Total*3+index])
+            all_data[doy]["U"] = float(value[Total*4+index])
     
+    return all_data
+
+
+def H_open_log_ppprtk_client_wgt(filename,P_C = 1000):
+    all_data={}
+    all_data_dis={}
+    all_data_num={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    index_normal = 0
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if len(value) < 15:
+                continue
+            if (value[0] != "Sat"):
+                if (value[0] == "HongKong" or value[0]=="WuHan"):
+                    index_normal = 1
+                else:
+                    continue
+            if value[7] == "ROTIFac:" :
+                index_normal = 1
+            ymd = value[7+index_normal]
+            hms = value[8+index_normal]
+            year = float(ymd[0:4])
+            month = float(ymd[5:7])
+            day = float(ymd[8:10])
+            hour = float(hms[0:2])
+            minute = float(hms[3:5])
+            second = float(hms[6:8])
+            [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+            if (w_last==0):
+                    w_last = w
+            soweek = soweek + (w-w_last)*604800
+            sat = value[9+index_normal]
+            site_site = value[3+index_normal]
+            dis = value[5+index_normal]
+            if soweek not in all_data.keys():
+                all_data[soweek]={}
+            if sat not in all_data[soweek].keys():
+                all_data[soweek][sat]={}
+                for index in range(6):
+                    if value[7] == "ROTIFac:" :
+                        all_data[soweek][sat][value[index+1]] = float(value[index+10+index_normal])
+                    else:
+                        all_data[soweek][sat][value[index+1+index_normal]] = float(value[index+10+index_normal])
+                all_data[soweek][sat]["Grid"] = P_C/all_data[soweek][sat]["BaseFac"]*math.sqrt(P_C/all_data[soweek][sat]["BaseWgt"])
+    return all_data
+
+def H_open_mean_ppprtk_client_wgt(filename,index):
+    all_data={}
+    all_data_dis={}
+    all_data_num={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if value[2] not in all_data.keys():
+                all_data[value[2]] = {}
+            if int(value[0]) not in all_data[value[2]].keys():
+                all_data[value[2]][int(value[0])] = {}
+            all_data[value[2]][int(value[0])][value[1]] = float(value[index+2])
+
     return all_data

@@ -19,10 +19,10 @@ import draw as dr
 
 Y=2021
 M=11
-D=8
+D=1
 #all 
-S=11.5 #21
-L=1
+S=10 #21
+L=6
 #open
 # S=8+43/60 #21
 # L=8/60
@@ -34,7 +34,7 @@ L=1
 # L=34/60
 
 # mode_list = ["DGDC","DGCA","SZYT","HZAD","SWHF"]
-mode_list = ["MLCM","Grid"]
+mode_list = ["WUDA","HKSC"]
 # file_list = [
 #             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\GRT3_20220924_SGG_CLK06_S_GEC.aug",
 #             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\N004_20220924_SGG_CLK06_S_GEC.aug",
@@ -50,8 +50,8 @@ mode_list = ["MLCM","Grid"]
 # ]
 
 file_list = [
-    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-New\client-Aug-312\HKMW-GEC-I.aug",
-    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-New\client-Grid-312\HKMW-GEC-I.aug"
+    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-SetRef\client-Grid_Coef-171-305\HKSC-GEC-I.aug",
+    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Server\2021305\HKSC-GEC.aug"
 ]
 data_all = {}
 for i in range(len(mode_list)):
@@ -60,4 +60,4 @@ for i in range(len(mode_list)):
     # data = rf.open_epo_file_rtppp(file_list[i])
     data_all[mode_list[i]] = data
 
-dr.plot_aug_NSAT(data_all,mode_list,type = "NSAT",freq = 1,starttime = S,time = "UTC+8",show = True,deltaT=1,ylim=0.5,LastT=L,year = Y,mon=M,day=D,deltaData=5)
+dr.plot_aug_NSAT(data_all,mode_list,type = "NSAT",freq = 1,starttime = S,time = "UTC",show = True,deltaT=1,ylim=0.5,LastT=L,year = Y,mon=M,day=D,deltaData=5)

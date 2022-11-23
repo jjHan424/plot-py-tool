@@ -14,44 +14,46 @@ import trans as tr
 plt.style.use(['science','grid','no-latex'])
 import math
 
-site_list = ["WUDA","WHYJ","HKSC","HKMW","HKTK"]
-# site_list = ["HKMW"]
+site_list = ["WUDA","WHYJ","N028","HKSC","HKMW","HKTK"]
+site_list = ["HKSC","HKMW","HKTK"]
 site_list_plot = site_list
 Mode_Plot = "Mean"
-Fix_mode = "FixRaw"
-com_mode = "Grid"
+Fix_mode = "FixSig"
+com_mode = "6"
 Site = "WUDA"
+# Direct_Old
 Direct7 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-7"
 Direct8 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-8"
 Direct9 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-9"
 Direct10 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-10"
 Direct11 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-11"
 Direct_Coef10 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-10"
+Direct_Coef11 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-11"
+Direct_Coef12 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-12"
+Direct_Coef13 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-13"
+Direct_Coef145 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-14-15"
+Direct_Coef16 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-16"
+Direct_Coef178 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-17-18"
+Direct_Coef1920 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-19-20"
+Direct_Coef41 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-4-1"
+Direct_Grid = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos3-Grid"
+DirectSave=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Bar"
+# Direct_New
+DirectGrid = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-IonoWhite\Pos_Grid"
 site_num = len(site_list)
-
+show = True
 data_save = {}
 for i in range(site_num):
     cur_site = site_list[i]
     # file_path = Direct1 + "\\" + cur_site + "-Sigma-1.txt"
     if cur_site not in data_save.keys():
         data_save[cur_site] = {}
-    data_save[cur_site]["MLCM"] = rf.H_open_rms(Direct_Coef10 + "\\" + cur_site + "-Sigma-1.txt",1)
-    data_save[cur_site]["Grid"] = rf.H_open_rms(Direct_Coef10 + "\\" + cur_site + "-Sigma-1.txt",2)
-    data_save[cur_site]["Chk"] = rf.H_open_rms(Direct_Coef10 + "\\" + cur_site + "-Sigma-1.txt",3)
-    data_save[cur_site]["Coef"] = rf.H_open_rms(Direct_Coef10 + "\\" + cur_site + "-Sigma-1.txt",4)
-    # data_save[cur_site]["Ele8"] = rf.H_open_rms(Direct8 + "\\" + cur_site + "-Sigma-1.txt",4)
-    # data_save[cur_site]["Ele9"] = rf.H_open_rms(Direct9 + "\\" + cur_site + "-Sigma-1.txt",4)
-    # data_save[cur_site]["Ele10"] = rf.H_open_rms(Direct10 + "\\" + cur_site + "-Sigma-1.txt",4)
-    # data_save[cur_site]["Ele11"] = rf.H_open_rms(Direct11 + "\\" + cur_site + "-Sigma-1.txt",4)
-
-    # data_save[cur_site]["Set"] = rf.H_open_rms(Direct7 + "\\" + cur_site + "-Sigma-1.txt",3)
-    # data_save[cur_site]["No"] = rf.H_open_rms(Direct99 + "\\" + cur_site + "-Sigma-1.txt",3)
-    # data_save[cur_site]["Chk"] = rf.H_open_rms(Direct7 + "\\" + cur_site + "-Sigma-1.txt",3)
-    # data_save[cur_site]["Ele7"] = rf.H_open_rms(Direct7 + "\\" + cur_site + "-Sigma-1.txt",4)
-    # data_save[cur_site]["Ele8"] = rf.H_open_rms(Direct8 + "\\" + cur_site + "-Sigma-1.txt",4)
-    # data_save[cur_site]["Ele9"] = rf.H_open_rms(Direct9 + "\\" + cur_site + "-Sigma-1.txt",4)
-    # data_save[cur_site]["Ele10"] = rf.H_open_rms(Direct10 + "\\" + cur_site + "-Sigma-1.txt",4)
-    # data_save[cur_site]["Ele11"] = rf.H_open_rms(Direct11 + "\\" + cur_site + "-Sigma-1.txt",4)
+    data_save[cur_site]["2"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1.txt",1)
+    data_save[cur_site]["4"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1.txt",2)
+    data_save[cur_site]["6"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1.txt",3)
+    data_save[cur_site]["8"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1.txt",4)
+    data_save[cur_site]["10"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1.txt",5)
+    # data_save[cur_site]["6"] = rf.H_open_rms(Direct_Coef178 + "\\" + cur_site + "-Sigma-1.txt",1)
 
 #===========Day============#
 if Mode_Plot=="Site":
@@ -62,9 +64,9 @@ if Mode_Plot=="Site":
             cur_site = Site
             W=0.8/len(data_save[site_list_plot[0]].keys())
             if Fix_mode == "FixRaw" or Fix_mode == "FixSig":
-                figP,axP = plt.subplots(5,1,figsize=(14,9.3),sharey=False,sharex=True)
+                figP,axP = plt.subplots(5,1,figsize=(18,9.5),sharey=False,sharex=True)
             else:
-                figP,axP = plt.subplots(4,1,figsize=(14,9.3),sharey=False,sharex=True)
+                figP,axP = plt.subplots(4,1,figsize=(18,9.5),sharey=False,sharex=True)
             mode_list = []
             imode = 0
             mode_num = len(data_save[cur_site].keys())
@@ -88,7 +90,7 @@ if Mode_Plot=="Site":
             for mode in data_save[cur_site].keys():
                 X_all = list(range(len(data_save[cur_site][mode].keys())))
                 mode_list.append(mode)
-                barplot_data_Fix,percent_Fix = [],[]
+                bartext_data_Fix,barplot_data_Fix,percent_Fix = [],[],[]
                 barplot_data_E,percent_E = [],[]
                 barplot_data_N,percent_N = [],[]
                 barplot_data_U,percent_U = [],[]
@@ -98,7 +100,11 @@ if Mode_Plot=="Site":
                 j=0
                 for cdoy in data_save[cur_site][mode]:
                     if Fix_mode == "FixRaw" or Fix_mode == "FixSig":
-                        barplot_data_Fix.append(data_save[cur_site][mode][cdoy][Fix_mode])
+                        if data_save[cur_site][mode][cdoy][Fix_mode] < 80:
+                            barplot_data_Fix.append(80)
+                        else:
+                            barplot_data_Fix.append(data_save[cur_site][mode][cdoy][Fix_mode])
+                        bartext_data_Fix.append(data_save[cur_site][mode][cdoy][Fix_mode])
                     barplot_data_E.append(data_save[cur_site][mode][cdoy]["E"])
                     barplot_data_N.append(data_save[cur_site][mode][cdoy]["N"])
                     barplot_data_U.append(data_save[cur_site][mode][cdoy]["U"])
@@ -124,20 +130,33 @@ if Mode_Plot=="Site":
                 if Fix_mode == "FixRaw" or Fix_mode == "FixSig":
                     axP[4].bar(x,barplot_data_Fix,width = W,label='value')
                 if mode != com_mode:
+                    font_text = {'family' : 'Times new roman','weight' : 300,'size'   : 10}
                     for i in range(len(x)):
-                        axP[0].text(x[i] - W/2,barplot_data_E[i],'{:.0f}%'.format(percent_E[i]),font_text)
-                        axP[1].text(x[i] - W/2,barplot_data_N[i],'{:.0f}%'.format(percent_N[i]),font_text)
-                        axP[2].text(x[i] - W/2,barplot_data_U[i],'{:.0f}%'.format(percent_U[i]),font_text)
-                        axP[3].text(x[i] - W/2,barplot_data_3D[i],'{:.0f}%'.format(percent_3D[i]),font_text)
+                        if percent_E[i] < 0:
+                            axP[0].text(x[i] - W/2,barplot_data_E[i],'{:.2f}%'.format(percent_E[i]),font_text,rotation=45,color="red")
+                        else:
+                            axP[0].text(x[i] - W/2,barplot_data_E[i],'{:.2f}%'.format(percent_E[i]),font_text,rotation=45,color="green")
+                        if percent_N[i] < 0:
+                            axP[1].text(x[i] - W/2,barplot_data_N[i],'{:.2f}%'.format(percent_N[i]),font_text,rotation=45,color="red")
+                        else:
+                            axP[1].text(x[i] - W/2,barplot_data_N[i],'{:.2f}%'.format(percent_N[i]),font_text,rotation=45,color="green")
+                        if percent_U[i] < 0:
+                            axP[2].text(x[i] - W/2,barplot_data_U[i],'{:.2f}%'.format(percent_U[i]),font_text,rotation=45,color="red")
+                        else:
+                            axP[2].text(x[i] - W/2,barplot_data_U[i],'{:.2f}%'.format(percent_U[i]),font_text,rotation=45,color="green")
+                        if percent_3D[i] < 0:
+                            axP[3].text(x[i] - W/2,barplot_data_3D[i],'{:.2f}%'.format(percent_3D[i]),font_text,rotation=45,color="red")
+                        else:
+                            axP[3].text(x[i] - W/2,barplot_data_3D[i],'{:.2f}%'.format(percent_3D[i]),font_text,rotation=45,color="green")
                 if Fix_mode == "FixRaw" or Fix_mode == "FixSig":
                     for i in range(len(x)):
-                        axP[4].text(x[i] - W/2,barplot_data_Fix[i],'{:.0f}%'.format(barplot_data_Fix[i]),font_text)
+                        axP[4].text(x[i] - W/2,barplot_data_Fix[i],'{:.2f}%'.format(bartext_data_Fix[i]),font_text,rotation=45)
 
             num_mode = len(mode_list)
             font_text = {'family' : 'Times new roman','weight' : 300,'size'   : 12}
             axP[3].set_xticks(X_all)
             axP[3].set_xticklabels(barplot_name)
-            axP[0].legend(mode_list,prop=font_text,ncol=2,bbox_to_anchor=(1,1.5),loc=1)
+            axP[0].legend(mode_list,prop=font_text,ncol=2,bbox_to_anchor=(1,1.55),loc=1)
             font_text = {'family' : 'Times new roman','weight' : 300,'size'   : 20}
             if Fix_mode == "FixRaw" or Fix_mode == "FixSig":
                 axP[4].set_xlabel("Day of Year",font_text)
@@ -155,14 +174,18 @@ if Mode_Plot=="Site":
             # axP[2].set_ylim(0,20)
             font_text = {'family' : 'Times new roman','weight' : 500,'size'   : 25}
             axP[0].set_title(Site+"-RMS",font_text)
-            plt.show()
+            if show:
+                plt.show()
+            else:
+                plt.savefig(DirectSave+"\\"+Site+"-Chk-Grid-Coef"+".png",dpi=600)
+
 if Mode_Plot=="Mean":
 #===========Site============#
     if Fix_mode == "FixRaw" or Fix_mode == "FixSig":
         mode_Num = 5
     else:
         mode_Num = 4
-    figP,axP = plt.subplots(mode_Num,1,figsize=(15,9.5),sharey=False,sharex=True)
+    figP,axP = plt.subplots(mode_Num,1,figsize=(18,9.5),sharey=False,sharex=True)
     for Site in site_list_plot:
         if Site not in data_save.keys():
             print("No Data")
@@ -182,6 +205,8 @@ if Mode_Plot=="Mean":
             x = []
             j=0
             for cdoy in data_save[cur_site][mode]:
+                if cdoy == 305:
+                    continue
                 if mode_Num==5:
                     barplot_data_Fix.append(data_save[cur_site][mode][cdoy][Fix_mode])
                 barplot_data_E.append(data_save[cur_site][mode][cdoy]["E"])
@@ -194,7 +219,6 @@ if Mode_Plot=="Mean":
             if mode_Num==5:
                 data_save[cur_site][mode]["mean"][Fix_mode] = np.mean(barplot_data_Fix)
             
-    site_list = []
     imode = 0
     mode_num = len(data_save[cur_site].keys())
     for mode in data_save[cur_site].keys():
@@ -252,19 +276,33 @@ if Mode_Plot=="Mean":
         font_text = {'family' : 'Times new roman','weight' : 300,'size'   : 10}
         if mode != com_mode:
             for i in range(len(x)):
-                axP[0].text(x[i] - W/2,barplot_data_E[i],'{:.0f}%'.format(percent_E[i]),font_text)
-                axP[1].text(x[i] - W/2,barplot_data_N[i],'{:.0f}%'.format(percent_N[i]),font_text)
-                axP[2].text(x[i] - W/2,barplot_data_U[i],'{:.0f}%'.format(percent_U[i]),font_text)
-                axP[3].text(x[i] - W/2,barplot_data_3D[i],'{:.0f}%'.format(percent_3D[i]),font_text)
+                if percent_E[i] < 0:
+                    axP[0].text(x[i] - W/2,barplot_data_E[i],'{:.2f}%'.format(percent_E[i]),font_text,rotation=45,color="red")
+                else:
+                    axP[0].text(x[i] - W/2,barplot_data_E[i],'{:.2f}%'.format(percent_E[i]),font_text,rotation=45,color="green")
+                if percent_N[i] < 0:
+                    axP[1].text(x[i] - W/2,barplot_data_N[i],'{:.2f}%'.format(percent_N[i]),font_text,rotation=45,color="red")
+                else:
+                    axP[1].text(x[i] - W/2,barplot_data_N[i],'{:.2f}%'.format(percent_N[i]),font_text,rotation=45,color="green")
+                if percent_U[i] < 0:
+                    axP[2].text(x[i] - W/2,barplot_data_U[i],'{:.2f}%'.format(percent_U[i]),font_text,rotation=45,color="red")
+                else:
+                    axP[2].text(x[i] - W/2,barplot_data_U[i],'{:.2f}%'.format(percent_U[i]),font_text,rotation=45,color="green")
+                if percent_3D[i] < 0:
+                    axP[3].text(x[i] - W/2,barplot_data_3D[i],'{:.2f}%'.format(percent_3D[i]),font_text,rotation=45,color="red")
+                else:
+                    axP[3].text(x[i] - W/2,barplot_data_3D[i],'{:.2f}%'.format(percent_3D[i]),font_text,rotation=45,color="green")
+                
         if mode_Num==5:
             for i in range(len(x)):
-                axP[4].text(x[i] - W/2,barplot_data_Fix[i],'{:.2f}%'.format(barplot_data_Fix[i]),font_text)
+                axP[4].text(x[i] - W/2,barplot_data_Fix[i],'{:.2f}%'.format(barplot_data_Fix[i]),font_text,rotation=45)
+                print("{:>4}-{}{:>3}:{:<3.4f}cm{:>3}:{:<3.4f}cm{:>3}:{:<3.4f}cm{:>3}:{:<3.4f}cm{:>3}:{:<3.2f}%".format(mode,site_list[i],"E",barplot_data_E[i],"N",barplot_data_N[i],"U",barplot_data_U[i],"3D",barplot_data_3D[i],"Fix",barplot_data_Fix[i]))
         
 
     font_text = {'family' : 'Times new roman','weight' : 300,'size'   : 15}
     axP[mode_Num-1].set_xticks(X_all)
     axP[mode_Num-1].set_xticklabels(barplot_name)
-    axP[0].legend(mode_list,prop=font_text,ncol=2,bbox_to_anchor=(1,1.5),loc=1)
+    axP[0].legend(mode_list,prop=font_text,ncol=2,bbox_to_anchor=(1,1.55),loc=1)
     font_text = {'family' : 'Times new roman','weight' : 300,'size'   : 20}
     axP[mode_Num-1].set_xlabel("Site",font_text)
     axP[0].set_ylabel("E(cm)",font_text)
@@ -280,5 +318,6 @@ if Mode_Plot=="Mean":
     font_text = {'family' : 'Times new roman','weight' : 500,'size'   : 25}
     axP[0].set_title("RMS",font_text)
     plt.show()
+    # plt.savefig(r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Bar\HK.png",dpi=600)
     
 
