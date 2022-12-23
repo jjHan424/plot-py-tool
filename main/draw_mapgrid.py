@@ -186,17 +186,27 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 #               'T430':[-2411015.2264,5380265.7133,2425132.7008]
 #                 }
 
-mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\AUG_HK_xml.crd")
-space_set = 0.1
-savedir = r'E:\1Master_2\Paper_Grid\crd'
-site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\AUG_HK_xml.crd")
+# space_set = 0.1
+# savedir = r'E:\1Master_2\Paper_Grid\crd'
+# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # site_list = ["AUG-HK2"]
 # mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_WH.crd")
 # space_set = 0.5
 # savedir = r'E:\1Master_2\Paper_Grid\crd'
-# site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA"]
+# site_list = ["WHYJ","WHXZ","WUDA","WHDS","WHSP","N028","N047","N068","XGXN"]
+# mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_GZ.crd")
+# space_set = 0.3
+# savedir = r'E:\1Master_2\Paper_Grid\crd'
+# site_list = ["H035","H038","H053","H055","H068","H074","H139"]
+
+mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\AUG_BJ_New.crd")
+space_set = 0.8
+savedir = r'E:\1Master_2\Paper_Grid\crd'
+site_list = ["K042","K057","K059","K101","A010","V092"]
+
 # site_list = ["Aug-WH2"]
-# Lines_xyz1 = rf.open_flt_pos_rtpppfile("/Volumes/H_GREAT/2Project/Allystar/2022_0725_Dynamic/CLK06/AUG4/SZK3_20220725_SGG_CLK06_K_GEC.pppar.pos")
+# Lines_xyz1 = rf.open_flt_pvtflt_file(r"E:\1Master_2\Paper_Grid\Dynamic\client-Grid_Ele-304-01\K803-GEC.flt")
 # Lines_xyz1 = rf.open_gpgga_file("/Volumes/H_GREAT/2Project/Allystar/2022_0726_Dynamic/novatel.txt",year=2022,mon=7,day=26)
 
 #Lines_xyz2 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-comp/SEPT-GEC.flt")
@@ -374,7 +384,7 @@ while cur_Lat < maxLat:
     folium.PolyLine(locations=[[cur_Lat,minLon],[cur_Lat + space,minLon]],color=c,weight=3).add_to(m)
     cur_Lat = cur_Lat + space
 # text ref
-folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space),show=True),icon=folium.Icon(color='red',icon="info-sign"),tooltip="click").add_to(m)
+# folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space),show=True),icon=folium.Icon(color='red',icon="info-sign"),tooltip="click").add_to(m)
 # text only text
 # folium.Marker(location=[maxLat,minLon], icon=DivIcon(
 #         icon_size=(150,36),
@@ -521,6 +531,21 @@ folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_L
 #             folium.PolyLine(locations=[[blh1[0],blh1[1]],[b,l]],color=c,weight=2).add_to(m)
 
 #========================Min Dis Grid ===============#
+minDis = 1e16
+maxDis = 0
+for site_in_list in site_list:
+    for cur_site in site_list:
+        if cur_site == site_in_list:
+            continue
+        dx = mark_point_xyz[cur_site][0] - mark_point_xyz[site_in_list][0]
+        dy = mark_point_xyz[cur_site][1] - mark_point_xyz[site_in_list][1]
+        dz = mark_point_xyz[cur_site][2] - mark_point_xyz[site_in_list][2]
+        dis = math.sqrt(dx*dx+dy*dy+dz*dz)
+        if dis < minDis:
+            minDis = dis
+        if dis > maxDis:
+            maxDis = dis
+print("Min:{:.1f}km,Max:{:.1f}km".format(minDis/1000,maxDis/1000))
 line_mindis = {}
 line_mindis1 = {}
 index_grid = 0
@@ -617,13 +642,13 @@ for site_in_list in site_list:
         # else:
         #     angle_mean.append(np.sum(np.abs(angle)))
     angle_mean_wgt = dis_site_in_list[0] / np.sum(dis_site_in_list) * angle_mean[0] + dis_site_in_list[1] / np.sum(dis_site_in_list) * angle_mean[1] + dis_site_in_list[2] / np.sum(dis_site_in_list) * angle_mean[2] + dis_site_in_list[3] / np.sum(dis_site_in_list) * angle_mean[3]
-    folium.Marker(location=[mark_point_blh[site_in_list][0],mark_point_blh[site_in_list][1]], icon=DivIcon(
-                icon_size=(150,36),
-                icon_anchor=(7,20),
-                html='<div style="font-size: 15pt; color : black">'+"{:.2f},{:.0f}".format(np.mean(site_dis_mean),np.sum(angle_mean))+'</div>',
-                )).add_to(m)
+    # folium.Marker(location=[mark_point_blh[site_in_list][0],mark_point_blh[site_in_list][1]], icon=DivIcon(
+    #             icon_size=(150,36),
+    #             icon_anchor=(7,20),
+    #             html='<div style="font-size: 15pt; color : black">'+"{:.2f},{:.0f}".format(np.mean(site_dis_mean),np.sum(angle_mean))+'</div>',
+    #             )).add_to(m)
     
-    print("{} : Mean: {:>10.2f} Wgt_Mean: {:>10.2f} Max3: {:>10.2f} Min: {:>10.2f} Mean_ALL: {:>10.2f}  {:.0f}  {:7.2f} {:7.2f}".format(site_in_list,np.mean(site_dis_mean),dis_mean_wgt,np.max(site_dis_mean),np.min(mean_index_dis),np.mean(mean_index_dis),np.sum(triangle),np.mean(angle_mean),angle_mean_wgt))
+    print("{} : Mean: {:>10.2f} Wgt_Mean: {:>10.2f} Max3: {:>10.2f} Min: {:>10.2f} 1: {:>10.2f} 2: {:>10.2f} 3: {:>10.2f} 4: {:>10.2f} Mean_ALL: {:>10.2f}  {:.0f}  {:7.2f} {:7.2f}".format(site_in_list,np.mean(site_dis_mean),dis_mean_wgt,np.max(site_dis_mean),np.min(mean_index_dis),dis_site_in_list[0],dis_site_in_list[1],dis_site_in_list[2],dis_site_in_list[3],np.mean(mean_index_dis),np.sum(triangle),np.mean(angle_mean),angle_mean_wgt))
 
 line_mindis = {}
 line_mindis1 = {}
@@ -653,6 +678,8 @@ for i in range(count_lat):
         index_grid = index_grid +1
 line_mindis2 = {}
 cofe_grid = []
+minDis = 1e16
+maxDis = 0
 for cur_site in line_mindis1.keys():
     min_list = sorted(line_mindis1[cur_site])
     min1,min2,min3 = min_list[0],min_list[1],min_list[2]
@@ -664,13 +691,18 @@ for cur_site in line_mindis1.keys():
     line_mindis2[cur_site][line_mindis[cur_site][min2]] = min2
     line_mindis2[cur_site][line_mindis[cur_site][min3]] = min3
     cofe_grid.append((min1+min2+min3)/3)
+    diss = (min1+min2+min3)/3
+    if diss < minDis:
+        minDis = diss
+    if diss > maxDis:
+        maxDis = diss
     folium.Marker(location=[mark_point_blh[cur_site][0],mark_point_blh[cur_site][1]], icon=DivIcon(
                 icon_size=(150,36),
                 icon_anchor=(7,20),
                 html='<div style="font-size: 10pt; color : red">'+"{:.2f}".format((min1+min2+min3)/3)+'</div>',
                 )).add_to(m)
 print("{}:{:.2f}".format("AUG",np.mean(cofe_grid)))
-
+print("Min:{:.1f}km,Max:{:.1f}km".format(minDis/1000,maxDis/1000))
 # line_plot = []
 # i = 0
 # for cur_site in line_mindis2.keys():
@@ -693,7 +725,7 @@ print("{}:{:.2f}".format("AUG",np.mean(cofe_grid)))
 #                 )).add_to(m)
 #         else:
 #             folium.PolyLine(locations=[[blh1[0],blh1[1]],[b,l]],color=c,weight=2).add_to(m)
-m.save(savedir+"\\AUG-HK3.html")
+m.save(savedir+"\\AUG-WH-Dynamic-310.html")
 # webbrowser.open(r'E:\1Master_2\Paper_Grid\crd\AUG_HK2.html')
 
 

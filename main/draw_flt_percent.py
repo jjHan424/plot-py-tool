@@ -1,11 +1,3 @@
-'''
-Author: HanJunjie
-Date: 2021-11-29 21:26:38
-LastEditTime: 2022-09-02 11:04:15
-LastEditors: HanJunjie HanJunjie@whu.edu.cn
-Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
-FilePath: /plot-py-tool/main/draw_flt.py
-'''
 import os
 import sys
 sys.path.insert(0,os.path.dirname(__file__)+'/..')
@@ -54,65 +46,24 @@ REF_XYZ = {
            "V092":[-1980661.4288,4556162.0565,3989739.6921],
            }
 ENU_ALL = {}
-#mode_list = ["HKLM","HKSC","HKTK"]
-#mode_list = ["GEC","G","E","C","GE"]#,"4 Sites Grid","3 Sites MLCM"]
-# mode_list = ["MLCM","Grid","Grid-Self","Grid-2"]#,"Omc","Rank"]
-# mode_list = ["MLCM","Grid","Grid-Chk","Grid_Ele"]
-# mode_list = ["Grid","Wgt-Chk","Ele-Self","Ele-WH"]
-# mode_list = ["Grid","Wgt-Chk","Old"]
-# mode_list = ["Aug","Grid","Grid_Chk","Ele8","Ele10"]
-# mode_list = ["ALL-1","Site-1","ALL-2","Site-2"]
-# mode_list = ["MLCM","Grid","Grid-Chk"]
-# mode_list = ["Grid","Grid-Self","Grid-2"]
-#mode_list = ["GRID"]#,"Omc","Rank"]
-# site_list = ["WUDA","WHYJ","N028"]
-# site_list = ["HKSC"]
-# Site = "WUDA"
-# site_list = ["WUDA","WHYJ","N028","HKSC","HKMW","HKTK"]
-# site_list = ["HKSC","HKMW","HKTK"]
-# site_list = ["WUDA","HKSC"]
-# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH","WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA"]
-# site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA","K042","K057","K059","K101","A010","V092"]
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-site_list = ["WUDA"]
-# mode_list = ["Grid","Coef-1","Coef-2","Coef-3"]
-# mode_list = ["Aug","Grid-2","Grid-4","Coef","Coef-R","Chk"]
-mode_list = ["MLCM","Grid"]
-Sig = 0
-SavePath=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\Aug"
+site_list = ["WUDA","WHYJ"]
+mode_list = ["MLCM","Grid-Con","Grid-Coef"]
+for cur_mode in mode_list:
+    ENU_ALL[cur_mode] = {}
+    for cur_site in site_list:
+        ENU_ALL[cur_mode][cur_site]={}
+DirectI=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-IonoWhite"
+Direct=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-All"
+DirectT=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-Trp"
 S=2
-if (not os.path.exists(SavePath)):
-    os.mkdir(SavePath)
-for j in range(len(site_list)):
-    
-    SavePathSite = SavePath + "\\" + site_list[j] + "-Sigma-"+"{:0>1}".format(Sig) + "-{:0>2}".format(S)+".txt"
-    # with open(SavePathSite,'a') as file:
-    #     file.write("Doy    ")
-    #     for i in range(len(mode_list)):
-    #         file.write("Fix1-{}     ".format(mode_list[i]))
-    #     for i in range(len(mode_list)):
-    #         file.write("Fix2-{}     ".format(mode_list[i]))
-    #     file.write("       ")
-    #     for i in range(len(mode_list)):
-    #         file.write("E-{}        ".format(mode_list[i]))
-    #     for i in range(len(mode_list)):
-    #         file.write("N-{}          ".format(mode_list[i]))
-    #     for i in range(len(mode_list)):
-    #         file.write("U-{}          ".format(mode_list[i]))
-    #     file.write("\n")
-
-for j in range(len(site_list)):
-    Site = site_list[j]
+for Site in site_list:
     Y=2021
-    M=11
-    D=5
-    L=22
-    DDD = 60/60
-    count = 1
-    DirectI=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-IonoWhite"
-    Direct=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-All"
-    DirectT=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-Trp"
-    
+    M=10
+    D=29
+    L=15/60
+    DDD = 3
+    count = 11
     while count > 0:
         doy = tr.ymd2doy(Y,M,D,0,0,00)
         cdoy = "{:0>3}".format(doy)
@@ -120,41 +71,35 @@ for j in range(len(site_list)):
             # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA.flt",
             # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-Chk.flt",
             # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-Coef.flt",
-            DirectT + "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-            DirectT + "\\client-Grid_Cor-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-            # DirectT + "\\client-Grid-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-            # DirectT + "\\client-Grid-" + cdoy + "-04" + "\\" + Site + "-GEC.flt",
+            DirectI + "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            DirectT + "\\client-Grid-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Grid-" + cdoy + "-06" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Grid-" + cdoy + "-08" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid-" + cdoy + "-08" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid-" + cdoy + "-10" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid_Ele-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid_Ele-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid_Ele-" + cdoy + "-03" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid_Ele_R-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-            
             # Direct + "\\client-Trp-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-            # DirectT + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
-            # Direct + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC-Trp.flt",
+            DirectT + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Grid_Chk-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
-            # DirectT + "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
-            
-            
-                        ]
+            ]
         for i in range(len(mode_list)):
-            data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
+            data_Raw = rf.open_flt_pvtflt_file_percent(filename_list[i],Year=Y,Mon=M,Day=D,Hour=S,Last=L)
             # data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
             data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
-            ENU_ALL[mode_list[i]] = data_ENU
-            
-        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["NSAT","E","N","U"],mode = mode_list,ylim = 0.4,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True)
+            ENU_ALL[mode_list[i]][Site][cdoy] = data_ENU
         D = D + 1
         count = count - 1
-        # if (count == 0 and M!=12):
-        #     count = 1
-        #     M=12
-        #     D=5
+        if (count == 0 and M!=12):
+            count = 1
+            M=12
+            D=5
         if (D > 31):
             D = 1
             M = M + 1
+
+dr.plot_e_n_u_percent(site ="WuHan", data = ENU_ALL,type = ["Position"],modelist = mode_list,sitelist = site_list,ylim = 0.5,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,percent=0.9,show=True)

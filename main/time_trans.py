@@ -14,12 +14,12 @@ import trans as tr
 
 year=2021
 mon=11
-day=1
+day=6
 
 print("GPST(Week Sow): ",tr.ymd2gpst(year,mon,day,9,31,0))
 print("Day of Year: ",tr.ymd2doy(year,mon,day,0,0,00))
 [week,sow]=tr.ymd2gpst(year,mon,day,0,0,00)
-[week,sow]=tr.ymd2gpst(year,mon,day,14,57,5)
+[week,sow]=tr.ymd2gpst(year,mon,day,16,22,0)
 print("GPST(Day of Week): ",sow/3600/24)
 print(tr.mjd2gpst(59519,32405))
 

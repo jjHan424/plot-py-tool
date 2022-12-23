@@ -363,7 +363,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         axP[2].set_title('C')
         for i in range(3):
                 axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-                # axP[i].set_ylim(ymin,ymax)
+                axP[i].set_ylim(ymin,ymax)
                 box = axP[i].get_position()
                 axP[i].set_position([box.x0, box.y0, box.width*0.99, box.height])
         if freq==1:
@@ -492,7 +492,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
                         continue
                     if abs(data[time][sat][sys_type[sat[0]]]) == 0:
                         continue
-                    if abs(data[time][sat][sys_type[sat[0]]]) < 1:
+                    if abs(data[time][sat][sys_type[sat[0]]]) < 1e16:
                         if sat[0] == "C" and sys_type[sat[0]] in data[time][sat].keys():
                             data_C[prn-1].append(data[time][sat][sys_type[sat[0]]])
                             time_C[prn-1].append(plot_time)
@@ -1580,7 +1580,7 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
     
     
     doy = tr.ymd2doy(year,mon,day,0,00,00)
-    SaveTextFile = save + "\\" + site + "-" "Sigma-" + "{:0>1}".format(Sigma_num) + ".txt"
+    SaveTextFile = save + "\\" + site + "-" "Sigma-" + "{:0>1}".format(Sigma_num) + "-{:0>2}".format(starttime) + ".txt"
     if not show:
         with open(SaveTextFile,'a') as file:
             file.write("{:0>3}    ".format(doy))
@@ -1789,7 +1789,7 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                         temp_M = np.mean(data_plot[cur_type][j])
                         MEAN_enu[cur_type].append(temp_M)
                         # if cur_type!="NSAT":
-                        #     data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
+                        #    data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
                         # temp_M = np.mean(data_plot[cur_type][j])
                         # MEAN_enu[cur_type].append(temp_M)
                         temp = dp.rms(data_plot[cur_type][j])
@@ -2135,57 +2135,33 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
     f1=5
     ymin = -ylim
     ymax = ylim
-    figP,axP = plt.subplots(N_plot,1,figsize=(20,10),sharey=False,sharex=False)
+    figP,axP = plt.subplots(N_plot,1,figsize=(18,11),sharey=False,sharex=False)
+    font = {'family': 'Times new roman','weight': 600,'size': 23}
     if (N_plot>3):
-        axP[N_plot-2].set_xlabel('Time' + '(' + time + ')')
+        axP[N_plot-2].set_xlabel('Time' + '(' + time + ')',font)
     else:
-        axP[N_plot-1].set_xlabel('Time' + '(' + time + ')')
+        axP[N_plot-1].set_xlabel('Time' + '(' + time + ')',font)
     font2 = {'family' : 'Arial',
 		'weight' : 500,
 		'size'   : 13,
             }
+    
     for i in range(N_plot):
-        axP[i].set_ylabel(type[i],font2)
+        font = {'family': 'Times new roman','weight': 600,'size': 23}
+        axP[i].set_ylabel("Receiver DCB(m)",font)
         axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
         if type[i] == "G" or type[i] == "E" or type[i] == "C":
-            axP[i].set_ylim(ymin,ymax)
-        if type[i] == "G":
-            axP[i].set_title("Difference of Bias(m)",font)
-            #axP[i].set_title("Bias(m)",font)
+            #  axP[i].set_ylim(ymin,ymax)
+             font = {'family': 'Times new roman','weight': 600,'size': 20}
+             axP[i].set_title(type[i],font)
         box = axP[i].get_position()
         if type[i] == "G" or type[i] == "E" or type[i] == "C":
             axP[i].set_position([box.x0, box.y0, box.width*0.9, box.height])
-        if type[i] == "RMS" or type[i] == "STD":
-            axP[i].set_position([box.x0, box.y0*0.9, box.width, box.height])
+        # if type[i] == "RMS" or type[i] == "STD":
+            # axP[i].set_position([box.x0, box.y0*0.9, box.width, box.height])
             #axP[i].set_ylim(0,0.6)
-    
-    if "+" in time:
-        end_time = len(time)
-        delta_Time = int(time[3:end_time]) + starttime
-        begT = int(time[3:end_time]) + starttime
-    else:
-        delta_Time = starttime
-        begT=starttime
-    
-    secow_start = tr.ymd2gpst(year,mon,day,starttime,00,00)
-    cov_Time = secow_start[1] - delta_Time * 3600
-    
-    end_Time = begT + LastT
-    delta_X = math.ceil((LastT)/deltaT)
-    XLabel = []
-    XTick = []
-    starttime = begT - deltaT
-    for i in range(delta_X):
-        starttime = starttime + deltaT
-        cur_Str_X = '%02d' % (starttime % 24) + ":00"
-        XLabel.append(cur_Str_X)
-        XTick.append(int(starttime))       
-    while starttime < math.ceil(end_Time):
-        starttime = starttime + deltaT
-        cur_Str_X = '%02d' % (starttime % 24) + ":00"
-        XLabel.append(cur_Str_X)
-        XTick.append(int(starttime))
 
+    [XLabel,XTick,cov_Time,begT,LastT]=xtick(time,year,mon,day,starttime,LastT,deltaT)
 
     time_G = [[] for i in range(N_mode)]
     time_E = [[] for i in range(N_mode)]
@@ -2312,15 +2288,19 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
 		'size'   : 15,
                 }
     
-    
+    font = {'family': 'Times new roman','weight': 600,'size': 20}
     for i in range(N_plot):
         cur_type = type[i]
         if (cur_type != "RMS" and cur_type != "STD" and cur_type != "BOX3"):
             axP[i].set_xticks(XTick)
-            axP[i].set_xticklabels(XLabel)
-            axP[i].legend(site_ploted[cur_type],prop=font2,
-                    framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=5, 
-                    bbox_to_anchor=(1.02,1.02),loc=0,borderaxespad=0) 
+            axP[i].set_xticklabels(XLabel,fontsize = 18)
+    axP[1].legend(site_ploted["G"],prop=font,
+                    framealpha=1,facecolor='none',ncol=1,numpoints=5, markerscale=10, 
+                    bbox_to_anchor=(1.02,1.6),loc=0,borderaxespad=0) 
+    # plt.tick_params(labelsize = 18)
+    labels = axP[0].get_yticklabels() + axP[0].get_xticklabels() + axP[1].get_yticklabels() + axP[1].get_xticklabels() + axP[2].get_yticklabels() + axP[2].get_xticklabels()
+    [label.set_fontsize(18) for label in labels]
+    [label.set_fontname('Times New Romam') for label in labels]
     if ("RMS" in type or "BOX3" in type):
         last_plot = RMS_enu
     elif("STD" in type):
@@ -2377,19 +2357,19 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
                 # print(np.mean(barplot_data))
                 #axP[i].bar_label(p1,label_type='edge')
                 isys=isys+1
-
-    for sys in last_plot.keys():
-        barplot_data = []
-        barplot_name = []
-        for site in last_plot[sys].keys():
-            barplot_name.append(site)
-        break
-    sys = ["G","E","C"]
-    if ('RMS' in type or 'STD' in type):
-        axP[3].set_xticks(X_all)
-        axP[3].set_xticklabels(mode)
-        axP[3].legend(sys)
-        axP[3].set_xlim(-0.5,len(mode)+0.5)
+    if ("RMS" in type or "BOX3" in type or "STD" in type):
+        for sys in last_plot.keys():
+            barplot_data = []
+            barplot_name = []
+            for site in last_plot[sys].keys():
+                barplot_name.append(site)
+            break
+        sys = ["G","E","C"]
+        if ('RMS' in type or 'STD' in type):
+            axP[3].set_xticks(X_all)
+            axP[3].set_xticklabels(mode)
+            axP[3].legend(sys)
+            axP[3].set_xlim(-0.5,len(mode)+0.5)
     # print("固定率:")
     # for i in range(N_mode):
     #     print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (Fixed_NUM[i] + Float_NUM[i]) * 100))
@@ -2397,8 +2377,10 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
     # for i in range(N_mode):
     #     print(mode[i] + ':{:.2f}%'.format((Fixed_NUM[i] + Float_NUM[i]) / ALL_NUM[i] * 100))
 
+    
+    plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HK-306-RDCB.png",dpi=600)
+    plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HK-306-RDCB.svg")
     plt.show()
-    #plt.savefig("/Users/hjj/Desktop/test.svg")
 
 def plot_SatofAug(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10,all=False):
     #with plt.style.context("science","grid"):
@@ -2671,3 +2653,111 @@ def plot_aug_NSAT(data = {},mode = {},type = "NSAT",freq = 1,ylim = 1,starttime 
     #plt.savefig(savedir)
     if show:
         plt.show()  
+
+
+def plot_e_n_u_percent(site = "Default",data = {},type = ["Horizontal","Vertical","Position"],modelist = ["DEFAULT"],sitelist = ["HJJ"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10,all=False,percent=90):
+    N_plot = len(type)
+    N_mode = len(modelist)
+    f1=5
+    ymin = 0.0
+    ymax = ylim
+    figP,axP = plt.subplots(1,N_plot,figsize=(17,9),sharey=False,sharex=True)
+    for i in range(N_plot):
+        if N_plot == 1:
+            axP.set_ylim(ymin,ymax)
+            font2 = {'family' : 'Times new roman','weight' : 300,'size'   : 22}
+            axP.set_ylabel(type[i] + " Diff/m",font2)
+            axP.set_xlabel("Time/min",font2)
+            axP.set_title("{:.0f}-Percent".format(percent*100),font2)
+            if type[i] != "Horizontal" and type[i] != "Vertical" and type[i] != "Position":
+                return
+        else:
+            axP[i].set_ylim(ymin,ymax)
+            font2 = {'family' : 'Times new roman','weight' : 300,'size'   : 22}
+            axP[i].set_ylabel(type[i] + " Diff/m",font2)
+            axP[i].set_title("{:.0f}-Percent".format(percent*100),font2)
+            if type[i] != "Horizontal" and type[i] != "Vertical" and type[i] != "Position":
+                return
+    
+    data_plot = {}
+    time_plot = {}
+    end_secs = LastT * 3600
+    Sec_Start = 0
+    XLabel,XTick = [],[]
+    tick_temp = 0
+    while tick_temp <= LastT * 60:
+        XTick.append(tick_temp)
+        XLabel.append("{:0>2d}".format(tick_temp))
+        tick_temp = tick_temp + deltaT
+    while Sec_Start < end_secs:
+        for mode in data:
+            Horizon_temp,Vertical_temp,Position_temp = [],[],[]
+            if mode not in data_plot.keys():
+                data_plot[mode] = {}
+                data_plot[mode]["Horizontal"],data_plot[mode]["Vertical"],data_plot[mode]["Position"] = [],[],[]
+                time_plot[mode] = []
+            for cur_site in sitelist:
+                if cur_site in data[mode].keys():
+                    for cur_doy in data[mode][cur_site].keys():
+                        if Sec_Start in data[mode][cur_site][cur_doy].keys():
+                            Vertical_temp.append(abs(data[mode][cur_site][cur_doy][Sec_Start]["U"]))
+                            Horizon_temp.append(math.sqrt(math.pow(data[mode][cur_site][cur_doy][Sec_Start]["E"],2)+math.pow(data[mode][cur_site][cur_doy][Sec_Start]["N"],2)))
+                            Position_temp.append(math.sqrt(math.pow(data[mode][cur_site][cur_doy][Sec_Start]["E"],2)+math.pow(data[mode][cur_site][cur_doy][Sec_Start]["N"],2)+math.pow(data[mode][cur_site][cur_doy][Sec_Start]["U"],2)))
+                        else:
+                            continue
+                else:
+                    continue
+            size_data = len(Vertical_temp)
+            if size_data>=1:
+                time_plot[mode].append(Sec_Start/60)
+                Vertical_temp.sort()
+                Horizon_temp.sort()
+                Position_temp.sort()
+                percent_size = int(size_data * percent)
+                # data_plot[mode]["Horizontal"].append(np.mean(Horizon_temp[0:percent_size]))
+                # data_plot[mode]["Vertical"].append(np.mean(Vertical_temp[0:percent_size]))
+                # data_plot[mode]["Position"].append(np.mean(Position_temp[0:percent_size]))
+                data_plot[mode]["Horizontal"].append((Horizon_temp[percent_size]))
+                data_plot[mode]["Vertical"].append((Vertical_temp[percent_size]))
+                data_plot[mode]["Position"].append((Position_temp[percent_size]))
+        Sec_Start = Sec_Start + delta_data
+    
+    for cur_mode in data_plot.keys():
+        count_20,count_10,count_5 = 0,0,0
+        bool_20,bool_10,bool_5 = False,False,False
+        for i in range(len(data_plot[cur_mode]["Position"])):
+            if data_plot[cur_mode]["Position"][i] > 0.2:
+                 count_20,count_10,count_5 = 0,0,0
+            if data_plot[cur_mode]["Position"][i] < 0.2:
+                count_20 = count_20 + 1
+            if data_plot[cur_mode]["Position"][i] < 0.1:
+                count_10 = count_10 + 1
+            if data_plot[cur_mode]["Position"][i] < 0.05:
+                count_5 = count_5 + 1
+            if count_20 == 10 and not bool_20:
+                print("{},20-{:.1f}".format(cur_mode,time_plot[cur_mode][i]*60))
+                bool_20 = True
+            if count_10 == 10 and not bool_10:
+                print("{},10-{:.1f}".format(cur_mode,time_plot[cur_mode][i]*60))
+                bool_10 = True
+            if count_5 == 10 and not bool_5:
+                print("{}, 5-{:.1f}".format(cur_mode,time_plot[cur_mode][i]*60))
+                bool_5 = True
+
+    for i in range(N_plot):
+        if N_plot == 1:
+            for cur_mode in data_plot.keys():
+                axP.plot(time_plot[mode],data_plot[cur_mode][type[i]],linewidth =2)
+            axP.legend(modelist,prop=font2,markerscale=5)
+            axP.grid(False)
+            axP.set_xticks(XTick)
+            axP.set_xticklabels(XLabel)
+        else:
+            for cur_mode in data_plot.keys():
+                axP[i].plot(time_plot[mode],data_plot[cur_mode][type[i]],linewidth =2)
+            axP[i].legend(modelist,prop=font2,markerscale=5)
+            axP[i].grid(False)
+    plt.axhline(0.20,color='gray',ls="--")
+    plt.axhline(0.10,color='gray',ls="--")
+    plt.axhline(0.05,color='gray',ls="--")
+    plt.show()

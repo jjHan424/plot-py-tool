@@ -19,7 +19,7 @@ import trans as tr
 
 site_list = ["HKSC"]
 count = 1
-Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,2,3,0.5
+Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,6,14,2
 time="UTC"
 while count > 0:
    

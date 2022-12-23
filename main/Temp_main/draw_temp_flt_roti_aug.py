@@ -26,8 +26,12 @@ import seaborn as sns
 import trans as tr
 #path set
 # path_flt = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-AR-2.flt"
-path_flt = r"G:\WangBo_Paper\2021305\HKSC-GC-AR-2.flt"
-path_roti = r"G:\WangBo_Paper\ROTI_GF\ISRM209-309\HKSC2021305_GEC.ismr"
+# path_flt = r"G:\WangBo_Paper\2021305\HKSC-GC-AR-2.flt"
+# path_roti = r"G:\WangBo_Paper\ROTI_GF\ISRM209-309\HKSC2021305_GEC.ismr"
+# path_aug_I = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-New\client-Aug-305\HKSC-GEC-I.aug"
+# path_aug_S = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Server\2021305\HKSC-GEC.aug"
+path_flt = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-IonoWhite\client-Aug-305-02\HKSC-GEC.flt"
+path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI-30\2021305\HKSC2021305_GEC.ismr"
 path_aug_I = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-New\client-Aug-305\HKSC-GEC-I.aug"
 path_aug_S = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Server\2021305\HKSC-GEC.aug"
 figP,axP = plt.subplots(3,1,figsize=(19,10),sharey=False,sharex=True)
@@ -106,7 +110,7 @@ axP[0].set_xticklabels(XLabel)
 # axP[0].set_yticklabels(["-1.00","","-0.50","","0.00","","0.50","","1.00"],fontsize=25)
 axP[0].set_yticks([-1.00,0.00,1.00])
 axP[0].set_yticklabels(["-1.00","0.00","1.00"],fontsize=20)
-axP[0].legend(["East direction","North direction","Up direction"],markerscale=2,prop=font2,loc=1,ncol=3)
+axP[0].legend(["East direction","North direction","Up direction"],markerscale=2,prop=font2,bbox_to_anchor=(1,1.29),loc=1,ncol=3)
 axP[0].set_xlim(8,18)
 axP[1].set_xlim(8,18)
 axP[2].set_xlim(8,18)
@@ -318,5 +322,5 @@ axP[2].grid(False)
 # axP[1].grid(False)
 # axP[1].grid(False)
 # axP[1].grid(False)
-plt.savefig("E:\\0Project\\Review\\HKSC_GC_PPPRTK_ROTI_AUG.pdf")
-plt.show()
+plt.savefig("E:\\1Master_2\\汇报\\ppt\\20221209_Fig\\HKSC_GEC_PPPRTK_ROTI_AUG.png",dpi=600)
+# plt.show()

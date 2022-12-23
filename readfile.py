@@ -292,7 +292,6 @@ def open_flt_pvtflt_file(filename):
                     w_last = w_last + 1
                 soweek = soweek + w_last*604800
                 soweek_last = soweek
-                
                 #soweek = hour + minute/60.0 + second/3600.0
                 if soweek not in all_data.keys():
                     all_data[soweek]={}
@@ -1247,4 +1246,41 @@ def H_open_mean_ppprtk_client_wgt(filename,index):
                 all_data[value[2]][int(value[0])] = {}
             all_data[value[2]][int(value[0])][value[1]] = float(value[index+2])
 
+    return all_data
+
+def open_flt_pvtflt_file_percent(filename,Year=1999,Mon=4,Day=24,Hour=2,Last=2):
+    all_data={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = True
+    [week,secs] = tr.ymd2gpst(Year,Mon,Day,Hour,0,00)
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if line[0] == " ":
+                soweek = float(value[0])
+                if (soweek < soweek_last):
+                    w_last = w_last + 1
+                soweek = soweek + w_last*604800
+                soweek_last = soweek
+                #soweek = hour + minute/60.0 + second/3600.0
+                if soweek >= secs and soweek < secs + Last*3600:
+                    soweek_save = soweek - secs
+                elif soweek <= secs:
+                    continue
+                if soweek >= secs + Last*3600:
+                    return all_data
+                if soweek_save not in all_data.keys():
+                    all_data[soweek_save]={}
+                all_data[soweek_save]['X'] = float(value[1])
+                all_data[soweek_save]['Y'] = float(value[2])
+                all_data[soweek_save]['Z'] = float(value[3])
+                all_data[soweek_save]['NSAT'] = float(value[13])
+                all_data[soweek_save]['PDOP'] = float(value[14])
+                if value[16] == 'Fixed':
+                    all_data[soweek_save]['AMB'] = 1
+                else:
+                    all_data[soweek_save]['AMB'] = 0
+                
     return all_data

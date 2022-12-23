@@ -14,12 +14,15 @@ import trans as tr
 plt.style.use(['science','grid','no-latex'])
 import math
 
-site_list = ["WUDA","WHYJ","N028","HKSC","HKMW","HKTK"]
-site_list = ["HKSC","HKMW","HKTK"]
+# site_list = ["WUDA","WHYJ","N028","HKSC","HKMW","HKTK","K057"]
+# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+site_list = ["WUDA","HKMW"]
+# site_list = ["K042","K057","K059","K101","A010","V092"]
 site_list_plot = site_list
 Mode_Plot = "Mean"
 Fix_mode = "FixSig"
-com_mode = "6"
+com_mode = "Aug"
 Site = "WUDA"
 # Direct_Old
 Direct7 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-7"
@@ -39,7 +42,18 @@ Direct_Coef41 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4
 Direct_Grid = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos3-Grid"
 DirectSave=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Bar"
 # Direct_New
-DirectGrid = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-IonoWhite\Pos_Grid"
+# DirectGrid = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-IonoWhite\Pos_Grid"
+# DirectCoef = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-IonoWhite\Pos_Coef"
+# DirectCoefR = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-IonoWhite\Pos_Coef_R"
+DirectAC = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-IonoWhite\Pos_Aug_Chk"
+# Direct_All
+DirectGrid = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-All\Pos_Grid"
+DirectCoef = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-All\Pos_Other"
+DirectRoti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-All\Pos_Roti"
+DirectTest = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-All\Pos_Test"
+# Direct_Trp
+DirectAll = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\All"
+DirectAug = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\Aug"
 site_num = len(site_list)
 show = True
 data_save = {}
@@ -48,12 +62,29 @@ for i in range(site_num):
     # file_path = Direct1 + "\\" + cur_site + "-Sigma-1.txt"
     if cur_site not in data_save.keys():
         data_save[cur_site] = {}
-    data_save[cur_site]["2"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1.txt",1)
-    data_save[cur_site]["4"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1.txt",2)
-    data_save[cur_site]["6"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1.txt",3)
-    data_save[cur_site]["8"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1.txt",4)
-    data_save[cur_site]["10"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1.txt",5)
+    data_save[cur_site]["Aug"] = rf.H_open_rms(DirectAug + "\\" + cur_site + "-Sigma-0-02.txt",1)
+    data_save[cur_site]["Grid"] = rf.H_open_rms(DirectAug + "\\" + cur_site + "-Sigma-0-02.txt",2)
+    # data_save[cur_site]["Chk"] = rf.H_open_rms(DirectAC + "\\" + cur_site + "-Sigma-0-03.txt",2)
+    # data_save[cur_site]["Grid-2"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",1)
+    # data_save[cur_site]["Grid"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1-02.txt",2)
+    # data_save[cur_site]["Grid-4"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",2)
+    # data_save[cur_site]["Grid-6"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",3)
+    # data_save[cur_site]["8"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1-02.txt",3)
+    # data_save[cur_site]["10"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1-02.txt",5)
     # data_save[cur_site]["6"] = rf.H_open_rms(Direct_Coef178 + "\\" + cur_site + "-Sigma-1.txt",1)
+    # data_save[cur_site]["C-1"] = rf.H_open_rms(DirectCoefR + "\\" + cur_site + "-Sigma-0-03.txt",1)
+    # data_save[cur_site]["C-2"] = rf.H_open_rms(DirectCoefR + "\\" + cur_site + "-Sigma-0-03.txt",2)
+    # data_save[cur_site]["Coef"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-0-02.txt",4)
+    # data_save[cur_site]["Grid-4"] = rf.H_open_rms(DirectRoti + "\\" + cur_site + "-Sigma-1-10.txt",1)
+    # data_save[cur_site]["Grid-6"] = rf.H_open_rms(DirectRoti + "\\" + cur_site + "-Sigma-1-10.txt",2)
+    # data_save[cur_site]["Coef"] = rf.H_open_rms(DirectRoti + "\\" + cur_site + "-Sigma-1-10.txt",3)
+    # data_save[cur_site]["Chk"] = rf.H_open_rms(DirectRoti + "\\" + cur_site + "-Sigma-1-10.txt",4)
+    # data_save[cur_site]["Grid-2"] = rf.H_open_rms(DirectTest + "\\" + cur_site + "-Sigma-1-02.txt",1)
+    # data_save[cur_site]["Grid-4"] = rf.H_open_rms(DirectTest + "\\" + cur_site + "-Sigma-1-02.txt",2)
+    # data_save[cur_site]["Grid-6"] = rf.H_open_rms(DirectTest + "\\" + cur_site + "-Sigma-1-02.txt",3)
+    # data_save[cur_site]["Coef"] = rf.H_open_rms(DirectTest + "\\" + cur_site + "-Sigma-1-02.txt",4)
+    # data_save[cur_site]["CoefR"] = rf.H_open_rms(DirectTest + "\\" + cur_site + "-Sigma-1-02.txt",5)
+    # data_save[cur_site]["Chk"] = rf.H_open_rms(DirectTest + "\\" + cur_site + "-Sigma-1-02.txt",6)
 
 #===========Day============#
 if Mode_Plot=="Site":
@@ -156,7 +187,7 @@ if Mode_Plot=="Site":
             font_text = {'family' : 'Times new roman','weight' : 300,'size'   : 12}
             axP[3].set_xticks(X_all)
             axP[3].set_xticklabels(barplot_name)
-            axP[0].legend(mode_list,prop=font_text,ncol=2,bbox_to_anchor=(1,1.55),loc=1)
+            axP[0].legend(mode_list,prop=font_text,ncol=3,bbox_to_anchor=(1,1.55),loc=1)
             font_text = {'family' : 'Times new roman','weight' : 300,'size'   : 20}
             if Fix_mode == "FixRaw" or Fix_mode == "FixSig":
                 axP[4].set_xlabel("Day of Year",font_text)
@@ -205,8 +236,8 @@ if Mode_Plot=="Mean":
             x = []
             j=0
             for cdoy in data_save[cur_site][mode]:
-                if cdoy == 305:
-                    continue
+                # if cdoy == 305:
+                #     continue
                 if mode_Num==5:
                     barplot_data_Fix.append(data_save[cur_site][mode][cdoy][Fix_mode])
                 barplot_data_E.append(data_save[cur_site][mode][cdoy]["E"])
@@ -297,12 +328,12 @@ if Mode_Plot=="Mean":
             for i in range(len(x)):
                 axP[4].text(x[i] - W/2,barplot_data_Fix[i],'{:.2f}%'.format(barplot_data_Fix[i]),font_text,rotation=45)
                 print("{:>4}-{}{:>3}:{:<3.4f}cm{:>3}:{:<3.4f}cm{:>3}:{:<3.4f}cm{:>3}:{:<3.4f}cm{:>3}:{:<3.2f}%".format(mode,site_list[i],"E",barplot_data_E[i],"N",barplot_data_N[i],"U",barplot_data_U[i],"3D",barplot_data_3D[i],"Fix",barplot_data_Fix[i]))
-        
+            print("{:>4} {:>3}:{:<3.4f}cm{:>3}:{:<3.4f}cm{:>3}:{:<3.4f}cm{:>3}:{:<3.4f}cm{:>3}:{:<3.2f}%".format(mode,"E",np.mean(barplot_data_E),"N",np.mean(barplot_data_N),"U",np.mean(barplot_data_U),"3D",np.mean(barplot_data_3D),"Fix",np.mean(barplot_data_Fix)))
 
     font_text = {'family' : 'Times new roman','weight' : 300,'size'   : 15}
     axP[mode_Num-1].set_xticks(X_all)
     axP[mode_Num-1].set_xticklabels(barplot_name)
-    axP[0].legend(mode_list,prop=font_text,ncol=2,bbox_to_anchor=(1,1.55),loc=1)
+    axP[0].legend(mode_list,prop=font_text,ncol=3,bbox_to_anchor=(1,1.8),loc=1)
     font_text = {'family' : 'Times new roman','weight' : 300,'size'   : 20}
     axP[mode_Num-1].set_xlabel("Site",font_text)
     axP[0].set_ylabel("E(cm)",font_text)

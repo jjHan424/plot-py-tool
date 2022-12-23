@@ -19,10 +19,10 @@ import draw as dr
 
 Y=2021
 M=11
-D=1
+D=6
 #all 
-S=10 #21
-L=6
+S=2 #21
+L=22
 #open
 # S=8+43/60 #21
 # L=8/60
@@ -34,7 +34,7 @@ L=6
 # L=34/60
 
 # mode_list = ["DGDC","DGCA","SZYT","HZAD","SWHF"]
-mode_list = ["WUDA","HKSC"]
+mode_list = ["MLCM","Grid"]
 # file_list = [
 #             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\GRT3_20220924_SGG_CLK06_S_GEC.aug",
 #             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\N004_20220924_SGG_CLK06_S_GEC.aug",
@@ -50,8 +50,8 @@ mode_list = ["WUDA","HKSC"]
 # ]
 
 file_list = [
-    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-SetRef\client-Grid_Coef-171-305\HKSC-GEC-I.aug",
-    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Server\2021305\HKSC-GEC.aug"
+    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-IonoWhite\client-Aug-310-02\HKMW-GEC-I.aug",
+    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-Trp\client-Grid_Cor-310-02\HKMW-GEC-I.aug"
 ]
 data_all = {}
 for i in range(len(mode_list)):

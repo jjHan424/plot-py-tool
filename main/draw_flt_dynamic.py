@@ -28,26 +28,27 @@ import draw as dr
 
 import trans as tr
 Y=2021
-M=12
-D=5
-S=6+35/60+17/3600
+M=10
+D=31
+# S=6+35/60+17/3600
+S=2
 
 ENU_ALL = {}
 #mode_list = ["HKLM","HKSC","HKTK"]
-mode_list = ["ION-corObs","ION-virTual"]
+mode_list = ["Aug","Grid-4","Coef"]
 #site_list = ["HKLM","HKSC","HKTK"]
-site_list = ["SEPT","SEPT","SEPT"]
-Direct3 = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result"
+site_list = ["K803","SEPT","SEPT"]
+Direct3=r"E:\1Master_2\Paper_Grid\Dynamic"
 filename_list = [
-                #Direct3 + "/client-1.0/"  + "SEPT-GEC.flt",
-                # Direct3 + "/client-comp/"  + "SEPT-GEC.flt",
-                Direct3 + "/client-aug/"  + "SEPT-GEC.flt",
-                Direct3 + "/client-aug/"  + "SEPT-GEC-vir.flt",
-                Direct3 + "/client-grid/"  + "SEPT-GEC.flt"
+                Direct3 + "\\" + "client-Aug-" +  "304" + "-02" + "\\" + site_list[0] + "-GEC.flt",
+                Direct3 + "\\" + "client-Grid-" + "304" + "-02" + "\\" + site_list[0] + "-GEC.flt",
+                # Direct3 + "\\" + "client-Grid-" + "339" + "-06" + "\\" + site_list[0] + "-GEC.flt",
+                # Direct3 + "\\" + "client-Grid-" + "310" + "-06" + "\\" + site_list[0] + "-GEC.flt",
+                Direct3 + "\\" + "client-Grid_Ele-" + "304" + "-01" + "\\" + site_list[0] + "-GEC.flt",
                 ]
-filename_ref = ["/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205_REF/IE/TC_combined_smoothed_ToTrimble.txt",
-                 "/Users/hjj/Documents/HJJ/Master_1/文档/PPPRTK综述/综述2.0/20211206/城市道路/TC_combined_smoothed_ToTrimble_city.txt",
-                 "/Users/hjj/Documents/HJJ/Master_1/文档/PPPRTK综述/综述2.0/20211206/穿越高架桥/TC_combined_smoothed_ToTrimble_brige.txt"]
+filename_ref = [r"E:\1Master_2\Paper_Grid\Dynamic\2021304_GZ\\Ref.txt",
+                r"E:\1Master_2\Paper_Grid\Dynamic\2021304_GZ\\Ref.txt",
+                r"E:\1Master_2\Paper_Grid\Dynamic\2021304_GZ\\Ref.txt",]
                  
 # filename_list = [
 #                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKTK/5.flt",
@@ -56,10 +57,10 @@ filename_ref = ["/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205_REF
 #                  ]
 for i in range(len(mode_list)):
     data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
-    REF_XYZ = rf.open_pos_ref(filename_ref[0])
+    REF_XYZ = rf.open_pos_ref_IE(filename_ref[0])
     data_ENU = dp.XYZ2ENU_dynamic(XYZ = data_Raw,REF_XYZ = REF_XYZ)
     ENU_ALL[mode_list[i]] = data_ENU
 
 
-dr.plot_e_n_u(data = ENU_ALL,type = ["NSAT","E","N","U"],mode = mode_list,ylim = 2,starttime=S,LastT=3,deltaT=1,time = "UTC",Fixed=True,delta_data = 1,year = Y,mon=M,day=D,all=True)
+dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 2,starttime=S,LastT=22,deltaT=60/60,time = "UTC",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=1,year = Y,mon=M,day=D,show = True,all=True)
 
