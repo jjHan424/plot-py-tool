@@ -74,13 +74,13 @@ ENU_ALL = {}
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH","WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA"]
 # site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA","K042","K057","K059","K101","A010","V092"]
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-site_list = ["WUDA"]
+site_list = ["HKMW"]
 # mode_list = ["Grid","Coef-1","Coef-2","Coef-3"]
 # mode_list = ["Aug","Grid-2","Grid-4","Coef","Coef-R","Chk"]
-mode_list = ["MLCM","Grid"]
-Sig = 0
+mode_list = ["MLCM","Grid","Coef"]
+Sig = 1
 SavePath=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\Aug"
-S=2
+S=10
 if (not os.path.exists(SavePath)):
     os.mkdir(SavePath)
 for j in range(len(site_list)):
@@ -105,8 +105,8 @@ for j in range(len(site_list)):
     Site = site_list[j]
     Y=2021
     M=11
-    D=5
-    L=22
+    D=1
+    L=6
     DDD = 60/60
     count = 1
     DirectI=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-IonoWhite"
@@ -121,10 +121,10 @@ for j in range(len(site_list)):
             # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-Chk.flt",
             # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-Coef.flt",
             DirectT + "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-            DirectT + "\\client-Grid_Cor-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            # DirectT + "\\client-Grid_Cor-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Grid-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Grid-" + cdoy + "-04" + "\\" + Site + "-GEC.flt",
-            # DirectT + "\\client-Grid-" + cdoy + "-06" + "\\" + Site + "-GEC.flt",
+            DirectT + "\\client-Grid-" + cdoy + "-06" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Grid-" + cdoy + "-08" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid-" + cdoy + "-10" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid_Ele-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
@@ -138,7 +138,7 @@ for j in range(len(site_list)):
             # Direct + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC-Trp.flt",
             # DirectT + "\\client-Grid_Chk-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-            # DirectT + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+            DirectT + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
             
             
                         ]
@@ -148,7 +148,7 @@ for j in range(len(site_list)):
             data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
             ENU_ALL[mode_list[i]] = data_ENU
             
-        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["NSAT","E","N","U"],mode = mode_list,ylim = 0.4,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True)
+        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.4,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True)
         D = D + 1
         count = count - 1
         # if (count == 0 and M!=12):

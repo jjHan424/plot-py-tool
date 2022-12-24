@@ -17,10 +17,13 @@ import draw as dr
 import seaborn as sns
 import trans as tr
 
-site_list = ["HKSC"]
+site_list = ["HKMW"]
 count = 1
 Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,6,14,2
 time="UTC"
+
+plot_type = "MEAN"
+
 while count > 0:
    
     doy = tr.ymd2doy(Year,Mon,Day,0,00,00)
@@ -37,7 +40,7 @@ while count > 0:
         # path_roti = r"D:\GREAT\GREAT_Project\Allystar\ROTI_20220722\30s\DGCA2022203_GEC.ismr"
         # path_roti = r"D:\GREAT\GREAT_Project\Allystar\ROTI_20220722\30s\SWHF2022203_GEC.ismr"
 
-        figP,axP = plt.subplots(4,3,figsize=(12,7),sharey=False,sharex=True)
+        figP,axP = plt.subplots(3,3,figsize=(12,10),sharey=False,sharex=True)
         #Time
         
         t=time
@@ -145,13 +148,15 @@ while count > 0:
                     # if sat == "G03":
                     #     data_G[prn-1].append(data[time][sat])
                     #     time_G[prn-1].append(plot_time)
-        axP[2][0].scatter(meanT_G, mean_G,s=1)
-        axP[2][1].scatter(meanT_E, mean_E,s=1)
-        axP[2][2].scatter(meanT_C, mean_C,s=1)
-
-        axP[2][0].set_ylim(0, 2)
-        axP[2][1].set_ylim(0, 2)
-        axP[2][2].set_ylim(0, 2)
+        if plot_type == "MEAN":
+            axP[1][0].scatter(meanT_G, mean_G,s=1)
+            axP[1][1].scatter(meanT_E, mean_E,s=1)
+            axP[1][2].scatter(meanT_C, mean_C,s=1)
+            axP[1][0].set_ylim(0, 2)
+            axP[1][1].set_ylim(0, 2)
+            axP[1][2].set_ylim(0, 2)
+        
+        
 
         axP[0][0].plot(meanT_G, All_G)
         axP[0][1].plot(meanT_E, All_E)
@@ -160,28 +165,34 @@ while count > 0:
         axP[0][0].plot(meanT_G, Num_G)
         axP[0][1].plot(meanT_E, Num_E)
         axP[0][2].plot(meanT_C, Num_C)
-        for i in range(100):
-            G,E,C = True,True,True
-            num = len(time_G[i])
-            if num < 1:
-                G = False
-            num = len(time_E[i])
-            if num < 1:
-                E = False
-            num = len(time_C[i])
-            if num < 1:
-                C = False
-            #!!!
-            # E=False
-            if G:
-                # axP.scatter(time_G[i],data_G[i],s=1,color=colormap[i])
-                axP[1][0].scatter(time_G[i], data_G[i], s=1)
-            if E:
-                # axP.scatter(time_E[i],data_E[i],s=1,color=colormap[i])
-                axP[1][1].scatter(time_E[i], data_E[i], s=1)
-            if C:
-                # axP.scatter(time_C[i],data_C[i],s=1,color=colormap[i])
-                axP[1][2].scatter(time_C[i], data_C[i], s=1)
+        font = {'family': 'Times new roman','weight': 600,'size': 20}
+        axP[0][2].legend(["All Sat","Scintillating Sat"],prop=font,
+        framealpha=1,facecolor='none',ncol=2,numpoints=5,markerscale=10,
+                    borderaxespad=0,bbox_to_anchor=(1,1.4),loc=1)
+        leg = axP[0][2].get_legend()
+        for legobj in leg.legendHandles:
+            legobj.set_linewidth(5)
+        if plot_type == "ALL":
+            for i in range(100):
+                G,E,C = True,True,True
+                num = len(time_G[i])
+                if num < 1:
+                    G = False
+                num = len(time_E[i])
+                if num < 1:
+                    E = False
+                num = len(time_C[i])
+                if num < 1:
+                    C = False
+                if G:
+                    # axP.scatter(time_G[i],data_G[i],s=1,color=colormap[i])
+                    axP[1][0].scatter(time_G[i], data_G[i], s=1)
+                if E:
+                    # axP.scatter(time_E[i],data_E[i],s=1,color=colormap[i])
+                    axP[1][1].scatter(time_E[i], data_E[i], s=1)
+                if C:
+                    # axP.scatter(time_C[i],data_C[i],s=1,color=colormap[i])
+                    axP[1][2].scatter(time_C[i], data_C[i], s=1)
 
         # font2 = {'family' : 'Arial',
         #             'weight' : 600,
@@ -301,9 +312,53 @@ while count > 0:
                     meanT_C.append(plot_time)
                     All_C.append(len(temp_mean_C))
                     Num_C.append(len(temp_mean_C))
-        axP[3][0].scatter(meanT_G, mean_G,s=1)
-        axP[3][1].scatter(meanT_E, mean_E,s=1)
-        axP[3][2].scatter(meanT_C, mean_C,s=1)
+        if plot_type == "MEAN" :
+            axP[2][0].scatter(meanT_G, mean_G,s=1)
+            axP[2][1].scatter(meanT_E, mean_E,s=1)
+            axP[2][2].scatter(meanT_C, mean_C,s=1)
+        if plot_type == "ALL":
+            for i in range(100):
+                G,E,C = True,True,True
+                num = len(time_G[i])
+                if num < 1:
+                    G = False
+                num = len(time_E[i])
+                if num < 1:
+                    E = False
+                num = len(time_C[i])
+                if num < 1:
+                    C = False
+                if G:
+                    # axP.scatter(time_G[i],data_G[i],s=1,color=colormap[i])
+                    axP[2][0].scatter(time_G[i], data_G[i], s=1)
+                if E:
+                    # axP.scatter(time_E[i],data_E[i],s=1,color=colormap[i])
+                    axP[2][1].scatter(time_E[i], data_E[i], s=1)
+                if C:
+                    # axP.scatter(time_C[i],data_C[i],s=1,color=colormap[i])
+                    axP[2][2].scatter(time_C[i], data_C[i], s=1)
+        
+        axP[2][0].set_xticks(XTick)
+        axP[2][0].set_xticklabels(XLabel)
+        labels = axP[2][0].get_xticklabels() + axP[2][1].get_xticklabels() + axP[2][2].get_xticklabels()
+        [label.set_fontsize(13) for label in labels]
+        [label.set_rotation(45) for label in labels]
+        font = {'family': 'Times new roman','weight': 600,'size': 20}
+        axP[2][1].set_xlabel("Time(UTC)",font)
+        axP[2][0].set_ylim(0,0.6)
+        axP[2][1].set_ylim(0,0.6)
+        axP[2][2].set_ylim(0,0.6)
+        y_labels = axP[0][0].get_yticklabels() + axP[1][0].get_yticklabels() + axP[2][0].get_yticklabels() + axP[0][1].get_yticklabels() + axP[1][1].get_yticklabels() + axP[2][1].get_yticklabels() + axP[0][2].get_yticklabels() + axP[1][2].get_yticklabels() + axP[2][2].get_yticklabels()
+        [label.set_fontsize(13) for label in y_labels]
+        axP[0][0].set_ylabel("Num of sat",font)
+        axP[1][0].set_ylabel("ROTI(TECU/min)",font)
+        axP[2][0].set_ylabel("Ionospheric errors(m)",font)
+        font = {'family': 'Times new roman','weight': 600,'size': 23}
+        axP[0][0].set_title("G",font)
+        axP[0][1].set_title("E",font)
+        axP[0][2].set_title("C",font)
+        plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HKMW-Sat-Roti-Diff-Mean.svg")
+        plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HKMW-Sat-Roti-Diff-Mean.png",dpi=600)
         plt.show()
         Day = Day + 1
         count = count - 1

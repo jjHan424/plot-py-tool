@@ -2378,8 +2378,8 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
     #     print(mode[i] + ':{:.2f}%'.format((Fixed_NUM[i] + Float_NUM[i]) / ALL_NUM[i] * 100))
 
     
-    plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HK-306-RDCB.png",dpi=600)
-    plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HK-306-RDCB.svg")
+    # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HK-306-RDCB.png",dpi=600)
+    # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HK-306-RDCB.svg")
     plt.show()
 
 def plot_SatofAug(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10,all=False):
