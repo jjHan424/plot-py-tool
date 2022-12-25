@@ -16,13 +16,13 @@ import math
 
 # site_list = ["WUDA","WHYJ","N028","HKSC","HKMW","HKTK","K057"]
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-site_list = ["WUDA","HKMW"]
+site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# site_list = ["HKSC","HKMW","HKTK"]
 # site_list = ["K042","K057","K059","K101","A010","V092"]
 site_list_plot = site_list
 Mode_Plot = "Mean"
 Fix_mode = "FixSig"
-com_mode = "Aug"
+com_mode = "Grid"
 Site = "WUDA"
 # Direct_Old
 Direct7 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-7"
@@ -62,8 +62,9 @@ for i in range(site_num):
     # file_path = Direct1 + "\\" + cur_site + "-Sigma-1.txt"
     if cur_site not in data_save.keys():
         data_save[cur_site] = {}
-    data_save[cur_site]["Aug"] = rf.H_open_rms(DirectAug + "\\" + cur_site + "-Sigma-0-02.txt",1)
-    data_save[cur_site]["Grid"] = rf.H_open_rms(DirectAug + "\\" + cur_site + "-Sigma-0-02.txt",2)
+    # data_save[cur_site]["Aug"] = rf.H_open_rms(DirectAug + "\\" + cur_site + "-Sigma-1-10.txt",1)
+    data_save[cur_site]["Grid"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-10.txt",2)
+    data_save[cur_site]["Coef"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-10.txt",4)
     # data_save[cur_site]["Chk"] = rf.H_open_rms(DirectAC + "\\" + cur_site + "-Sigma-0-03.txt",2)
     # data_save[cur_site]["Grid-2"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",1)
     # data_save[cur_site]["Grid"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1-02.txt",2)

@@ -1553,19 +1553,25 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
         'weight' : 600,
         'size'   : 15,
             }
-    axP[N_plot - 1].set_xlabel('Time' + '(' + time + ')',font2)
+    axP[N_plot - 1].set_xlabel('Time' + '(' + time + ')',font)
     for i in range(N_plot):
-        axP[i].set_ylabel(type[i],font2)
+        
         #axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
+        if type[i] == "E":
+            axP[i].set_ylabel("East errors(m)",font)
+        if type[i] == "N":
+            axP[i].set_ylabel("North errors(m)",font)
+        if type[i] == "U":
+            axP[i].set_ylabel("Up errors(m)",font)
         if type[i] == "E" or type[i] == "N":
             axP[i].set_ylim(ymin,ymax)
         if type[i] == "U":
             axP[i].set_ylim(ymin,ymax)
-        if type[i] == "E":
-            if N_plot==3:
-                axP[i].set_title(site + "-Positioning Errors(m)",font,y=1.1)
-            else:
-                axP[i].set_title(site + "-Positioning Errors(m)",font)
+        # if type[i] == "E":
+        #     if N_plot==3:
+        #         axP[i].set_title(site + "-Positioning Errors(m)",font,y=1.1)
+        #     else:
+        #         axP[i].set_title(site + "-Positioning Errors(m)",font)
         if type[i] == "NSAT":
             axP[i].set_title("Number of Satellite",font)
         if type[i] == "ION":
@@ -1788,8 +1794,8 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                         time_temp = time[j]
                         temp_M = np.mean(data_plot[cur_type][j])
                         MEAN_enu[cur_type].append(temp_M)
-                        # if cur_type!="NSAT":
-                        #    data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
+                        if cur_type!="NSAT":
+                           data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
                         # temp_M = np.mean(data_plot[cur_type][j])
                         # MEAN_enu[cur_type].append(temp_M)
                         temp = dp.rms(data_plot[cur_type][j])
@@ -1821,7 +1827,7 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
 
     font_text = {'family' : 'Times new roman',
         'weight' : 600,
-        'size'   : 15,
+        'size'   : 20,
                 }
     for i in range(N_plot):
         cur_type = type[i]
@@ -1842,7 +1848,9 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
             #print(len(RMS_str))
             #RMS_str[len(RMS_str)-2:len(RMS_str)] = ""
             axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:7*N_mode+3],font_text)
-
+    labels = axP[0].get_yticklabels() + axP[0].get_xticklabels() + axP[1].get_yticklabels() + axP[1].get_xticklabels() + axP[2].get_yticklabels() + axP[2].get_xticklabels()
+    [label.set_fontsize(18) for label in labels]
+    [label.set_fontname('Times New Romam') for label in labels]
     if not all:
         axP[N_plot-1].set_xticks(XTick)
         axP[N_plot-1].set_xticklabels(XLabel)
@@ -1857,10 +1865,10 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
         # if not all:
         #     axP[i].set_xticks(XTick)
         ax_range = axP[i].axis()
-        if (N_plot==3):
+        if (N_plot==3 and i == 0):
             axP[i].legend(mode,prop=font_text,
-            framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=3, 
-            borderaxespad=0,bbox_to_anchor=(1,1.17),loc=1) 
+            framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=5, 
+            borderaxespad=0,bbox_to_anchor=(1,1.25),loc=1) 
         if (N_plot==4):
             axP[i].legend(mode,prop=font_text,
             framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3,
@@ -1895,6 +1903,8 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
     for i in range(N_mode):
         print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (ALL_NUM[i]) * 100))
     if show:
+        # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HKMW-PositionErrors-305.png",dpi=600)
+        # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HKMW-PositionErrors-305.svg")
         plt.show()
     else:
         SaveFigFile = save + "\\" + site + "-" + "{:0>3}".format(doy) + "-" "Sigma-" + "{:0>1}".format(Sigma_num) + ".png"
@@ -1917,217 +1927,160 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
             # file.write("==========="+"{:0>3}".format(doy)+"===========\n")
             # file1.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
 
-def plot_enu(data = {},type = ["ENU"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,begT = 0,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30):
-    N_plot = len(mode)
+def plot_enu(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10,all=False,Sigma=3,Sigma_num=1):
     N_mode = len(mode)
-    f1=5
-    ymin = -ylim
-    ymax = ylim
-    figP,axP = plt.subplots(N_plot,1,figsize=(20,10),sharey=False,sharex=False)
-    
-    font2 = {'family' : 'Times new roman',
-		'weight' : 600,
-		'size'   : 15,
-            }
-    axP[N_plot-1].set_xlabel("GPS Time(Hours)",font2)
-    for i in range(N_plot):
-        axP[i].set_ylabel("Positioning Errors(m)",font2)
-        # axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-        axP[i].set_ylim(ymin,ymax)
-        axP[i].set_yticks([-1,-0.5,0,0.5,1])
-        x_major_locator = MultipleLocator(0.01)
-        #ax = plt.gca()
-        axP[0].xaxis.set_major_locator(x_major_locator)
-        x_major_locator = MultipleLocator(0.02)
-        #ax = plt.gca()
-        axP[1].xaxis.set_major_locator(x_major_locator)
-        if type[i] == "ENU":
-            axP[i].set_ylim(ymin,ymax)
-        if type[i] == "NSAT":
-            axP[i].set_title("Number of Satellite",font)
-        if type[i] == "ION":
-            axP[i].set_title("Difference of Ionosphere Delay correction/m",font)
-            # axP[i].set_ylim(-0.5,0.5)
-        if type[i] == "TRP":
-            axP[i].set_title("Difference of Tropsphere Delay correction/m",font)
-            axP[i].set_ylim(ymin,ymax)
-        box = axP[i].get_position()
-        if type[i] == "NSAT" or type[i] == "ION" or type[i] == "TRP":
-            axP[i].set_position([box.x0, box.y0*1.04, box.width, box.height])
-    
-    if "+" in time:
-        end_time = len(time)
-        delta_Time = int(time[3:end_time]) + starttime
-        begT = int(time[3:end_time]) + starttime
+    if "NSAT" in type:
+        figP,axP = plt.subplots(N_mode+1,1,figsize=(15,11),sharey=False,sharex=True)
     else:
-        delta_Time = starttime
-        begT=starttime
-    for time in data[mode[0]].keys():
-        cov_Time = time - delta_Time * 3600
-        break
-    
-    end_Time = begT + LastT
-    delta_X = math.ceil((LastT)/deltaT)
-    XLabel = []
-    XTick = []
-    starttime = begT - deltaT
-    for i in range(delta_X):
-        starttime = starttime + deltaT
-        cur_Str_X = '%02d' % (starttime % 24) + ":00"
-        XLabel.append(cur_Str_X)
-        XTick.append(starttime)       
-    if starttime < end_Time:
-        starttime = starttime + deltaT
-        cur_Str_X = '%02d' % (starttime % 24) + ":00"
-        XLabel.append(cur_Str_X)
-        XTick.append(starttime)
-
-
-    time = [[] for i in range(N_mode)]
+        figP,axP = plt.subplots(N_mode,1,figsize=(15,11),sharey=False,sharex=False)
+    [XLabel,XTick,cov_Time,begT,LastT]=xtick(time,year,mon,day,starttime,LastT,deltaT)
     data_plot = {}
-    data_E = [[] for i in range(N_mode)]
-    data_N = [[] for i in range(N_mode)]
-    data_U = [[] for i in range(N_mode)]
-    data_S = [[] for i in range(N_mode)]
-    Fixed_NUM = [[] for i in range(N_mode)]
-    Float_NUM = [[] for i in range(N_mode)]
-    ALL_NUM = [[] for i in range(N_mode)]
-
-    for i in range(N_mode):
-        Fixed_NUM[i] = 0
-        Float_NUM[i] = 0
-        ALL_NUM[i] = (LastT*3600) / delta_data + 1
-
-    RMS_enu,STD_enu,MEAN_enu = {},{},{}
-    
-    time_sG = [[] for i in range(100)]
-    time_sE = [[] for i in range(100)]
-    time_sC = [[] for i in range(100)]
-    time_TRP = []
-    data_sG = [[] for i in range(100)]
-    data_sE = [[] for i in range(100)]
-    data_sC = [[] for i in range(100)]
-    data_TRP = []
-    time_cov=[]
-    for i in range(N_mode):
-        for cur_time in data[mode[i]].keys():
-            time_cov.append(cur_time)
-            break
-
-    for i in range(N_mode):
-        for cur_time in data[mode[i]].keys():
-            plot_time =(cur_time-time_cov[i]) / 3600
-            if (1):
-                if data[mode[i]][cur_time]["AMB"] == 0:
-                    Float_NUM[i] = Float_NUM[i] + 1
-                elif data[mode[i]][cur_time]["AMB"] == 1:
-                    Fixed_NUM[i] = Fixed_NUM[i] + 1
-                if (Fixed and data[mode[i]][cur_time]["AMB"] == 0):
+    time_plot = {}
+    #data convert
+    for cur_mode in mode:
+        if cur_mode not in data_plot.keys():
+            data_plot[cur_mode] = {}
+            time_plot[cur_mode] = []
+            data_plot[cur_mode]["E"] = []
+            data_plot[cur_mode]["N"] = []
+            data_plot[cur_mode]["U"] = []
+            data_plot[cur_mode]["NSAT"] = []
+            data_plot[cur_mode]["PDOP"] = []
+    indexx = 0
+    for cur_mode in mode:
+        for cur_time in data[cur_mode].keys():
+            plot_time = (cur_time-cov_Time) / 3600
+            if ((plot_time >= begT and plot_time <= (begT + LastT)) or all):
+                if (Fixed and data[cur_mode][cur_time]["AMB"] == 0):
                     continue
-                time[i].append(plot_time)
-                data_E[i].append(data[mode[i]][cur_time]["E"])
-                data_N[i].append(data[mode[i]][cur_time]["N"])
-                data_U[i].append(data[mode[i]][cur_time]["U"])
-                data_S[i].append(data[mode[i]][cur_time]["NSAT"])
-                if "ION" in type and cur_time in data["ION"].keys():
-                    for sat in data["ION"][cur_time].keys():
-                        prn = int(sat[1:3])
-                        if sat[0] == "C":
-                            data_sC[prn-1].append(data["ION"][cur_time][sat]["ION2"])
-                            time_sC[prn-1].append(plot_time)
-                        if sat[0] == "G":
-                            data_sG[prn-1].append(data["ION"][cur_time][sat]["ION1"])
-                            time_sG[prn-1].append(plot_time)
-                        if sat[0] == "E":
-                            data_sE[prn-1].append(data["ION"][cur_time][sat]["ION1"])
-                            time_sE[prn-1].append(plot_time)
-                if "TRP" in type and cur_time in data["ION"].keys():
-                    for sat in data["ION"][cur_time].keys():
-                        prn = int(sat[1:3])
-                        data_TRP.append(data["ION"][cur_time][sat]["TRP1"])
-                        time_TRP.append(plot_time)
-                        break
+                if (data[cur_mode][cur_time]["PDOP"] > 5):
+                    continue
+                data_plot[cur_mode]["E"].append(data[cur_mode][cur_time]["E"])
+                data_plot[cur_mode]["N"].append(data[cur_mode][cur_time]["N"])
+                data_plot[cur_mode]["U"].append(data[cur_mode][cur_time]["U"])
+                data_plot[cur_mode]["NSAT"].append(data[cur_mode][cur_time]["NSAT"])
+                data_plot[cur_mode]["PDOP"].append(data[cur_mode][cur_time]["PDOP"])
+                time_plot[cur_mode].append(plot_time)
+                indexx = indexx + 1
+                # if (plot_time - 10+37.5) < 5/3600:
+                #     print(indexx)
+                # if (plot_time - 10+47.5) < 5/3600:
+                #     print(indexx)
+    #Sigma
+    RMS_enu,STD_enu,MEAN_enu={},{},{}
+    if Sigma > 0:
+        cur_type = "E"
+        RMS_enu[cur_type] = []
+        STD_enu[cur_type] = []
+        MEAN_enu[cur_type] = []
+        cur_type = "N"
+        RMS_enu[cur_type] = []
+        STD_enu[cur_type] = []
+        MEAN_enu[cur_type] = []
+        cur_type = "U"
+        RMS_enu[cur_type] = []
+        STD_enu[cur_type] = []
+        MEAN_enu[cur_type] = []
+        for cur_mode in mode:
+            Sigma_num_temp = Sigma_num
+            mean_E = np.mean(data_plot[cur_mode]["E"])
+            mean_N = np.mean(data_plot[cur_mode]["N"])
+            mean_U = np.mean(data_plot[cur_mode]["U"])
+            std_E = np.std(data_plot[cur_mode]["E"])
+            std_N = np.std(data_plot[cur_mode]["N"])
+            std_U = np.std(data_plot[cur_mode]["U"])
+            rms_E = dp.rms(data_plot[cur_mode]["E"])
+            rms_N = dp.rms(data_plot[cur_mode]["N"])
+            rms_U = dp.rms(data_plot[cur_mode]["U"])
+            while Sigma_num_temp >= 1:
+                indexs = []
+                mean_E = np.mean(data_plot[cur_mode]["E"])
+                mean_N = np.mean(data_plot[cur_mode]["N"])
+                mean_U = np.mean(data_plot[cur_mode]["U"])
+                std_E = np.std(data_plot[cur_mode]["E"])
+                std_N = np.std(data_plot[cur_mode]["N"])
+                std_U = np.std(data_plot[cur_mode]["U"])
+                rms_E = dp.rms(data_plot[cur_mode]["E"])
+                rms_N = dp.rms(data_plot[cur_mode]["N"])
+                rms_U = dp.rms(data_plot[cur_mode]["U"])
+                for ii in range(len(time_plot[cur_mode])):
+                    if abs(data_plot[cur_mode]["E"][ii] - mean_E) > Sigma * std_E or abs(data_plot[cur_mode]["N"][ii] - mean_N) >  Sigma * std_N or abs(data_plot[cur_mode]["U"][ii] - mean_U) >  Sigma * std_U:
+                        indexs.append(ii)
+                data_plot[cur_mode]["E"] = np.delete(data_plot[cur_mode]["E"],indexs)
+                data_plot[cur_mode]["N"] = np.delete(data_plot[cur_mode]["N"],indexs)
+                data_plot[cur_mode]["U"] = np.delete(data_plot[cur_mode]["U"],indexs)
+                data_plot[cur_mode]["NSAT"] = np.delete(data_plot[cur_mode]["NSAT"],indexs)
+                data_plot[cur_mode]["PDOP"] = np.delete(data_plot[cur_mode]["PDOP"],indexs)
+                time_plot[cur_mode] = np.delete(time_plot[cur_mode],indexs)
+                Sigma_num_temp = Sigma_num_temp - 1
+    #plot
+    font = {'family': 'Times new roman','weight': 500,'size': 20}
+    for i in range(N_mode):
+        if N_mode < len(axP):
+            plus_index = 1
+        else:
+            plus_index = 0
+        data_plot[mode[i]]["E"] = data_plot[mode[i]]["E"] - np.mean(data_plot[mode[i]]["E"])
+        data_plot[mode[i]]["N"] = data_plot[mode[i]]["N"] - np.mean(data_plot[mode[i]]["N"])
+        data_plot[mode[i]]["U"] = data_plot[mode[i]]["U"] - np.mean(data_plot[mode[i]]["U"])
+        axP[i+plus_index].scatter(time_plot[mode[i]],data_plot[mode[i]]["E"],s=5.5)
+        axP[i+plus_index].scatter(time_plot[mode[i]],data_plot[mode[i]]["N"],s=5.5)
+        axP[i+plus_index].scatter(time_plot[mode[i]],data_plot[mode[i]]["U"],s=5.5)
+        axP[i+plus_index].set_ylim(-0.5,0.5)
+        axP[i+plus_index].set_title(mode[i],font,loc = "left")
+        axP[i+plus_index].fill_between(time_plot["Interpolation"][1000:1100],-0.5,0.5,facecolor = "gray",alpha=0.3)
+        
+    
+    axP[0+plus_index].legend(["East direction","North direction","Up direction"],prop=font,
+            framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=3, 
+            borderaxespad=0,bbox_to_anchor=(1,1.2),loc=1,frameon = False) 
+    if N_mode < len(axP):
+        colormap = sns.color_palette("muted",10)
+        axP[0].grid(False)
+        axP[0].plot(time_plot[mode[0]],data_plot[mode[0]]["NSAT"],color = colormap[0],ls = '-',linewidth = 1.5)
+        axP[0].plot(time_plot[mode[1]],data_plot[mode[1]]["NSAT"],color = colormap[0],ls=':',linewidth = 1.5)
+        font = {'family': 'Times new roman','weight': 600,'size': 23}
+        axP[0].set_ylabel("Num of Sat",font,color = colormap[0])
+        axP[0].spines['left'].set(color = colormap[0],linewidth = 2,linestyle = "-")
+        axP[0].tick_params(length=6, width=2, color=colormap[0], labelcolor=colormap[0])
+        font = {'family': 'Times new roman','weight': 500,'size': 20}
+        axP[0].legend(["Interpolation","Grid"],prop=font,
+            framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=3, 
+            borderaxespad=0,bbox_to_anchor=(1,1.2),loc=1,frameon = False) 
+        leg = axP[0].get_legend()
+        for legobj in leg.legendHandles:
+            legobj.set_linewidth(3)
+            legobj.set_color("black")
+        font = {'family': 'Times new roman','weight': 600,'size': 23}
+        axP2 = axP[0].twinx()
+        axP2.grid(False)
+        axP2.plot(time_plot[mode[0]],data_plot[mode[0]]["PDOP"],color = colormap[2],ls = '-',linewidth = 1.5)
+        axP2.plot(time_plot[mode[1]],data_plot[mode[1]]["PDOP"],color = colormap[2],ls = ':',linewidth = 1.5)
+        axP2.set_ylabel("PDOP",font,color = colormap[2])
+        axP2.spines['right'].set(color = colormap[2],linewidth = 2,linestyle = "-")
+        axP2.tick_params(length=6, width=2, color=colormap[2], labelcolor=colormap[2])
+        labels = axP[0].get_xticklabels() + axP[0].get_yticklabels() + axP2.get_xticklabels() + axP2.get_yticklabels()
+        [label.set_fontsize(18) for label in labels]
+        [label.set_fontname('Times New Romam') for label in labels]
 
-    data_plot["E"] = data_E
-    data_plot["N"] = data_N
-    data_plot["U"] = data_U
-    data_plot["NSAT"] = data_S
-    data_plot["TRP"] = data_TRP
+    axP[1+plus_index].set_ylabel("Position errors(m)",font)
+    axP[2+plus_index].set_xlabel("Time(UTC)",font)
+    axP[2+plus_index].set_xticks(XTick)
+    axP[2+plus_index].set_xticklabels(XLabel)
 
-    RMS_enu["E"] = []
-    RMS_enu["N"] = []
-    RMS_enu["U"] = []
-    STD_enu["E"] = []
-    STD_enu["N"] = []
-    STD_enu["U"] = []
-    MEAN_enu["E"] = []
-    MEAN_enu["N"] = []
-    MEAN_enu["U"] = []
-    font2 = {'family' : 'Times new roman',
-		'weight' : 600,
-		'size'   : 15,
-            }
-    for i in range(N_plot):
-        cur_mode = mode[i]
-        for j in range(len(type)):
-            cur_type = type[j]
-            axP[i].scatter(time[i],data_plot[cur_type][i],s=5)
-            temp = dp.rms(data_plot[cur_type][i])
-            RMS_enu[cur_type].append(temp)
-            temp = np.std(data_plot[cur_type][i])
-            STD_enu[cur_type].append(temp)
-            temp = np.mean(data_plot[cur_type][i])
-            MEAN_enu[cur_type].append(temp)
-        axP[i].legend(["East","North","Up"],prop=font2,
-            framealpha=1,facecolor='none',ncol=3,numpoints=5, markerscale=3, 
-            bbox_to_anchor=(1,1.11),loc=1,borderaxespad=0) 
-
-    font_text = {'family' : 'Times new roman',
-		'weight' : 600,
-		'size'   : 15,
-                }
-    for i in range(N_plot):
-        cur_type = type[i]
-        RMS_str = "RMS:("
-        for j in range(len(type)):
-            cur_type = type[j]
-            if cur_type == "E" or cur_type == "N":
-                RMS_str = RMS_str +'{:.4f},'.format(RMS_enu[cur_type][i])
-            if cur_type == "U":
-                RMS_str = RMS_str +'{:.4f}'.format(RMS_enu[cur_type][i])
-        RMS_str = RMS_str + ")m"
-        ax_range = axP[i].axis()
-        axP[i].text(ax_range[0],ax_range[3]+0.08,RMS_str,font_text,bbox=dict(facecolor='none', alpha=0.1,boxstyle="round"))
+    for i in range(N_mode):
+        labels = labels + axP[i+plus_index].get_xticklabels() + axP[i+plus_index].get_yticklabels()
+    [label.set_fontsize(18) for label in labels]
+    [label.set_fontname('Times New Romam') for label in labels]
+    
+    # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\SEPT-Dynamic-310.svg")
+    # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\SEPT-Dynamic-310.png",dpi=600)
+    plt.show()
+    
+    
         
 
-
-    # axP[N_plot-1].set_xticks(XTick)
-    # axP[N_plot-1].set_xticklabels(XLabel)
-
     
-    for i in range(N_plot):
-        cur_type=type[i]
-        # axP[i].set_xticks(XTick)
-        if cur_type == "E" or cur_type == "N" or cur_type == "U":
-            print("\n"+cur_type)
-            for j in range(N_mode):
-                print(mode[j] + ":")
-                print('RMS={:.4f}cm,MEAN={:.4f}cm,STD={:.4f}cm'.format(RMS_enu[cur_type][j]*100,MEAN_enu[cur_type][j]*100,STD_enu[cur_type][j]*100))
-    
-    print("固定率(Fixed/Fixed+Float):")
-    for i in range(N_mode):
-        if ((Fixed_NUM[i]) == 0):
-            print(mode[i] + ':{:.2f}%'.format(0))
-        else:
-            print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (Fixed_NUM[i] + Float_NUM[i]) * 100))
-    print("完整率:")
-    for i in range(N_mode):
-        print(mode[i] + ':{:.2f}%'.format((Fixed_NUM[i] + Float_NUM[i]) / ALL_NUM[i] * 100))
-    print("固定率(Fixed/ALL):")
-    for i in range(N_mode):
-        print(mode[i] + ':{:.2f}%'.format(Fixed_NUM[i] / (ALL_NUM[i]) * 100))
-
-    plt.show()
 
 def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10):
     N_plot = len(type)
