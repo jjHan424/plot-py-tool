@@ -47,8 +47,8 @@ filename_list = [
                 Direct3 + "\\" + "client-Grid_Ele-" + "339" + "-01" + "\\" + site_list[0] + "-GEC.flt",
                 ]
 filename_ref = [r"E:\1Master_2\Paper_Grid\Dynamic\2021339_WH\\Ref.txt",
-                r"E:\1Master_2\Paper_Grid\Dynamic\2021339_WH\\Ref.txt",
-                r"E:\1Master_2\Paper_Grid\Dynamic\2021339_WH\\Ref.txt",]
+                r"E:\1Master_2\Paper_Grid\Dynamic\2021310_WH\\Ref.txt",
+                r"E:\1Master_2\Paper_Grid\Dynamic\2021310_WH\\Ref.txt",]
                  
 # filename_list = [
 #                 #"/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKTK/5.flt",

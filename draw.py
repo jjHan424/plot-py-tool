@@ -1794,8 +1794,8 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                         time_temp = time[j]
                         temp_M = np.mean(data_plot[cur_type][j])
                         MEAN_enu[cur_type].append(temp_M)
-                        if cur_type!="NSAT":
-                           data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
+                        # if cur_type!="NSAT":
+                        #    data_plot[cur_type][j] = data_plot[cur_type][j]-temp_M       
                         # temp_M = np.mean(data_plot[cur_type][j])
                         # MEAN_enu[cur_type].append(temp_M)
                         temp = dp.rms(data_plot[cur_type][j])
@@ -2614,14 +2614,14 @@ def plot_e_n_u_percent(site = "Default",data = {},type = ["Horizontal","Vertical
     f1=5
     ymin = 0.0
     ymax = ylim
-    figP,axP = plt.subplots(1,N_plot,figsize=(17,9),sharey=False,sharex=True)
+    figP,axP = plt.subplots(1,N_plot,figsize=(9,9),sharey=False,sharex=True)
     for i in range(N_plot):
         if N_plot == 1:
             axP.set_ylim(ymin,ymax)
-            font2 = {'family' : 'Times new roman','weight' : 300,'size'   : 22}
-            axP.set_ylabel(type[i] + " Diff/m",font2)
-            axP.set_xlabel("Time/min",font2)
-            axP.set_title("{:.0f}-Percent".format(percent*100),font2)
+            font2 = {'family' : 'Times new roman','weight' : 600,'size'   : 23}
+            axP.set_ylabel("3D " + type[i] + " Errors(m)",font2)
+            axP.set_xlabel("Time(min)",font2)
+            axP.set_title(site.format(percent*100),font2)
             if type[i] != "Horizontal" and type[i] != "Vertical" and type[i] != "Position":
                 return
         else:
@@ -2653,6 +2653,8 @@ def plot_e_n_u_percent(site = "Default",data = {},type = ["Horizontal","Vertical
                 if cur_site in data[mode].keys():
                     for cur_doy in data[mode][cur_site].keys():
                         if Sec_Start in data[mode][cur_site][cur_doy].keys():
+                            if data[mode][cur_site][cur_doy][Sec_Start]["AMB"] == 0:
+                                continue
                             Vertical_temp.append(abs(data[mode][cur_site][cur_doy][Sec_Start]["U"]))
                             Horizon_temp.append(math.sqrt(math.pow(data[mode][cur_site][cur_doy][Sec_Start]["E"],2)+math.pow(data[mode][cur_site][cur_doy][Sec_Start]["N"],2)))
                             Position_temp.append(math.sqrt(math.pow(data[mode][cur_site][cur_doy][Sec_Start]["E"],2)+math.pow(data[mode][cur_site][cur_doy][Sec_Start]["N"],2)+math.pow(data[mode][cur_site][cur_doy][Sec_Start]["U"],2)))
@@ -2679,32 +2681,45 @@ def plot_e_n_u_percent(site = "Default",data = {},type = ["Horizontal","Vertical
         count_20,count_10,count_5 = 0,0,0
         bool_20,bool_10,bool_5 = False,False,False
         for i in range(len(data_plot[cur_mode]["Position"])):
+            if data_plot[cur_mode]["Position"][i] > 0.05:
+                 count_5 = 0
+            if data_plot[cur_mode]["Position"][i] > 0.1:
+                 count_10,count_5 = 0,0 
             if data_plot[cur_mode]["Position"][i] > 0.2:
-                 count_20,count_10,count_5 = 0,0,0
-            if data_plot[cur_mode]["Position"][i] < 0.2:
+                 count_20,count_10,count_5 = 0,0,0    
+            if data_plot[cur_mode]["Position"][i] <= 0.2:
                 count_20 = count_20 + 1
-            if data_plot[cur_mode]["Position"][i] < 0.1:
+            if data_plot[cur_mode]["Position"][i] <= 0.1:
                 count_10 = count_10 + 1
-            if data_plot[cur_mode]["Position"][i] < 0.05:
+            if data_plot[cur_mode]["Position"][i] <= 0.05:
                 count_5 = count_5 + 1
             if count_20 == 10 and not bool_20:
-                print("{},20-{:.1f}".format(cur_mode,time_plot[cur_mode][i]*60))
+                print("{},20-{:.1f}".format(cur_mode,time_plot[cur_mode][i]*60/5 - 9))
                 bool_20 = True
             if count_10 == 10 and not bool_10:
-                print("{},10-{:.1f}".format(cur_mode,time_plot[cur_mode][i]*60))
+                print("{},10-{:.1f}".format(cur_mode,time_plot[cur_mode][i]*60/5 - 9))
                 bool_10 = True
             if count_5 == 10 and not bool_5:
-                print("{}, 5-{:.1f}".format(cur_mode,time_plot[cur_mode][i]*60))
+                print("{}, 5-{:.1f}".format(cur_mode,time_plot[cur_mode][i]*60/5 - 9))
                 bool_5 = True
 
     for i in range(N_plot):
         if N_plot == 1:
             for cur_mode in data_plot.keys():
                 axP.plot(time_plot[mode],data_plot[cur_mode][type[i]],linewidth =2)
-            axP.legend(modelist,prop=font2,markerscale=5)
+            font = {'family': 'Times new roman','weight': 600,'size': 20}
+            axP.legend(modelist,prop=font,
+                framealpha=1,facecolor='none',ncol=1,numpoints=5,markerscale=5, 
+                borderaxespad=0,loc=1)
+            leg = axP.get_legend()
+            for legobj in leg.legendHandles:
+                legobj.set_linewidth(5)
             axP.grid(False)
             axP.set_xticks(XTick)
             axP.set_xticklabels(XLabel)
+            labels = axP.get_xticklabels() + axP.get_yticklabels()
+            [label.set_fontsize(18) for label in labels]
+            [label.set_fontname('Times New Romam') for label in labels]
         else:
             for cur_mode in data_plot.keys():
                 axP[i].plot(time_plot[mode],data_plot[cur_mode][type[i]],linewidth =2)
@@ -2712,5 +2727,7 @@ def plot_e_n_u_percent(site = "Default",data = {},type = ["Horizontal","Vertical
             axP[i].grid(False)
     plt.axhline(0.20,color='gray',ls="--")
     plt.axhline(0.10,color='gray',ls="--")
-    plt.axhline(0.05,color='gray',ls="--")
+    # plt.axhline(0.05,color='gray',ls="--")
+    plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1"+"\\"+site+"-Percent.svg")
+    plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1"+"\\"+site+"-Percent.png",dpi=600)
     plt.show()

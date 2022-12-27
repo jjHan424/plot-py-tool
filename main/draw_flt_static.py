@@ -72,12 +72,12 @@ ENU_ALL = {}
 # site_list = ["HKSC","HKMW","HKTK"]
 # site_list = ["WUDA","HKSC"]
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH","WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA"]
-# site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA","K042","K057","K059","K101","A010","V092"]
-# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-site_list = ["HKSC","HKMW","HKTK"]
+# site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA","K042","K057","K059","K101","A010","V092","HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# site_list = ["HKSC","HKMW","HKTK"]
 # mode_list = ["Grid","Coef-1","Coef-2","Coef-3"]
 # mode_list = ["Aug","Grid-2","Grid-4","Coef","Coef-R","Chk"]
-mode_list = ["Interpolation","Grid-1cm","Grid-Auto"]
+mode_list = ["Interpolation"]
 Sig = 1
 SavePath=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\Aug"
 S=10
@@ -124,7 +124,7 @@ for j in range(len(site_list)):
             # DirectT + "\\client-Grid_Cor-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Grid-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Grid-" + cdoy + "-04" + "\\" + Site + "-GEC.flt",
-            DirectT + "\\client-Grid-" + cdoy + "-06" + "\\" + Site + "-GEC.flt",
+            # DirectT + "\\client-Grid-" + cdoy + "-06" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Grid-" + cdoy + "-08" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid-" + cdoy + "-10" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid_Ele-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
@@ -138,7 +138,7 @@ for j in range(len(site_list)):
             # Direct + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC-Trp.flt",
             # DirectT + "\\client-Grid_Chk-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-            DirectT + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+            # DirectT + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
             
             
                         ]

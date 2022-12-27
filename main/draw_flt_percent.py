@@ -47,8 +47,13 @@ REF_XYZ = {
            }
 ENU_ALL = {}
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-site_list = ["WUDA","WHYJ"]
-mode_list = ["MLCM","Grid-Con","Grid-Coef"]
+# site_list = ["K101"]
+# site_list = ["A010","V092","K059","K101"]
+# site_list = ["K042","K057","N068","N028","N047"]
+# site_list = ["WHSP","XGXN","WHXZ","WHYJ","WUDA","WHDS"]
+site_list = ["HKMW","HKLM","HKSC","HKPC","HKST","HKKT","HKSS","HKWS","T430","HKTK","HKLT","HKSL","HKKS","HKCL","HKNP","HKOH"]
+# site_list = ["WUDA","WHYJ"]
+mode_list = ["Interpolation","Grid-1dm","Grid-Auto"]
 for cur_mode in mode_list:
     ENU_ALL[cur_mode] = {}
     for cur_site in site_list:
@@ -71,11 +76,11 @@ for Site in site_list:
             # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA.flt",
             # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-Chk.flt",
             # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-Coef.flt",
-            DirectI + "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-            DirectT + "\\client-Grid-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            DirectT + "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            DirectT + "\\client-Grid-" + cdoy + "-04" + "\\" + Site + "-GEC.flt",
+            # DirectT + "\\client-Grid-" + cdoy + "-04" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Grid-" + cdoy + "-06" + "\\" + Site + "-GEC.flt",
             # DirectT + "\\client-Grid-" + cdoy + "-08" + "\\" + Site + "-GEC.flt",
-            # Direct + "\\client-Grid-" + cdoy + "-08" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid-" + cdoy + "-10" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid_Ele-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
             # Direct + "\\client-Grid_Ele-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
@@ -102,4 +107,4 @@ for Site in site_list:
             D = 1
             M = M + 1
 
-dr.plot_e_n_u_percent(site ="WuHan", data = ENU_ALL,type = ["Position"],modelist = mode_list,sitelist = site_list,ylim = 0.5,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,percent=0.9,show=True)
+dr.plot_e_n_u_percent(site ="10km", data = ENU_ALL,type = ["Position"],modelist = mode_list,sitelist = site_list,ylim = 0.5,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,percent=0.6,show=True)
