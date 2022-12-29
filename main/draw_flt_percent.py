@@ -47,11 +47,11 @@ REF_XYZ = {
            }
 ENU_ALL = {}
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-# site_list = ["K101"]
+site_list = ["K057"]
 # site_list = ["A010","V092","K059","K101"]
 # site_list = ["K042","K057","N068","N028","N047"]
 # site_list = ["WHSP","XGXN","WHXZ","WHYJ","WUDA","WHDS"]
-site_list = ["HKMW","HKLM","HKSC","HKPC","HKST","HKKT","HKSS","HKWS","T430","HKTK","HKLT","HKSL","HKKS","HKCL","HKNP","HKOH"]
+# site_list = ["HKMW","HKLM","HKSC","HKPC","HKST","HKKT","HKSS","HKWS","T430","HKTK","HKLT","HKSL","HKKS","HKCL","HKNP","HKOH"]
 # site_list = ["WUDA","WHYJ"]
 mode_list = ["Interpolation","Grid-1dm","Grid-Auto"]
 for cur_mode in mode_list:

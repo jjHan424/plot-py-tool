@@ -191,14 +191,20 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 # savedir = r'E:\1Master_2\Paper_Grid\crd'
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # site_list = ["AUG-HK2"]
-mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_WH.crd")
-space_set = 0.5
-savedir = r'E:\1Master_2\Paper_Grid\crd'
-site_list = ["WHYJ","WHXZ","WUDA","WHDS","WHSP","N028","N047","N068","XGXN"]
+# mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_WH.crd")
+# space_set = 0.5
+# savedir = r'E:\1Master_2\Paper_Grid\crd'
+# site_list = ["WHYJ","WHXZ","WUDA","WHDS","WHSP","N028","N047","N068","XGXN"]
 # mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_GZ.crd")
 # space_set = 0.3
 # savedir = r'E:\1Master_2\Paper_Grid\crd'
 # site_list = ["H035","H038","H053","H055","H068","H074","H139"]
+
+#----LX---#
+mark_point_xyz = rf.open_crd_gridmap(r"E:\0Project\LX\data\AUG.crd")
+space_set = 0.5
+savedir = r'E:\1Master_2\Paper_Grid\crd'
+site_list = ["R293","EZEC","WHHN","WHHP"]
 
 # mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\AUG_BJ_New.crd")
 # space_set = 0.8
@@ -725,7 +731,8 @@ print("Min:{:.1f}km,Max:{:.1f}km".format(minDis/1000,maxDis/1000))
 #                 )).add_to(m)
 #         else:
 #             folium.PolyLine(locations=[[blh1[0],blh1[1]],[b,l]],color=c,weight=2).add_to(m)
-m.save(savedir+"\\AUG-WH-Dynamic-310.html")
+# m.save(savedir+"\\AUG-WH-Dynamic-310.html")
+m.save(r"E:\0Project\LX\data\AUG.html")
 # webbrowser.open(r'E:\1Master_2\Paper_Grid\crd\AUG_HK2.html')
 
 

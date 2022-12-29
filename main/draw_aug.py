@@ -93,6 +93,9 @@ import draw as dr
 path_S = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Server\2021310\HKMW-GEC.aug"   # PPPAR算的改正数
 path_I = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-IonoWhite\client-Aug-310-02\HKMW-GEC-I.aug"# 内插改正数
 
+path_S = r"E:\0Project\LX\data\Project\server\R293-GEC.aug"   # PPPAR算的改正数
+path_I = r"E:\0Project\LX\data\Project\client\R293-GEC-I.aug"# 内插改正数
+
 # path_S = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-S-2.aug"   # PPPAR算的改正数
 # path_I = "/Volumes/H_GREAT/WangBo_Paper/2021305/test/Frequency2_UPD_HK_GBM/HKSC-GEC-I.aug"# 内插改正数
 
@@ -127,7 +130,7 @@ data = dp.pre_aug_new(head_I,data_I,data_S)
 # begTime = 10
 # while (begTime < 31):
 # dr.plot_aug_GEC_new(data,head_I,type = "P",freq = 1,starttime = 17,time = "UTC",show = True,deltaT=2,ylim=1.5,LastT=7,year = 2022,mon=6,day=20)
-dr.plot_aug_GEC_new(data,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=1,ylim=0.1,LastT=22,year = 2021,mon=11,day=6)
+dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 6,time = "UTC",show = True,deltaT=0.5,ylim=0.1,LastT=2,year = 2022,mon=1,day=12)
 #########
 #year mon day starttime 为开始时间
 #ylim 为y坐标范围

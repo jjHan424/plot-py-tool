@@ -315,6 +315,12 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
                 axP[i][j].set_ylim(ymin,ymax)
         type1="P1"
         type2="P2"
+        sys_type["C"]["1"] = "P2"
+        sys_type["G"]["1"] = "P1"
+        sys_type["E"]["1"] = "P1"  
+        sys_type["C"]["2"]  = "P7"
+        sys_type["G"]["2"]  = "P2"
+        sys_type["E"]["2"]  = "P7" 
     elif type == 'L':
         f1=2
         f2=3
@@ -334,33 +340,33 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         for i in range(3):
             for j in range(2):
                 axP[i][j].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-                axP[i][j].set_ylim(ymin,ymax)
+                # axP[i][j].set_ylim(ymin,ymax)
         sys_type["C"] = {}
         sys_type["G"] = {}
         sys_type["E"] = {}
-        # sys_type["C"]["1"] = "L2"
-        # sys_type["G"]["1"] = "L1"
-        # sys_type["E"]["1"] = "L1"  
-        # sys_type["C"]["2"]  = "L7"
-        # sys_type["G"]["2"]  = "L2"
-        # sys_type["E"]["2"]  = "L5" 
-        sys_type["C"]["1"] = "L1"
+        sys_type["C"]["1"] = "L2"
         sys_type["G"]["1"] = "L1"
         sys_type["E"]["1"] = "L1"  
-        sys_type["C"]["2"]  = "L2"
+        sys_type["C"]["2"]  = "L7"
         sys_type["G"]["2"]  = "L2"
-        sys_type["E"]["2"]  = "L2" 
+        sys_type["E"]["2"]  = "L7" 
+        # sys_type["C"]["1"] = "L1"
+        # sys_type["G"]["1"] = "L1"
+        # sys_type["E"]["1"] = "L1"  
+        # sys_type["C"]["2"]  = "L2"
+        # sys_type["G"]["2"]  = "L2"
+        # sys_type["E"]["2"]  = "L2" 
     elif type == 'ION':
         f1=5
         ymin = -ylim
         ymax = ylim
         col = 1
         figP,axP = plt.subplots(3,1,figsize=(15,8),sharey=True,sharex=True)
-        axP[2].set_xlabel('Time' + '(' + time + ')')
+        axP[2].set_xlabel('Time' + '(' + time + ')',font)
         axP[1].set_ylabel('Difference of Ionosphere Delay correction/m',font)
-        axP[0].set_title('G')
-        axP[1].set_title('E')
-        axP[2].set_title('C')
+        axP[0].set_title('G',font)
+        axP[1].set_title('E',font)
+        axP[2].set_title('C',font)
         for i in range(3):
                 axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
                 axP[i].set_ylim(ymin,ymax)
@@ -380,10 +386,10 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         ymax = ylim
         col = 1
         figP,axP = plt.subplots(1,1,figsize=(12,10),sharey=True,sharex=True)
-        axP.set_xlabel('Time' + '(' + time + ')')
+        axP.set_xlabel('Time' + '(' + time + ')',font)
         axP.set_ylabel('Difference of Troposphere Delay correction/m',font)
         axP.grid(linestyle='--',linewidth=0.2, color='black',axis='both')
-        # axP.set_ylim(ymin,ymax)
+        axP.set_ylim(ymin,ymax)
         sys_type["C"]="TRP1"
         sys_type["G"]="TRP1"
         sys_type["E"]="TRP1"
@@ -437,31 +443,8 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     data_R1 = [[] for i in range(100)]
     data_E1 = [[] for i in range(100)]
     data_C1 = [[] for i in range(100)]
-    if "+" in time:
-        end_time = len(time)
-        delta_Time = int(time[3:end_time]) + starttime
-        begT = int(time[3:end_time]) + starttime
-    else:
-        delta_Time = starttime
-        begT=starttime
-    secow_start = tr.ymd2gpst(year,mon,day,starttime,00,00)
-    cov_Time = secow_start[1] - delta_Time * 3600
-    end_Time = begT + LastT
-    delta_X = math.ceil((LastT)/deltaT)
-    XLabel = []
-    XTick = []
-    starttime = begT - deltaT
-    for i in range(delta_X):
-        starttime = starttime + deltaT
-        cur_Str_X = '%02d' % (starttime % 24) + ":00"
-        XLabel.append(cur_Str_X)
-        XTick.append(int(starttime))       
-    while starttime < math.ceil(end_Time):
-        starttime = starttime + deltaT
-        cur_Str_X = '%02d' % (starttime % 24) + ":00"
-        XLabel.append(cur_Str_X)
-        XTick.append(int(starttime))
-
+    
+    [XLabel,XTick,cov_Time,begT,LastT]=xtick(time,year,mon,day,starttime,LastT,deltaT)
     if type == "L" or type == "P":
         for time in data.keys():
             plot_time = (time - cov_Time) / 3600
@@ -492,7 +475,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
                         continue
                     if abs(data[time][sat][sys_type[sat[0]]]) == 0:
                         continue
-                    if abs(data[time][sat][sys_type[sat[0]]]) < 1e16:
+                    if abs(data[time][sat][sys_type[sat[0]]]) < 0.5:
                         if sat[0] == "C" and sys_type[sat[0]] in data[time][sat].keys():
                             data_C[prn-1].append(data[time][sat][sys_type[sat[0]]])
                             time_C[prn-1].append(plot_time)
@@ -589,22 +572,25 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
                     temp = np.mean(data_C[i])
                     MEAN_C[0].append(temp)
         
-        font_text = {'family' : 'Arial',
+        font_text = {'family' : 'Times New Roman',
 		'weight' : 500,
-		'size'   : 15,
+		'size'   : 18,
                 }
-        font2 = {"size":7}
+        font2 = {'family' : 'Times New Roman',
+		'weight' : 400,
+		'size'   : 12,
+                }
         ax_range = axP[0].axis()
         axP[0].legend(G_L,prop=font2,
-            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=2, 
+            framealpha=1,facecolor='w',ncol=1,numpoints=5, markerscale=5, 
             bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
         axP[0].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_G[0])*100, np.mean(RMS_G[0])*100, np.mean(STD_G[0])*100),font_text)
         axP[1].legend(E_L,prop=font2,
-            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=2, 
+            framealpha=1,facecolor='w',ncol=1,numpoints=5, markerscale=5, 
             bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
         axP[1].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_E[0])*100, np.mean(RMS_E[0])*100, np.mean(STD_E[0])*100),font_text)
         axP[2].legend(C_L,prop=font2,
-            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=2, 
+            framealpha=1,facecolor='w',ncol=1,numpoints=5, markerscale=5, 
             bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
         axP[2].text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_C[0])*100, np.mean(RMS_C[0])*100, np.mean(STD_C[0])*100),font_text)
         axP[2].set_xticks(XTick)
@@ -620,10 +606,13 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
         STD_G[0].append(temp)
         temp = np.mean(data_TRP)
         MEAN_G[0].append(temp)
-            
+        font_text = {'family' : 'Times New Roman',
+		'weight' : 500,
+		'size'   : 18,
+                }    
         font2 = {"size":7}
         ax_range = axP.axis()
-        axP.text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_G[0])*100, np.mean(RMS_G[0])*100, np.mean(STD_G[0])*100))
+        axP.text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_G[0])*100, np.mean(RMS_G[0])*100, np.mean(STD_G[0])*100),font_text)
         axP.set_xticks(XTick)
         axP.set_xticklabels(XLabel)
     if type == "NSAT":
@@ -719,6 +708,12 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     # figP.suptitle(mode)
     # savedir = save + ".jpg"
     # plt.savefig(savedir)
+    if type == "ION":
+        labels = axP[0].get_xticklabels() + axP[0].get_yticklabels() + axP[1].get_xticklabels() + axP[1].get_yticklabels() + axP[2].get_xticklabels() + axP[2].get_yticklabels()
+        [label.set_fontsize(15) for label in labels]
+    if type == "TRP":
+        labels = axP.get_xticklabels() + axP.get_yticklabels()
+        [label.set_fontsize(15) for label in labels]
     if show:
         plt.show()  
 
@@ -2615,6 +2610,10 @@ def plot_e_n_u_percent(site = "Default",data = {},type = ["Horizontal","Vertical
     ymin = 0.0
     ymax = ylim
     figP,axP = plt.subplots(1,N_plot,figsize=(9,9),sharey=False,sharex=True)
+    font = {'family' : 'Times New Roman',
+		'weight' : 500,
+		'size'   : 20,
+        }
     for i in range(N_plot):
         if N_plot == 1:
             axP.set_ylim(ymin,ymax)
@@ -2672,9 +2671,12 @@ def plot_e_n_u_percent(site = "Default",data = {},type = ["Horizontal","Vertical
                 # data_plot[mode]["Horizontal"].append(np.mean(Horizon_temp[0:percent_size]))
                 # data_plot[mode]["Vertical"].append(np.mean(Vertical_temp[0:percent_size]))
                 # data_plot[mode]["Position"].append(np.mean(Position_temp[0:percent_size]))
-                data_plot[mode]["Horizontal"].append((Horizon_temp[percent_size]))
-                data_plot[mode]["Vertical"].append((Vertical_temp[percent_size]))
-                data_plot[mode]["Position"].append((Position_temp[percent_size]))
+                # data_plot[mode]["Horizontal"].append((Horizon_temp[percent_size]))
+                # data_plot[mode]["Vertical"].append((Vertical_temp[percent_size]))
+                # data_plot[mode]["Position"].append((Position_temp[percent_size]))
+                data_plot[mode]["Horizontal"].append(np.mean(Horizon_temp))
+                data_plot[mode]["Vertical"].append(np.mean(Vertical_temp))
+                data_plot[mode]["Position"].append(np.mean(Position_temp))
         Sec_Start = Sec_Start + delta_data
     
     for cur_mode in data_plot.keys():
@@ -2728,6 +2730,6 @@ def plot_e_n_u_percent(site = "Default",data = {},type = ["Horizontal","Vertical
     plt.axhline(0.20,color='gray',ls="--")
     plt.axhline(0.10,color='gray',ls="--")
     # plt.axhline(0.05,color='gray',ls="--")
-    plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1"+"\\"+site+"-Percent.svg")
-    plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1"+"\\"+site+"-Percent.png",dpi=600)
+    # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1"+"\\"+site+"-Percent.svg")
+    # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1"+"\\"+site+"-Percent.png",dpi=600)
     plt.show()
