@@ -82,7 +82,7 @@ mode_list = ["1","2","3"]
 Sig = 0
 # SavePath=r"D:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\Aug"
 SavePath=r"D:\A-paper\Test-Trp"
-S=12
+S=13
 if (not os.path.exists(SavePath)):
     os.mkdir(SavePath)
 for j in range(len(site_list)):
@@ -159,7 +159,7 @@ for j in range(len(site_list)):
             data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
             ENU_ALL[mode_list[i]] = data_ENU
             
-        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.5,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True)
+        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.5,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=False,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True,recovergence=3600)
         D = D + 1
         count = count - 1
         # if (count == 0 and M!=12):

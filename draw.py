@@ -1565,7 +1565,7 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
             file.write("{:0>3}    ".format(doy))
     ##=== Time Xtick set ===##
     [XLabel,XTick,cov_Time,begT,LastT]=xtick(time,year,mon,day,starttime,LastT,deltaT)
-    ##=== Data convert ===##
+    ##=== Data convert && convergence time ===##
     time_plot,data_plot,fixed_num,float_num,all_num,RMS_enu,STD_enu,MEAN_enu = {},{},{},{},{},{},{},{}
     type_list = ["E","N","U","NSAT","PDOP","AMB"]
     type_enu = ["E","N","U"]
@@ -1590,6 +1590,71 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                 time_plot[cur_mode].append(plot_time)
                 for cur_type in type_list:
                     data_plot[cur_mode][cur_type].append(data[cur_mode][cur_time][cur_type])
+    ##=== Convergence time ===##
+    con_list = [20,10,5]
+    cont_continue = 10
+    con_horizontal,con_vertical,con_position = {},{},{}
+    for cur_mode in mode:
+        if cur_mode not in con_horizontal.keys():
+            con_horizontal[cur_mode] = {}
+            con_vertical[cur_mode],con_position[cur_mode] = {},{}
+            for cur_accuracy in con_list:
+                con_horizontal[cur_mode][cur_accuracy] = []
+                con_vertical[cur_mode][cur_accuracy] = []
+                con_position[cur_mode][cur_accuracy] = []
+    if recovergence != 0:
+        for cur_mode in time_plot.keys():
+            start_recon = False
+            all_epoch = len(time_plot[cur_mode])
+            i = 0
+            while i < all_epoch:
+                time_now = time_plot[cur_mode][i] * 3600
+                if time_now % recovergence == 0:
+                    index_time_now = i
+                    for cur_accuracy in con_list:
+                        i = index_time_now
+                        con_position_num,con_horizontal_num,con_vertical_num = 0,0,0
+                        while i < all_epoch:
+                            cur_time = time_plot[cur_mode][i] * 3600
+                            horizontal = math.sqrt(math.pow(data_plot[cur_mode]["E"][i],2) + math.pow(data_plot[cur_mode]["N"][i],2))*100
+                            vertical = abs(data_plot[cur_mode]["U"][i])*100
+                            position = math.sqrt(math.pow(data_plot[cur_mode]["E"][i],2) + math.pow(data_plot[cur_mode]["N"][i],2) +  math.pow(data_plot[cur_mode]["U"][i],2))*100
+                            #= position =#
+                            if position < cur_accuracy:
+                                if con_position_num < cont_continue:
+                                    con_position_num = con_position_num + 1
+                            elif con_position_num < cont_continue:
+                                con_position_num = 0
+                            if con_position_num == cont_continue:
+                                con_position[cur_mode][cur_accuracy].append(time_plot[cur_mode][i-9]*3600 - time_now)
+                                con_position_num = 99
+                            #= horizontal =#
+                            if horizontal < cur_accuracy:
+                                if con_horizontal_num < cont_continue:
+                                    con_horizontal_num = con_horizontal_num + 1
+                            elif con_horizontal_num < cont_continue:
+                                con_horizontal_num = 0
+                            if con_horizontal_num == cont_continue:
+                                con_horizontal[cur_mode][cur_accuracy].append(time_plot[cur_mode][i-9]*3600 - time_now)
+                                con_horizontal_num = 99
+                            #= vertical =#
+                            if vertical < cur_accuracy:
+                                if con_vertical_num < cont_continue:
+                                    con_vertical_num = con_vertical_num + 1
+                            elif con_vertical_num < cont_continue:
+                                con_vertical_num = 0
+                            if con_vertical_num == cont_continue:
+                                con_vertical[cur_mode][cur_accuracy].append(time_plot[cur_mode][i-9]*3600 - time_now)
+                                con_vertical_num = 99
+                            if cur_time - time_now > 15*60:
+                                break
+                            i = i+1
+                            
+                else:
+                    i=i+1
+                    continue
+                    
+
     ##=== Sigma Edit ===##
     if Sigma > 0:
         for cur_mode in mode:
