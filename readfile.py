@@ -304,6 +304,8 @@ def open_flt_pvtflt_file(filename):
                     all_data[soweek]['AMB'] = 1
                 else:
                     all_data[soweek]['AMB'] = 0
+                if all_data[soweek]['PDOP'] > 5:
+                    all_data[soweek]['AMB'] = 0
                 
     return all_data
 

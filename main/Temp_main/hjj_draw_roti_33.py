@@ -16,13 +16,22 @@ import dataprocess as dp
 import draw as dr
 import seaborn as sns
 import trans as tr
+import seaborn as sns
+
+font_title = {'family' : 'Times New Roman', 'weight' : 700, 'size' : 30}
+font_label = {'family' : 'Times New Roman', 'weight' : 600, 'size' : 25}
+font_tick = {'family' : 'Times New Roman', 'weight' : 400, 'size' : 30}
+font_legend = {'family' : 'Times New Roman', 'weight' : 600, 'size' : 22}
+font_text = {'family' : 'Times new roman','weight' : 600,'size'   : 20}
+xtick_size = 23
+color_list = sns.color_palette("Set1")
 
 site_list = ["HKMW"]
 count = 1
-Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,6,14,2
+Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,5,16,4
 time="UTC"
 
-plot_type = "MEAN"
+plot_type = "ALL"
 
 while count > 0:
    
@@ -31,16 +40,19 @@ while count > 0:
     for i in range(len(site_list)):
         cur_site = site_list[i]
         
-        path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
-        save_dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\ROTI-30" + "\\" + "{:0>4}".format(Year) + cdoy
-        diff_dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Diff-New" + "\\" + "{:0>4}{:0>3}".format(Year,doy) + "\\" + cur_site + "-GEC-5.diff"
+        # path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
+        # save_dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\ROTI-30" + "\\" + "{:0>4}".format(Year) + cdoy
+        # diff_dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Diff-New" + "\\" + "{:0>4}{:0>3}".format(Year,doy) + "\\" + cur_site + "-GEC-5.diff"
+        path_roti = r"G:\Data\Res\ROTI" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
+        save_dir = r"G:\Data\Res\ROTI-30" + "\\" + "{:0>4}".format(Year) + cdoy
+        diff_dir = r"G:\Data\Res\Diff-New" + "\\" + "{:0>4}{:0>3}".format(Year,doy) + "\\" + cur_site + "-GEC-5.diff"
         [Diff_Head,Diff_Data] = rf.open_aug_file_new(diff_dir)
         if (not os.path.exists(save_dir)):
             os.mkdir(save_dir)
         # path_roti = r"D:\GREAT\GREAT_Project\Allystar\ROTI_20220722\30s\DGCA2022203_GEC.ismr"
         # path_roti = r"D:\GREAT\GREAT_Project\Allystar\ROTI_20220722\30s\SWHF2022203_GEC.ismr"
 
-        figP,axP = plt.subplots(3,3,figsize=(12,10),sharey=False,sharex=True)
+        figP,axP = plt.subplots(3,3,figsize=(12,14),sharey=False,sharex=True)
         #Time
         
         t=time
@@ -158,15 +170,15 @@ while count > 0:
         
         
 
-        axP[0][0].plot(meanT_G, All_G)
-        axP[0][1].plot(meanT_E, All_E)
-        axP[0][2].plot(meanT_C, All_C)
+        axP[0][0].plot(meanT_G, All_G,color = color_list[0])
+        axP[0][1].plot(meanT_E, All_E,color = color_list[0])
+        axP[0][2].plot(meanT_C, All_C,color = color_list[0])
 
-        axP[0][0].plot(meanT_G, Num_G)
-        axP[0][1].plot(meanT_E, Num_E)
-        axP[0][2].plot(meanT_C, Num_C)
-        font = {'family': 'Times new roman','weight': 600,'size': 20}
-        axP[0][2].legend(["All Sat","Scintillating Sat"],prop=font,
+        axP[0][0].plot(meanT_G, Num_G,color = color_list[1])
+        axP[0][1].plot(meanT_E, Num_E,color = color_list[1])
+        axP[0][2].plot(meanT_C, Num_C,color = color_list[1])
+
+        axP[0][2].legend(["All Sat","Scintillating Sat"],prop=font_legend,
         framealpha=1,facecolor='none',ncol=2,numpoints=5,markerscale=10,
                     borderaxespad=0,bbox_to_anchor=(1,1.4),loc=1)
         leg = axP[0][2].get_legend()
@@ -186,13 +198,13 @@ while count > 0:
                     C = False
                 if G:
                     # axP.scatter(time_G[i],data_G[i],s=1,color=colormap[i])
-                    axP[1][0].scatter(time_G[i], data_G[i], s=1)
+                    axP[1][0].scatter(time_G[i], data_G[i], s=1,color = color_list[i%9])
                 if E:
                     # axP.scatter(time_E[i],data_E[i],s=1,color=colormap[i])
-                    axP[1][1].scatter(time_E[i], data_E[i], s=1)
+                    axP[1][1].scatter(time_E[i], data_E[i], s=1,color = color_list[i%9])
                 if C:
                     # axP.scatter(time_C[i],data_C[i],s=1,color=colormap[i])
-                    axP[1][2].scatter(time_C[i], data_C[i], s=1)
+                    axP[1][2].scatter(time_C[i], data_C[i], s=1,color = color_list[i%9])
 
         # font2 = {'family' : 'Arial',
         #             'weight' : 600,
@@ -219,9 +231,9 @@ while count > 0:
         # axP[1].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
         # axP[2].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
 
-        # axP[0].set_ylim(0,1)
-        # axP[1].set_ylim(0,1)
-        # axP[2].set_ylim(0,1)
+        axP[1][0].set_ylim(0,12)
+        axP[1][1].set_ylim(0,12)
+        axP[1][2].set_ylim(0,12)
 
         # axP[0].grid(False)
         # axP[1].grid(False)
@@ -330,35 +342,35 @@ while count > 0:
                     C = False
                 if G:
                     # axP.scatter(time_G[i],data_G[i],s=1,color=colormap[i])
-                    axP[2][0].scatter(time_G[i], data_G[i], s=1)
+                    axP[2][0].scatter(time_G[i], data_G[i], s=1,color = color_list[i%9])
                 if E:
                     # axP.scatter(time_E[i],data_E[i],s=1,color=colormap[i])
-                    axP[2][1].scatter(time_E[i], data_E[i], s=1)
+                    axP[2][1].scatter(time_E[i], data_E[i], s=1,color = color_list[i%9])
                 if C:
                     # axP.scatter(time_C[i],data_C[i],s=1,color=colormap[i])
-                    axP[2][2].scatter(time_C[i], data_C[i], s=1)
+                    axP[2][2].scatter(time_C[i], data_C[i], s=1,color = color_list[i%9])
         
         axP[2][0].set_xticks(XTick)
         axP[2][0].set_xticklabels(XLabel)
         labels = axP[2][0].get_xticklabels() + axP[2][1].get_xticklabels() + axP[2][2].get_xticklabels()
-        [label.set_fontsize(13) for label in labels]
+        [label.set_fontsize(xtick_size) for label in labels]
         [label.set_rotation(45) for label in labels]
         font = {'family': 'Times new roman','weight': 600,'size': 20}
-        axP[2][1].set_xlabel("Time(UTC)",font)
+        axP[2][1].set_xlabel("Time(UTC)",font_label)
         axP[2][0].set_ylim(0,0.6)
         axP[2][1].set_ylim(0,0.6)
         axP[2][2].set_ylim(0,0.6)
         y_labels = axP[0][0].get_yticklabels() + axP[1][0].get_yticklabels() + axP[2][0].get_yticklabels() + axP[0][1].get_yticklabels() + axP[1][1].get_yticklabels() + axP[2][1].get_yticklabels() + axP[0][2].get_yticklabels() + axP[1][2].get_yticklabels() + axP[2][2].get_yticklabels()
-        [label.set_fontsize(13) for label in y_labels]
-        axP[0][0].set_ylabel("Num of sat",font)
-        axP[1][0].set_ylabel("ROTI(TECU/min)",font)
-        axP[2][0].set_ylabel("Ionospheric errors(m)",font)
+        [label.set_fontsize(xtick_size) for label in y_labels]
+        axP[0][0].set_ylabel("Num of sat",font_label)
+        axP[1][0].set_ylabel("ROTI(TECU/min)",font_label)
+        axP[2][0].set_ylabel("IONO errors(m)",font_label)
         font = {'family': 'Times new roman','weight': 600,'size': 23}
-        axP[0][0].set_title("G",font)
-        axP[0][1].set_title("E",font)
-        axP[0][2].set_title("C",font)
-        plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HKMW-Sat-Roti-Diff-Mean.svg")
-        plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HKMW-Sat-Roti-Diff-Mean.png",dpi=600)
+        axP[0][0].set_title("G",font_title)
+        axP[0][1].set_title("E",font_title)
+        axP[0][2].set_title("C",font_title)
+        plt.savefig(r"D:\A-paper\Fig_and_Res\HKMW-ROTI33.png",dpi=600)
+        plt.savefig(r"D:\A-paper\Fig_and_Res\HKMW-ROTI33.svg")
         plt.show()
         Day = Day + 1
         count = count - 1

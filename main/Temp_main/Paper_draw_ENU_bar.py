@@ -24,13 +24,13 @@ import math
 # site_list = ["K101","A010","V092","K059"]
 # site_list = ["K042","N028","N047","N068","K057"]
 # site_list = ["WHYJ","WUDA","WHDS","WHSP","XGXN","WHXZ"]
-# site_list = ["HKMW","HKLM","HKSC","HKPC","HKST","HKKT","HKSS","HKWS","T430","HKTK","HKLT","HKSL","HKKS","HKCL"]
-site_list = ["10km","55km","90km","160km"]
+site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# site_list = ["10km","55km","90km","160km"]
 
 site_list_plot = site_list
 Mode_Plot = "Mean"
 Fix_mode = "FixSig"
-com_mode = "Grid-1dm"
+com_mode = "Grid"
 Site = "WUDA"
 # Direct_Old
 Direct7 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-7"
@@ -62,6 +62,7 @@ DirectTest = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-All\Pos_Test"
 # Direct_Trp
 DirectAll = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\All"
 DirectAug = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\Aug"
+DirectAll = r"D:\A-paper\Test-Trp\Trp-2"
 site_num = len(site_list)
 show = True
 data_save = {}
@@ -71,9 +72,10 @@ for i in range(site_num):
     if cur_site not in data_save.keys():
         data_save[cur_site] = {}
     # data_save[cur_site]["Aug"] = rf.H_open_rms(DirectAug + "\\" + cur_site + "-Sigma-1-02.txt",1)
-    data_save[cur_site]["Interpolation"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",1)
-    data_save[cur_site]["Grid-1dm"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",2)
-    data_save[cur_site]["Grid-Auto"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",3)
+    data_save[cur_site]["Interpolation2"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-10.txt",1)
+    data_save[cur_site]["Interpolation4"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-10.txt",2)
+    data_save[cur_site]["Interpolation6"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-10.txt",3)
+    data_save[cur_site]["Grid"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-10.txt",4)
     # data_save[cur_site]["Grid-Auto"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",4)
     # data_save[cur_site]["Chk"] = rf.H_open_rms(DirectAC + "\\" + cur_site + "-Sigma-0-03.txt",2)
     # data_save[cur_site]["Grid-2"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",1)
@@ -356,7 +358,7 @@ if Mode_Plot=="Mean":
     axP[3].set_ylabel("3D(cm)",font_text)
     labels = axP[0].get_yticklabels() + axP[1].get_yticklabels() + axP[2].get_yticklabels() + axP[3].get_yticklabels() + axP[4].get_yticklabels() + axP[4].get_xticklabels()
     [label.set_fontsize(18) for label in labels]
-    [label.set_fontname('Times New Romam') for label in labels]
+    [label.set_fontname('Times New Roman') for label in labels]
     if mode_Num==5:
         # axP[4].set_ylabel(Fix_mode,font_text)
         axP[4].set_ylabel("Fixing rate(%)",font_text)
@@ -366,8 +368,8 @@ if Mode_Plot=="Mean":
     # axP[2].set_ylim(0,20)
     font_text = {'family' : 'Times new roman','weight' : 500,'size'   : 25}
     # axP[0].set_title("RMS",font_text)
-    plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\4-distance-Position-Bar.svg")
-    plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\4-distance-Position-Bar.png",dpi=600)
+    # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\4-distance-Position-Bar.svg")
+    # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\4-distance-Position-Bar.png",dpi=600)
     plt.show()
     
     

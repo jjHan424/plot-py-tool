@@ -27,11 +27,13 @@ font = {'family' : 'Arial',
 		'size'   : 20,
 }
 
-font_title = {'family' : 'Times New Roman', 'weight' : 700, 'size' : 25}
-font_label = {'family' : 'Times New Roman', 'weight' : 600, 'size' : 25}
-font_tick = {'family' : 'Times New Roman', 'weight' : 400, 'size' : 20}
-font_legend = {'family' : 'Times New Roman', 'weight' : 500, 'size' : 23}
-font_text = {'family' : 'Times new roman','weight' : 600,'size'   : 20}
+font_title = {'family' : 'Times New Roman', 'weight' : 700, 'size' : 45}
+font_label = {'family' : 'Times New Roman', 'weight' : 600, 'size' : 29}
+font_tick = {'family' : 'Times New Roman', 'weight' : 400, 'size' : 30}
+# font_legend = {'family' : 'Times New Roman', 'weight' : 600, 'size' : 22}
+font_legend = {'family' : 'Times New Roman', 'weight' : 600, 'size' : 15}
+font_text = {'family' : 'Times new roman','weight' : 500,'size'   : 28}
+xtick_size = 26
 color_list = sns.color_palette("Set1")
 
 def xtick(time,year,mon,day,starttime,LastT,deltaT):
@@ -289,7 +291,7 @@ def plot_aug_GEC(time_G = [], aug_G = [], time_E = [], aug_E = [], time_C = [], 
     if show:
         plt.show()
 
-def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,year = 2021,mon=11,day=1):
+def plot_aug_G_E_C(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,year = 2021,mon=11,day=1):
     sys_type = {}
     RMS_G,MEAN_G,STD_G = [[],[]],[[],[]],[[],[]]
     RMS_E,MEAN_E,STD_E = [[],[]],[[],[]],[[],[]]
@@ -482,7 +484,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
                         continue
                     if abs(data[time][sat][sys_type[sat[0]]]) == 0:
                         continue
-                    if abs(data[time][sat][sys_type[sat[0]]]) > -1:
+                    if abs(data[time][sat][sys_type[sat[0]]]) < 0.1:
                         if sat[0] == "C" and sys_type[sat[0]] in data[time][sat].keys():
                             data_C[prn-1].append(data[time][sat][sys_type[sat[0]]])
                             time_C[prn-1].append(plot_time)
@@ -714,7 +716,7 @@ def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttim
     
     # figP.suptitle(mode)
     # savedir = save + ".jpg"
-    # plt.savefig(savedir)
+    plt.savefig(r"D:\A-paper\Fig_and_Res\K070-Grid.png")
     if type == "ION":
         labels = axP[0].get_xticklabels() + axP[0].get_yticklabels() + axP[1].get_xticklabels() + axP[1].get_yticklabels() + axP[2].get_xticklabels() + axP[2].get_yticklabels()
         [label.set_fontsize(15) for label in labels]
@@ -1544,19 +1546,36 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
     ymin = -ylim
     ymax = ylim
     ##=== Plot set ===##
-    figP,axP = plt.subplots(N_plot,1,figsize=(15,9),sharey=False,sharex=True)
+    figP,axP = plt.subplots(N_plot,1,figsize=(13.7,11),sharey=False,sharex=True)
     axP[N_plot - 1].set_xlabel('Time' + '(' + time + ')',font_label)
+    ## Only ENU
+    if N_plot == 3:
+        for i in range(N_plot):
+            if type[i] == "E":
+                axP[i].set_ylabel("East errors(m)",font_label)
+            if type[i] == "N":
+                axP[i].set_ylabel("North errors(m)",font_label)
+            if type[i] == "U":
+                axP[i].set_ylabel("Up errors(m)",font_label)
+            if type[i] == "NSAT":
+                axP[i].set_ylabel("Number of Sat",font_label)
+    ## with NSAT
+    elif N_plot == 4 and "NSAT" in type:
+        axP[0].set_ylabel("Number of Sat",font_label)
+        axP[2].set_ylabel("Position errors(m)",font_label)
     for i in range(N_plot):
-        if type[i] == "E":
-            axP[i].set_ylabel("East errors(m)",font_label)
-        if type[i] == "N":
-            axP[i].set_ylabel("North errors(m)",font_label)
-        if type[i] == "U":
-            axP[i].set_ylabel("Up errors(m)",font_label)
-        if type[i] == "NSAT":
-            axP[i].set_ylabel("Number of Sat",font_label)
+        if type[i] != "NSAT":
+            axP[i].set_ylim(ymin,ymax)
+        else:
+            box = axP[i].get_position()
+            axP[i].set_position([box.x0, box.y0, box.width, box.height*1.3])
+            axP2 = axP[i].twinx()
+            box = axP2.get_position()
+            axP2.set_position([box.x0, box.y0, box.width, box.height*1.3])
+            
+
         
-        axP[i].set_ylim(ymin,ymax)
+        
     ##=== Save set ===##
     doy = tr.ymd2doy(year,mon,day,0,00,00)
     SaveTextFile = save + "\\" + site + "-" "Sigma-" + "{:0>1}".format(Sigma_num) + "-{:0>2}".format(starttime) + ".txt"
@@ -1591,13 +1610,13 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                 for cur_type in type_list:
                     data_plot[cur_mode][cur_type].append(data[cur_mode][cur_time][cur_type])
     ##=== Convergence time ===##
-    con_list = [20,10,5]
+    # con_list = [20,10,5]
+    con_list = [10]
     cont_continue = 10
     con_horizontal,con_vertical,con_position = {},{},{}
     for cur_mode in mode:
         if cur_mode not in con_horizontal.keys():
-            con_horizontal[cur_mode] = {}
-            con_vertical[cur_mode],con_position[cur_mode] = {},{}
+            con_horizontal[cur_mode],con_vertical[cur_mode],con_position[cur_mode] = {},{},{}
             for cur_accuracy in con_list:
                 con_horizontal[cur_mode][cur_accuracy] = []
                 con_vertical[cur_mode][cur_accuracy] = []
@@ -1626,7 +1645,7 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                             elif con_position_num < cont_continue:
                                 con_position_num = 0
                             if con_position_num == cont_continue:
-                                con_position[cur_mode][cur_accuracy].append(time_plot[cur_mode][i-9]*3600 - time_now)
+                                con_position[cur_mode][cur_accuracy].append(time_plot[cur_mode][i-cont_continue+1]*3600 - time_now)
                                 con_position_num = 99
                             #= horizontal =#
                             if horizontal < cur_accuracy:
@@ -1635,7 +1654,7 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                             elif con_horizontal_num < cont_continue:
                                 con_horizontal_num = 0
                             if con_horizontal_num == cont_continue:
-                                con_horizontal[cur_mode][cur_accuracy].append(time_plot[cur_mode][i-9]*3600 - time_now)
+                                con_horizontal[cur_mode][cur_accuracy].append(time_plot[cur_mode][i-cont_continue+1]*3600 - time_now)
                                 con_horizontal_num = 99
                             #= vertical =#
                             if vertical < cur_accuracy:
@@ -1644,9 +1663,17 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                             elif con_vertical_num < cont_continue:
                                 con_vertical_num = 0
                             if con_vertical_num == cont_continue:
-                                con_vertical[cur_mode][cur_accuracy].append(time_plot[cur_mode][i-9]*3600 - time_now)
+                                con_vertical[cur_mode][cur_accuracy].append(time_plot[cur_mode][i-cont_continue+1]*3600 - time_now)
                                 con_vertical_num = 99
+                            if con_horizontal_num == 99 and con_vertical_num == 99 and con_position_num == 99:
+                                break
                             if cur_time - time_now > 15*60:
+                                if con_horizontal_num != 99:
+                                    con_horizontal[cur_mode][cur_accuracy].append(900)
+                                if con_position_num != 99:
+                                    con_position[cur_mode][cur_accuracy].append(900)
+                                if con_vertical_num != 99:
+                                    con_vertical[cur_mode][cur_accuracy].append(900)
                                 break
                             i = i+1
                             
@@ -1678,8 +1705,14 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                     RMS_enu[cur_mode][cur_type] = dp.rms(data_plot[cur_mode][cur_type])
                 time_plot[cur_mode] = np.delete(time_plot[cur_mode],index_rm)
                 after_sig = len(time_plot[cur_mode])
-                print("{}-{}:{:0>2}-({:0>5},{:0>5}",format(cur_mode,"Sig",Sigma_num_temp,before_sig,after_sig))
+                print("{}-{}:{:0>2}-{:0>5},{:0>5}".format(cur_mode,"Sig",Sigma_num_temp,before_sig,after_sig))
                 Sigma_num_temp = Sigma_num_temp - 1
+            #== -MEAN ==#
+            # for cur_type in type_enu:
+            #     MEAN_enu[cur_mode][cur_type] = np.mean(data_plot[cur_mode][cur_type])
+            #     data_plot[cur_mode][cur_type] = data_plot[cur_mode][cur_type] - MEAN_enu[cur_mode][cur_type]
+            #     STD_enu[cur_mode][cur_type] = np.std(data_plot[cur_mode][cur_type])
+            #     RMS_enu[cur_mode][cur_type] = dp.rms(data_plot[cur_mode][cur_type])    
             #== Distribution ==#
             num_5_en,num_10_en,num_10_u,num_15_u = 0,0,0,0
             for i in range(after_sig):
@@ -1697,9 +1730,38 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
             print("Altitude(<10cm)   " + '{:.2f}%'.format(num_10_u/after_sig*100))
             print("Altitude(<15cm)  " + '{:.2f}%'.format(num_15_u/after_sig*100))
     ##=== Plot Data ===##
-    for i in range(N_plot):
-        for j in range(N_mode):
-            axP[i].scatter(time_plot[mode[j]],data_plot[mode[j]][type[i]],color = color_list[j%9],s=5)
+    if 1:
+        for i in range(N_plot):
+            for j in range(N_mode):
+                axP[i].scatter(time_plot[mode[j]],data_plot[mode[j]][type[i]],color = color_list[j%9],s=13)
+    else:
+        for i in range(N_plot):
+            for j in range(N_mode):
+                if type[i] != "NSAT":
+                    axP[i].scatter(time_plot[mode[j]],data_plot[mode[j]][type[i]],color = color_list[j%9],s=13)
+        axP[0].plot(time_plot[mode[0]],data_plot[mode[0]]["NSAT"],color = color_list[3],ls = '-',linewidth = 3)
+        axP[0].plot(time_plot[mode[1]],data_plot[mode[1]]["NSAT"],color = color_list[3],ls=':',linewidth = 3)
+        axP[0].set_ylabel("Num of Sat",font_label,color = color_list[3])
+        axP[0].spines['left'].set(color = color_list[3],linewidth = 2,linestyle = "-")
+        axP[0].tick_params(length=6, width=2, color=color_list[3], labelcolor=color_list[3])
+        axP[0].legend(["Interpolation","Grid"],prop=font_legend,
+            framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=3, 
+            borderaxespad=0,bbox_to_anchor=(1,1.2),loc=1,frameon = False) 
+        leg = axP[0].get_legend()
+        for legobj in leg.legendHandles:
+            legobj.set_linewidth(5)
+            legobj.set_color("black")
+        
+        axP2.grid(False)
+        axP2.plot(time_plot[mode[0]],data_plot[mode[0]]["PDOP"],color = color_list[4],ls = '-',linewidth = 3)
+        axP2.plot(time_plot[mode[1]],data_plot[mode[1]]["PDOP"],color = color_list[4],ls = ':',linewidth = 3)
+        axP2.set_ylabel("PDOP",font_label,color = color_list[4])
+        axP2.spines['right'].set(color = color_list[4],linewidth = 2,linestyle = "-")
+        axP2.tick_params(length=6, width=2, color=color_list[4], labelcolor=color_list[4])
+        labels = axP2.get_yticklabels() + axP2.get_xticklabels()
+        [label.set_fontsize(xtick_size) for label in labels]
+        [label.set_fontname('Times New Roman') for label in labels]
+
     i=-1
     for cur_type in type:
         i = i+1
@@ -1712,13 +1774,20 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                 MEAN_str = MEAN_str +'{:.2f}, '.format(MEAN_enu[cur_mode][cur_type])
         if cur_type in type_enu:
             ax_range = axP[i].axis()
-            axP[i].text(ax_range[0],ax_range[3]+ylim/15,RMS_str[0:9*N_mode+2],font_text)
+            # axP[i].text(ax_range[0],ax_range[3]+ylim/15,RMS_str[0:9*N_mode+2],font_text)
+            # if cur_type == "E":
+            #     axP[i].text(ax_range[0],ax_range[3]-ylim/2,"East",font_title)
+            # if cur_type == "N":
+            #     axP[i].text(ax_range[0],ax_range[3]-ylim/2,"North",font_title)
+            # if cur_type == "U":
+            #     axP[i].text(ax_range[0],ax_range[3]-ylim/2,"Up",font_title)
         if cur_type == "NSAT":
             ax_range = axP[i].axis()
-            axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:7*N_mode+3],font_text)
-
-    labels = axP[0].get_yticklabels() + axP[0].get_xticklabels() + axP[1].get_yticklabels() + axP[1].get_xticklabels() + axP[2].get_yticklabels() + axP[2].get_xticklabels()
-    [label.set_fontsize(23) for label in labels]
+            # axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:7*N_mode+3],font_text)
+    labels = axP[0].get_yticklabels() + axP[0].get_xticklabels()
+    for i in range(N_plot):
+        labels = labels + axP[i].get_yticklabels() + axP[i].get_xticklabels()
+    [label.set_fontsize(xtick_size) for label in labels]
     [label.set_fontname('Times New Roman') for label in labels]
     if not all:
         axP[N_plot-1].set_xticks(XTick)
@@ -1730,13 +1799,13 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
         #     axP[i].set_xticks(XTick)
         ax_range = axP[i].axis()
         if (N_plot==3 and i == 0):
-            axP[i].legend(mode,prop=font_text,
-            framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=5, 
-            borderaxespad=0,bbox_to_anchor=(1,1.25),loc=1) 
-        if (N_plot==4):
-            axP[i].legend(mode,prop=font_text,
-            framealpha=1,facecolor='none',ncol=4,numpoints=5, markerscale=1.3,
-            borderaxespad=0,bbox_to_anchor=(1,1.16),loc=1) 
+            axP[i].legend(mode,prop=font_legend,
+            framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=4, 
+            borderaxespad=0,bbox_to_anchor=(1,1.3),loc=1) 
+        if (N_plot==4 and i == 1):
+            axP[i].legend(mode,prop=font_legend,
+            framealpha=0,facecolor='none',ncol=4,numpoints=5, markerscale=4,
+            borderaxespad=0,bbox_to_anchor=(1,1.22),loc=1) 
         #axP[i].autoscale(tight=True)
         if cur_type == "E" or cur_type == "N" or cur_type == "U":
             print("\n"+cur_type)
@@ -1744,7 +1813,7 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                 # E_str = E_str + "             ###{}-{}###       \n".format(cur_type,mode[j])
                 # E_str = E_str + 'RMS={:.4f}cm,MEAN={:.4f}cm,STD={:.4f}cm\n'.format(RMS_enu[cur_type][j]*100,MEAN_enu[cur_type][j]*100,STD_enu[cur_type][j]*100)
                 E_str = E_str + '{:.4f}           '.format(RMS_enu[cur_mode][cur_type]*100)
-                print(mode[j] + ":")
+                print(cur_mode + ":")
                 print('RMS={:.4f}cm,MEAN={:.4f}cm,STD={:.4f}cm'.format(RMS_enu[cur_mode][cur_type]*100,MEAN_enu[cur_mode][cur_type]*100,STD_enu[cur_mode][cur_type]*100))
     
     print("固定率(Fixed/Fixed+Float):")
@@ -1765,30 +1834,45 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
     print("固定率(Fixed/ALL):")
     for cur_mode in mode:
         print(cur_mode + ':{:.2f}%'.format(fixed_num[cur_mode] / (all_num[cur_mode]) * 100))
+    print("3D收敛时间(s):")
+    for cur_accuracy in con_list:
+        print('{:.0f}cm'.format(cur_accuracy))
+        for cur_mode in con_position.keys():
+            print('{}:{:.2f}s'.format(cur_mode,np.mean(con_position[cur_mode][cur_accuracy])))
+    print("垂直收敛时间(s):")
+    for cur_accuracy in con_list:
+        print('{:.0f}cm'.format(cur_accuracy))
+        for cur_mode in con_position.keys():
+            print('{}:{:.2f}s'.format(cur_mode,np.mean(con_vertical[cur_mode][cur_accuracy])))
+    print("水平收敛时间(s):")
+    for cur_accuracy in con_list:
+        print('{:.0f}cm'.format(cur_accuracy))
+        for cur_mode in con_position.keys():
+            print('{}:{:.2f}s'.format(cur_mode,np.mean(con_horizontal[cur_mode][cur_accuracy])))
+
     if show:
-        # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HKMW-PositionErrors-305.png",dpi=600)
-        # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HKMW-PositionErrors-305.svg")
+        plt.savefig(r"D:\A-paper\Fig_and_Res\HKPC-305-IONO.png",dpi=600)
+        plt.savefig(r"D:\A-paper\Fig_and_Res\HKPC-305-IONO.svg")
         plt.show()
-    # else:
-    #     SaveFigFile = save + "\\" + site + "-" + "{:0>3}".format(doy) + "-" "Sigma-" + "{:0>1}".format(Sigma_num) + ".png"
-    #     # plt.savefig(SaveFigFile)
-    #     with open(SaveTextFile,'a') as file:
-    #         # file.write("       ###"+"Fixed/Fixed+Float"+"###       \n")
-    #         for i in range(N_mode):
-    #             if ((Fixed_NUM[i]) == 0):
-    #                 file.write('{:>.2f}%           '.format(mode[i],0))
-    #             else:
-    #                 file.write('{:>.2f}%           '.format(Fixed_NUM[i] / (Fixed_NUM[i] + Float_NUM[i]) * 100))
-    #         # file.write("       ###"+"Fixed_Sigma/Fixed+Float"+"###       \n")
-    #         for i in range(N_mode):
-    #             if ((Fixed_NUM[i]) == 0):
-    #                 file.write('{:>.2f}%           '.format(mode[i],0))
-    #             else:
-    #                 file.write('{:>.2f}%           '.format(len(time[i]) / (Fixed_NUM[i] + Float_NUM[i]) * 100))
-    #         file.write(E_str+'\n')
-    #         # file.write("=========================="+"{:0>3}".format(doy)+"==========================\n")
-    #         # file.write("==========="+"{:0>3}".format(doy)+"===========\n")
-    #         # file1.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
+    else:
+        SaveFigFile = save + "\\" + site + "-" + "{:0>3}".format(doy) + "-" "Sigma-" + "{:0>1}".format(Sigma_num) + ".png"
+        plt.savefig(SaveFigFile)
+        with open(SaveTextFile,'a') as file:
+            # file.write("       ###"+"Fixed/Fixed+Float"+"###       \n")
+            for i in range(N_mode):
+                if ((fixed_num[mode[i]]) == 0):
+                    file.write('{:>.2f}%           '.format(mode[i],0))
+                else:
+                    file.write('{:>.2f}%           '.format(fixed_num[mode[i]] / (all_num[mode[i]]) * 100))
+            for i in range(N_mode):
+                if ((fixed_num[mode[i]]) == 0):
+                    file.write('{:>.2f}%           '.format(mode[i],0))
+                else:
+                    file.write('{:>.2f}%           '.format(len(time_plot[mode[i]]) / (fixed_num[mode[i]] + float_num[mode[i]]) * 100))
+            file.write(E_str+'\n')
+            # file.write("=========================="+"{:0>3}".format(doy)+"==========================\n")
+            # file.write("==========="+"{:0>3}".format(doy)+"===========\n")
+            # file1.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
 
 
 def plot_enu(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10,all=False,Sigma=3,Sigma_num=1):
@@ -1955,9 +2039,9 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
     figP,axP = plt.subplots(N_plot,1,figsize=(18,11),sharey=False,sharex=False)
     font = {'family': 'Times new roman','weight': 600,'size': 23}
     if (N_plot>3):
-        axP[N_plot-2].set_xlabel('Time' + '(' + time + ')',font)
+        axP[N_plot-2].set_xlabel('Time' + '(' + time + ')',font_label)
     else:
-        axP[N_plot-1].set_xlabel('Time' + '(' + time + ')',font)
+        axP[N_plot-1].set_xlabel('Time' + '(' + time + ')',font_label)
     font2 = {'family' : 'Arial',
 		'weight' : 500,
 		'size'   : 13,
@@ -1965,15 +2049,19 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
     
     for i in range(N_plot):
         font = {'family': 'Times new roman','weight': 600,'size': 23}
-        axP[i].set_ylabel("Receiver DCB(m)",font)
+        axP[1].set_ylabel("Receiver DCB(m)",font_label)
         axP[i].grid(linestyle='--',linewidth=0.2, color='black',axis='both')
         if type[i] == "G" or type[i] == "E" or type[i] == "C":
             #  axP[i].set_ylim(ymin,ymax)
              font = {'family': 'Times new roman','weight': 600,'size': 20}
-             axP[i].set_title(type[i],font)
+             axP[i].set_title(type[i],font_title)
         box = axP[i].get_position()
         if type[i] == "G" or type[i] == "E" or type[i] == "C":
             axP[i].set_position([box.x0, box.y0, box.width*0.9, box.height])
+        box = axP[0].get_position()
+        axP[0].set_position([box.x0, box.y0*1.023, box.width, box.height])
+        box = axP[2].get_position()
+        axP[2].set_position([box.x0, box.y0-0.015, box.width, box.height])
         # if type[i] == "RMS" or type[i] == "STD":
             # axP[i].set_position([box.x0, box.y0*0.9, box.width, box.height])
             #axP[i].set_ylim(0,0.6)
@@ -2111,12 +2199,12 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
         if (cur_type != "RMS" and cur_type != "STD" and cur_type != "BOX3"):
             axP[i].set_xticks(XTick)
             axP[i].set_xticklabels(XLabel,fontsize = 18)
-    axP[1].legend(site_ploted["G"],prop=font,
+    axP[1].legend(site_ploted["G"],prop=font_legend,
                     framealpha=1,facecolor='none',ncol=1,numpoints=5, markerscale=10, 
-                    bbox_to_anchor=(1.02,1.6),loc=0,borderaxespad=0) 
+                    bbox_to_anchor=(1.02,1.2),loc=0,borderaxespad=0) 
     # plt.tick_params(labelsize = 18)
     labels = axP[0].get_yticklabels() + axP[0].get_xticklabels() + axP[1].get_yticklabels() + axP[1].get_xticklabels() + axP[2].get_yticklabels() + axP[2].get_xticklabels()
-    [label.set_fontsize(18) for label in labels]
+    [label.set_fontsize(xtick_size) for label in labels]
     [label.set_fontname('Times New Roman') for label in labels]
     if ("RMS" in type or "BOX3" in type):
         last_plot = RMS_enu
@@ -2194,9 +2282,9 @@ def plot_bias_grid(data = {},type = ["G","E","C"],mode = ["HKCL"],ylim = 1,start
     # for i in range(N_mode):
     #     print(mode[i] + ':{:.2f}%'.format((Fixed_NUM[i] + Float_NUM[i]) / ALL_NUM[i] * 100))
 
-    
-    # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HK-306-RDCB.png",dpi=600)
-    # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\HK-306-RDCB.svg")
+    labels = axP[0].get_yticklabels() + axP[0].get_xticklabels() + axP[1].get_yticklabels() + axP[1].get_xticklabels() + axP[2].get_yticklabels() + axP[2].get_xticklabels()
+    plt.savefig(r"D:\A-paper\Fig_and_Res\HB-306-RDCB.png",dpi=600)
+    plt.savefig(r"D:\A-paper\Fig_and_Res\HB-306-RDCB.svg")
     plt.show()
 
 def plot_SatofAug(data = {},type = ["E","N","U"],mode = ["DEFAULT"],ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,Fixed = False,delta_data = 30,year=2021,mon=4,day=10,all=False):
@@ -2602,3 +2690,291 @@ def plot_e_n_u_percent(site = "Default",data = {},type = ["Horizontal","Vertical
     # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1"+"\\"+site+"-Percent.svg")
     # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1"+"\\"+site+"-Percent.png",dpi=600)
     plt.show()
+
+def plot_aug_GEC_new(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime = 0,deltaT = 2,LastT=24,time = "UTC",save='',show = False,year = 2021,mon=11,day=1):
+    sys_type = {}
+    RMS_G,MEAN_G,STD_G = [[],[]],[[],[]],[[],[]]
+    RMS_E,MEAN_E,STD_E = [[],[]],[[],[]],[[],[]]
+    RMS_C,MEAN_C,STD_C = [[],[]],[[],[]],[[],[]]
+
+    RMS_G1,MEAN_G1,STD_G1 = [[],[]],[[],[]],[[],[]]
+    RMS_E1,MEAN_E1,STD_E1 = [[],[]],[[],[]],[[],[]]
+    RMS_C1,MEAN_C1,STD_C1 = [[],[]],[[],[]],[[],[]]
+    G_L,E_L,C_L = [],[],[]
+    if type == 'ION':
+        f1=5
+        ymin = -ylim
+        ymax = ylim
+        col = 1
+        figP,axP = plt.subplots(1,1,figsize=(15,9),sharey=True,sharex=True)
+        axP.set_xlabel('Time' + '(' + time + ')',font_label)
+        axP.set_ylabel('Difference of Ionosphere Delay correction/m',font_label)
+        axP.grid(linestyle='--',linewidth=0.2, color='black',axis='both')
+        axP.set_ylim(ymin,ymax)
+        box = axP.get_position()
+        axP.set_position([box.x0, box.y0, box.width*0.88, box.height])
+        if freq==1:
+            sys_type["C"] = "ION2"
+            sys_type["G"] = "ION1"
+            sys_type["E"] = "ION1"  
+        else:
+            sys_type["C"] = "ION7"
+            sys_type["G"] = "ION2"
+            sys_type["E"] = "ION5" 
+    
+    time_G = [[] for i in range(100)]
+    time_R = [[] for i in range(100)]
+    time_E = [[] for i in range(100)]
+    time_C = [[] for i in range(100)]
+    time_TRP = []
+    data_G = [[] for i in range(100)]
+    data_R = [[] for i in range(100)]
+    data_E = [[] for i in range(100)]
+    data_C = [[] for i in range(100)]
+    data_TRP = []
+    data_G1 = [[] for i in range(100)]
+    data_R1 = [[] for i in range(100)]
+    data_E1 = [[] for i in range(100)]
+    data_C1 = [[] for i in range(100)]
+    
+    [XLabel,XTick,cov_Time,begT,LastT]=xtick(time,year,mon,day,starttime,LastT,deltaT)
+    if type == "L" or type == "P":
+        for time in data.keys():
+            plot_time = (time - cov_Time) / 3600
+            if (plot_time > begT and plot_time < begT + LastT):
+                for sat in data[time].keys():
+                    prn = int(sat[1:3])
+                    # if abs(data[time][sat][sys_type[sat[0]]]) > -1:
+                    if sat[0] == "C":
+                        data_C[prn-1].append(data[time][sat][sys_type[sat[0]]["1"]])
+                        data_C1[prn-1].append(data[time][sat][sys_type[sat[0]]["2"]])
+                        time_C[prn-1].append(plot_time)
+                    if sat[0] == "G":
+                        data_G[prn-1].append(data[time][sat][sys_type[sat[0]]["1"]])
+                        data_G1[prn-1].append(data[time][sat][sys_type[sat[0]]["2"]])
+                        time_G[prn-1].append(plot_time)
+                    if sat[0] == "E":
+                        data_E[prn-1].append(data[time][sat][sys_type[sat[0]]["1"]])
+                        data_E1[prn-1].append(data[time][sat][sys_type[sat[0]]["2"]])
+                        time_E[prn-1].append(plot_time)
+    
+    if type == "ION" or type == "diffIon":
+        for time in data.keys():
+            plot_time = (time - cov_Time) / 3600
+            if (plot_time > begT and plot_time < begT + LastT):
+                for sat in data[time].keys():
+                    prn = int(sat[1:3])
+                    if sys_type[sat[0]] not in data[time][sat].keys():
+                        continue
+                    if abs(data[time][sat][sys_type[sat[0]]]) == 0:
+                        continue
+                    if abs(data[time][sat][sys_type[sat[0]]]) < 0.1:
+                        if sat[0] == "C" and sys_type[sat[0]] in data[time][sat].keys():
+                            data_C[prn-1].append(data[time][sat][sys_type[sat[0]]])
+                            time_C[prn-1].append(plot_time)
+                        if sat[0] == "G" and sys_type[sat[0]] in data[time][sat].keys():
+                            data_G[prn-1].append(data[time][sat][sys_type[sat[0]]])
+                            time_G[prn-1].append(plot_time)
+                        if sat[0] == "E" and sys_type[sat[0]] in data[time][sat].keys():
+                            data_E[prn-1].append(data[time][sat][sys_type[sat[0]]])
+                            time_E[prn-1].append(plot_time)
+    if type == "NSAT":
+        for time in data.keys():
+            num_C,num_G,num_E = 0,0,0
+            plot_time = (time - cov_Time) / 3600
+            if (plot_time > begT and plot_time < begT + LastT):
+                for sat in data[time].keys():
+                    prn = int(sat[1:3])
+                    if sat[0] == "C":
+                        num_C = num_C + 1
+                    if sat[0] == "G":
+                        num_G = num_G + 1
+                    if sat[0] == "E":
+                        num_E = num_E + 1
+                
+                data_C[0].append(num_C)
+                time_C[0].append(plot_time)
+                data_G[0].append(num_G)
+                time_G[0].append(plot_time)
+                data_E[0].append(num_E)
+                time_E[0].append(plot_time)
+    if type == "TRP":
+        for time in data.keys():
+            plot_time = (time - cov_Time) / 3600
+            if (plot_time > begT and plot_time < begT + LastT):
+                for sat in data[time].keys():
+                    prn = int(sat[1:3])
+                    data_TRP.append(data[time][sat][sys_type[sat[0]]])
+                    time_TRP.append(plot_time)
+                    break
+    if type == "NSAT":
+        axP[0].scatter(time_G[0],data_G[0])
+        axP[1].scatter(time_E[0],data_E[0])
+        axP[2].scatter(time_C[0],data_C[0])
+        mean_Sat_G=np.mean(data_G[0])
+        mean_Sat_E=np.mean(data_E[0])
+        mean_Sat_C=np.mean(data_C[0])
+        axP[2].set_xticks(XTick)
+        axP[1].set_xticks(XTick)
+        axP[0].set_xticks(XTick)
+        axP[2].set_xticklabels(XLabel)
+    if type == "ION" or type == "diffIon":
+        for i in range (100):
+            if len(time_G[i]) > 1:
+                axP.scatter(time_G[i],data_G[i],s=1)
+                prn = '%02d' % (i + 1)
+                G_L.append('G'+prn)
+                temp = dp.rms(data_G[i])
+                RMS_G[0].append(temp)
+                temp = np.std(data_G[i])
+                STD_G[0].append(temp)
+                temp = np.mean(data_G[i])
+                MEAN_G[0].append(temp)
+        for i in range (100):
+            if len(time_E[i]) > 1:
+                axP.scatter(time_E[i],data_E[i],s=1)
+                prn = '%02d' % (i + 1)
+                G_L.append('E'+prn)
+                temp = dp.rms(data_E[i])
+                RMS_G[0].append(temp)
+                temp = np.std(data_E[i])
+                STD_G[0].append(temp)
+                temp = np.mean(data_E[i])
+                MEAN_G[0].append(temp)
+        for i in range (100):
+            if len(time_C[i]) > 1:
+                axP.scatter(time_C[i],data_C[i],s=1)
+                prn = '%02d' % (i + 1)
+                G_L.append('C'+prn)
+                temp = dp.rms(data_C[i])
+                RMS_G[0].append(temp)
+                temp = np.std(data_C[i])
+                STD_G[0].append(temp)
+                temp = np.mean(data_C[i])
+                MEAN_G[0].append(temp)
+        
+       
+        font2 = {'family' : 'Times New Roman',
+		'weight' : 400,
+		'size'   : 12,
+                }
+        ax_range = axP.axis()
+        axP.legend(G_L,prop=font_legend,
+            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=10, 
+            bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
+        axP.text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_G[0])*100, np.mean(RMS_G[0])*100, np.mean(STD_G[0])*100),font_text)
+        axP.text(ax_range[0],0.08,'Interpolation',font_title)
+        axP.set_xticks(XTick)
+        axP.set_xticklabels(XLabel)
+    
+    if type == "TRP":
+        axP.scatter(time_TRP,data_TRP,s=1)
+        temp = dp.rms(data_TRP)
+        RMS_G[0].append(temp)
+        temp = np.std(data_TRP)
+        STD_G[0].append(temp)
+        temp = np.mean(data_TRP)
+        MEAN_G[0].append(temp)   
+        font2 = {"size":7}
+        ax_range = axP.axis()
+        axP.text(ax_range[0],ax_range[3],r'MEAN={:.4f}cm, RMS={:.4f}cm, STD={:.4f}cm'.format(np.mean(MEAN_G[0])*100, np.mean(RMS_G[0])*100, np.mean(STD_G[0])*100),font_text)
+        axP.set_xticks(XTick)
+        axP.set_xticklabels(XLabel)
+    if type == "NSAT":
+        ax_range = axP[0].axis()
+        font2 = {"size":20}
+        axP[0].text(ax_range[0],ax_range[3],r'ALL: {:.1f}, G: {:.1f}, E: {:.1f}, C: {:.1f}'.format(mean_Sat_C+mean_Sat_E+mean_Sat_G,mean_Sat_G,mean_Sat_E,mean_Sat_C),font2)
+    if type == "L" or type=="P":
+        for i in range(100):
+                G,E,C = True,True,True
+                num = len(time_G[i])
+                if num < 1:
+                    G = False
+                num = len(time_E[i])
+                if num < 1:
+                    E = False
+                num = len(time_C[i])
+                if num < 1:
+                    C = False
+                if G:
+                    axP[0][0].scatter(time_G[i],data_G[i],s=1)
+                    axP[0][1].scatter(time_G[i],data_G1[i],s=1)
+                    prn = '%02d' % (i + 1)
+                    G_L.append('G'+prn)
+                    temp = dp.rms(data_G[i])
+                    RMS_G[0].append(temp)
+                    temp = dp.rms(data_G1[i])
+                    RMS_G1[0].append(temp)
+                    temp = np.std(data_G[i])
+                    STD_G[0].append(temp)
+                    temp = np.mean(data_G[i])
+                    MEAN_G[0].append(temp)
+                if E:
+                    axP[1][0].scatter(time_E[i],data_E[i],s=1)
+                    axP[1][1].scatter(time_E[i],data_E1[i],s=1)
+                    prn = '%02d' % (i + 1)
+                    E_L.append('E'+prn)
+                    temp = dp.rms(data_E[i])
+                    RMS_E[0].append(temp)
+                    temp = dp.rms(data_E1[i])
+                    RMS_E1[0].append(temp)
+                    temp = np.std(data_E[i])
+                    STD_E[0].append(temp)
+                    temp = np.mean(data_E[i])
+                    MEAN_E[0].append(temp)
+                if C:
+                    axP[2][0].scatter(time_C[i],data_C[i],s=1)
+                    axP[2][1].scatter(time_C[i],data_C1[i],s=1)
+                    prn = '%02d' % (i + 1)
+                    C_L.append('C'+prn)
+                    temp = dp.rms(data_C[i])
+                    RMS_C[0].append(temp)
+                    temp = dp.rms(data_C1[i])
+                    RMS_C1[0].append(temp)
+                    temp = np.std(data_C[i])
+                    STD_C[0].append(temp)
+                    temp = np.mean(data_C[i])
+                    MEAN_C[0].append(temp)
+        font2 = {"size":7}
+        axP[0][1].legend(G_L,prop=font2,
+            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=2, 
+            bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
+        ax_range = axP[0][0].axis()
+        axP[0][0].text(ax_range[0],ax_range[3],r'RMS={:.4f}cm'.format(np.mean(RMS_G[0])*100),font_text)
+        ax_range = axP[0][1].axis()
+        axP[0][1].text(ax_range[0],ax_range[3],r'RMS={:.4f}cm'.format(np.mean(RMS_G1[0])*100),font_text)
+        axP[1][1].legend(E_L,prop=font2,
+            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=2, 
+            bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
+        ax_range = axP[1][0].axis()
+        axP[1][0].text(ax_range[0],ax_range[3],r'RMS={:.4f}cm'.format(np.mean(RMS_E[0])*100),font_text)
+        ax_range = axP[1][1].axis()
+        axP[1][1].text(ax_range[0],ax_range[3],r'RMS={:.4f}cm'.format(np.mean(RMS_E1[0])*100),font_text)
+        axP[2][1].legend(C_L,prop=font2,
+            framealpha=1,facecolor='w',ncol=2,numpoints=5, markerscale=2, 
+            bbox_to_anchor=(1.01,1),loc=2,borderaxespad=0)
+        ax_range = axP[2][0].axis()
+        axP[2][0].text(ax_range[0],ax_range[3],r'RMS={:.4f}cm'.format(np.mean(RMS_C[0])*100),font_text)
+        ax_range = axP[2][1].axis()
+        axP[2][1].text(ax_range[0],ax_range[3],r'RMS={:.4f}cm'.format(np.mean(RMS_C1[0])*100),font_text)
+        axP[0][1].set_xticks(XTick)
+        axP[0][0].set_xticks(XTick)
+        axP[1][1].set_xticks(XTick)
+        axP[1][0].set_xticks(XTick)
+        axP[2][1].set_xticks(XTick)
+        axP[2][0].set_xticks(XTick)
+        axP[2][0].set_xticklabels(XLabel)
+        axP[2][1].set_xticklabels(XLabel)
+    
+    # figP.suptitle(mode)
+    # savedir = save + ".jpg"
+    plt.savefig(r"D:\A-paper\Fig_and_Res\K070-Grid.png")
+    if type == "ION":
+        labels = axP.get_xticklabels() + axP.get_yticklabels()
+        [label.set_fontsize(xtick_size) for label in labels]
+    if type == "TRP":
+        labels = axP.get_xticklabels() + axP.get_yticklabels()
+        [label.set_fontsize(15) for label in labels]
+    if show:
+        plt.savefig(r"D:\A-paper\Fig_and_Res\K070-306-AUG-Interpolation.png",dpi=600)
+        plt.show()  

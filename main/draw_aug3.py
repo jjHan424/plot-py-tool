@@ -19,10 +19,10 @@ import draw as dr
 
 Y=2021
 M=11
-D=6
+D=2
 #all 
-S=2 #21
-L=22
+S=12 #21
+L=12
 #open
 # S=8+43/60 #21
 # L=8/60
@@ -50,8 +50,8 @@ mode_list = ["MLCM","Grid"]
 # ]
 
 file_list = [
-    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-IonoWhite\client-Aug-310-02\HKMW-GEC-I.aug",
-    r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-Trp\client-Grid_Cor-310-02\HKMW-GEC-I.aug"
+    r"D:\A-paper\Project\Res_FromServer\Client_convergence\filter\client-Aug-306-02\WUDA-GEC-I.aug",
+    r"D:\A-paper\Project\Res_FromServer\Client_convergence\filter\client-Grid_Ele_R-306-01\WUDA-GEC-I.aug"
 ]
 data_all = {}
 for i in range(len(mode_list)):

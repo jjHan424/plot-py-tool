@@ -90,8 +90,9 @@ import draw as dr
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/server-ion/HKSC-GEC-S.aug"
 # path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/client-aug/HKSC-GEC-I.aug"
 
-path_S = r"G:\LX\WHHP-GEC-S-2\R293-GEC-S-2.aug"   # PPPAR算的改正数
-path_I = r"G:\LX\data\Project\clientLX\R293-GEC-I.aug"# 内插改正数
+path_S = r"D:\A-paper\Project\Res_FromServer\Client_convergence\filter\K070-GEC.aug"   # PPPAR算的改正数
+path_I = r"D:\A-paper\Project\Res_FromServer\Client_convergence\filter\client-Aug-306-02\K070-GEC-I.aug"# 内插改正数
+# path_I = r"D:\A-paper\Project\Res_FromServer\Client_convergence\filter\client-Grid_Ele_R-306-01\K070-GEC-I.aug"# 内插改正数
 
 # path_S = r"G:\Project\data\aug\2021306\K057-GEC.aug"   # PPPAR算的改正数
 # path_I = r"D:\A-paper\Project\2021306\client-Grid_Ele_R\From_Server\K057-GEC-I.aug"# 内插改正数
@@ -130,7 +131,7 @@ data = dp.pre_aug_new(head_I,data_I,data_S)
 # begTime = 10
 # while (begTime < 31):
 # dr.plot_aug_GEC_new(data,head_I,type = "P",freq = 1,starttime = 17,time = "UTC",show = True,deltaT=2,ylim=1.5,LastT=7,year = 2022,mon=6,day=20)
-dr.plot_aug_GEC_new(data,head_I,type = "TRP",freq = 1,starttime = 6,time = "UTC",show = True,deltaT=30/60,ylim=0.1,LastT=2,year = 2022,mon=1,day=12)
+dr.plot_aug_GEC_new(data,head_I,type = "ION",freq = 1,starttime = 12,time = "UTC",show = True,deltaT=2,ylim=0.1,LastT=12,year = 2021,mon=11,day=2)
 #########
 #year mon day starttime 为开始时间
 #ylim 为y坐标范围

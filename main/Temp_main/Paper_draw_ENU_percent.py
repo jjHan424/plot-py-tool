@@ -13,6 +13,15 @@ import draw as dr
 import trans as tr
 plt.style.use(['science','grid','no-latex'])
 import math
+import seaborn as sns
+
+font_title = {'family' : 'Times New Roman', 'weight' : 700, 'size' : 30}
+font_label = {'family' : 'Times New Roman', 'weight' : 600, 'size' : 30}
+font_tick = {'family' : 'Times New Roman', 'weight' : 400, 'size' : 30}
+font_legend = {'family' : 'Times New Roman', 'weight' : 600, 'size' : 22}
+font_text = {'family' : 'Times new roman','weight' : 600,'size'   : 20}
+xtick_size = 26
+color_list = sns.color_palette("Set1")
 
 plot_type = "3D"
 plot_type = "3D"
@@ -22,27 +31,28 @@ last_end = 0.5
 time = "UTC"
 Fixed = True
 year = 2021
-mon = 11
-day = 6
-starttime = 10
-LastT = 50/60
+mon = 12
+day = 5
+starttime = 8
+LastT = 10/60
 deltaT = 60/60
-mode_list = ["Interpolation","Grid-1dm","Grid-Auto"]
+mode_list = ["Interpolation","Grid"]
 
 # mode_list = ["Interpolation"]
 site_list = ["SEPT","SEPT","SEPT"]
 ENU_ALL = {}
 #-----dynamic-------#
-Direct3=r"E:\1Master_2\Paper_Grid\Dynamic"
-filename_list = [Direct3 + "\\" + "client-Aug-" +  "310" + "-02" + "\\" + site_list[0] + "-GEC.flt",
-                Direct3 + "\\" + "client-Grid-" + "310" + "-02" + "\\" + site_list[0] + "-GEC.flt",
+Direct3=r"D:\A-paper\Project\Res_FromServer\Client_Dynamic-2"
+filename_list = [Direct3 + "\\" + "client-Aug-" +  "339" + "-02" + "\\" + site_list[0] + "-GEC.flt",
+                # Direct3 + "\\" + "client-Grid-" + "310" + "-02" + "\\" + site_list[0] + "-GEC.flt",
                 # Direct3 + "\\" + "client-Grid-" + "339" + "-06" + "\\" + site_list[0] + "-GEC.flt",
                 # Direct3 + "\\" + "client-Grid-" + "310" + "-06" + "\\" + site_list[0] + "-GEC.flt",
-                Direct3 + "\\" + "client-Grid_Ele-" + "310" + "-01" + "\\" + site_list[0] + "-GEC.flt",
+                Direct3 + "\\" + "client-Grid_Ele-" + "339" + "-01" + "\\" + site_list[0] + "-GEC.flt",
                 ]
-filename_ref = [r"E:\1Master_2\Paper_Grid\Dynamic\2021310_WH\\Ref.txt",
-                r"E:\1Master_2\Paper_Grid\Dynamic\2021339_WH\\Ref.txt",
-                r"E:\1Master_2\Paper_Grid\Dynamic\2021339_WH\\Ref.txt",]
+filename_ref = [r"G:\Data\Res\Dynamic\2021339_WH\\Ref.txt",
+                r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
+                r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
+                r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",]
 for i in range(len(mode_list)):
     data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
     REF_XYZ = rf.open_pos_ref_IE(filename_ref[0])
@@ -174,7 +184,7 @@ while step_start < last_end:
     step_start = step_start + step_in
 D3,U,H = 0,0,0
 for cur_mode in plot_all.keys():
-    print(np.sum(np.array(plot_all[cur_mode]["3D"][0:10])))
+    print(np.sum(np.array(plot_all[cur_mode]["3D"][0:20])))
     print(np.sum(np.array(plot_all[cur_mode]["U"])))
     print(np.sum(np.array(plot_all[cur_mode]["H"])))
 
@@ -184,24 +194,22 @@ for ii in range(len(plot_all[mode_list[0]]["3D"])):
     bottomm.append(plot_all[mode_list[0]]["3D"][ii]+plot_all[mode_list[1]]["3D"][ii])
 
 if plot_type == "3D":
-    figP,axP = plt.subplots(1,1,figsize=(15,8.5),sharey=True,sharex=True)
+    figP,axP = plt.subplots(1,1,figsize=(13,10),sharey=True,sharex=True)
     for ii in range(len(mode_list)):
         if ii == 1:
-            axP.bar(step_plot[mode_list[ii]]["3D"],plot_all[mode_list[ii]]["3D"],width = step_in,bottom=plot_all[mode_list[ii-1]]["3D"],label='value')
+            axP.bar(step_plot[mode_list[ii]]["3D"],plot_all[mode_list[ii]]["3D"],width = step_in,bottom=plot_all[mode_list[ii-1]]["3D"],label='value',color = color_list[ii%9])
         if ii == 2:
-            axP.bar(step_plot[mode_list[ii]]["3D"],plot_all[mode_list[ii]]["3D"],width = step_in,bottom=bottomm,label='value')
+            axP.bar(step_plot[mode_list[ii]]["3D"],plot_all[mode_list[ii]]["3D"],width = step_in,bottom=bottomm,label='value',color = color_list[ii%9])
         if ii == 0:
-            axP.bar(step_plot[mode_list[ii]]["3D"],plot_all[mode_list[ii]]["3D"],width = step_in,label='value')
+            axP.bar(step_plot[mode_list[ii]]["3D"],plot_all[mode_list[ii]]["3D"],width = step_in,label='value',color = color_list[ii%9])
     # for ii in range(len(mode_list)):
     #     axP.plot(step_plot[mode_list[ii]]["3D"],plot_all[mode_list[ii]]["3D"],linewidth = 5)
-    font = {'family': 'Times new roman','weight': 600,'size': 23}
-    axP.set_ylabel("Percentage(%)",font)
-    axP.set_xlabel("Position Errors(m)",font)
+    axP.set_ylabel("Percentage(%)",font_label)
+    axP.set_xlabel("Position Errors(m)",font_label)
     labels = axP.get_xticklabels() + axP.get_yticklabels()
-    [label.set_fontsize(18) for label in labels]
-    [label.set_fontname('Times New Romam') for label in labels]
-    font = {'family': 'Times new roman','weight': 600,'size': 20}
-    axP.legend(mode_list,prop=font,
+    [label.set_fontsize(xtick_size) for label in labels]
+    [label.set_fontname('Times New Roman') for label in labels]
+    axP.legend(mode_list,prop=font_legend,
             framealpha=1,facecolor='none',ncol=1,numpoints=5,markerscale=5, 
             borderaxespad=0,loc=1) 
 
@@ -212,7 +220,7 @@ if plot_type == "2D":
     for cur_mode in plot_all.keys():
         axP[0].bar(step_plot[cur_mode]["3D"],plot_all[cur_mode]["H"],width = step_in,label='value')
         axP[1].bar(step_plot[cur_mode]["3D"],plot_all[cur_mode]["U"],width = step_in,label='value')
-# plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\SEPT-Precent-Bar-310.svg")
-# plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-1\SEPT-Precent-Bar-310.png",dpi=600)
+# plt.savefig(r"D:\A-paper\Fig_and_Res\SEPT-339-Percent.svg")
+# plt.savefig(r"D:\A-paper\Fig_and_Res\SEPT-339-Percent.png",dpi=600)
 plt.show()
 print("HJJ")
