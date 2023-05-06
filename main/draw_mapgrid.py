@@ -189,30 +189,38 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 # mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\AUG_HK_xml.crd")
 # space_set = 0.1
 # savedir = r'E:\1Master_2\Paper_Grid\crd'
-# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-# site_list = ["AUG-HK2"]
+site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# # site_list = ["AUG-HK2"]
+# site_user = "HKSC"
+mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\UPD_CHN.crd")
+space_set = 1
+site_user = "HKSC"
 # mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_WH.crd")
 # space_set = 0.5
 # savedir = r'E:\1Master_2\Paper_Grid\crd'
-# site_list = ["WHYJ","WHXZ","WUDA","WHDS","WHSP","N028","N047","N068","XGXN"]
-# mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_GZ.crd")
+# site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA"]
+# site_user = "WUDA"
+# mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_WH.crd")
+# site_user = "WUDA"
 # space_set = 0.3
 # savedir = r'E:\1Master_2\Paper_Grid\crd'
 # site_list = ["H035","H038","H053","H055","H068","H074","H139"]
 
 #----LX---#
-mark_point_xyz = rf.open_crd_gridmap(r"E:\0Project\LX\data\AUG.crd")
-space_set = 0.5
-savedir = r'E:\1Master_2\Paper_Grid\crd'
-site_list = ["R293","EZEC","WHHN","WHHP"]
+# mark_point_xyz = rf.open_crd_gridmap(r"E:\0Project\LX\data\AUG.crd")
+# space_set = 0.5
+# savedir = r'E:\1Master_2\Paper_Grid\crd'
+# site_list = ["R293","EZEC","WHHN","WHHP"]
 
-# mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\AUG_BJ_New.crd")
+# mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-3\AUG_HB.crd")
 # space_set = 0.8
 # savedir = r'E:\1Master_2\Paper_Grid\crd'
-# site_list = ["K042","K057","K059","K101","A010","V092"]
-
+# site_list = ["K042","K057","K059","K101","A010","V092","K070"]
+# site_list = ["HB01","HB02","HB03","HB04","HB05","HB06","HB07"]
+# site_user = "HB04"
 # site_list = ["Aug-WH2"]
-# Lines_xyz1 = rf.open_flt_pvtflt_file(r"E:\1Master_2\Paper_Grid\Dynamic\client-Grid_Ele-304-01\K803-GEC.flt")
+# Lines_xyz1 = rf.open_flt_pvtflt_file(r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2\client-Grid_Ele-310-01\SEPT-GEC.flt")
+# Lines_xyz1 = rf.open_pos_ref_IE(r"E:\1Master_2\Paper_Grid\Dynamic\2021310_WH\Ref.txt")
 # Lines_xyz1 = rf.open_gpgga_file("/Volumes/H_GREAT/2Project/Allystar/2022_0726_Dynamic/novatel.txt",year=2022,mon=7,day=26)
 
 #Lines_xyz2 = rf.open_flt_pvtflt_file("/Users/hjj/Documents/HJJ/Master_1/IonoGrid/Dynamic/20211205/Result/client-comp/SEPT-GEC.flt")
@@ -226,10 +234,15 @@ site_list = ["R293","EZEC","WHHN","WHHP"]
 #                 }
 # title='Stamen Terrain'
 # title='https://wprd01.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=1&style=8&ltype=11' #街道图
-title='http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}'#高德
-# title='https://webrd02.is.autonavi.com/appmaptile?lang=en&size=1&scale=1&style=8&x={x}&y={y}&z={z}' #常规英文
+# title='http://webrd02.is.autonavi.com/appmaptile?lang=en&size=1&scale=1&style=7&x={x}&y={y}&z={z}'#高德
+title='https://webrd02.is.autonavi.com/appmaptile?lang=en&size=1&scale=1&style=8&x={x}&y={y}&z={z}' #常规英文
 # title='https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}' #卫星
-m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11.2, tiles=title, attr='高德-卫星影像图')
+# title='https://mt.google.com/vt/lyrs=h&x={x}&y={y}&z={z}' # google 地图
+# title='https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}' # google 卫星图
+# title = "Stamen Terrain"
+# title = "QuadTree"
+m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11.2, tiles=title, attr='default',control_scale = True)
+# m = folium.Map(location = [center_bl[0], center_bl[1]],zoom_start = 15,control_scale = True)
 mark_point_blh={}
 points = []
 Lines_blh1={}
@@ -253,7 +266,46 @@ for site in mark_point_xyz.keys():
         maxLon = blh[1]
     mark_point_blh[site]=[blh[0],blh[1],blh[2]]
     points.append(shapely.geometry.Point(blh[0],blh[1]))
-    folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='blue', icon="info-sign"),tooltip="click").add_to(m)
+    if site == "HB04":
+    # if site == "HKSC":
+    # if site == "WUDA":
+    # if site == "WHXZ":
+        folium.CircleMarker(location=[blh[0],blh[1]],
+                            radius=20,   # 圆的半径
+                            popup='基站位置',
+                            color='red',
+                            fill=True,
+                            fill_color='red',
+                            fill_opacity=1
+        ).add_to(m)
+    elif site == "HB05" or site == "HB06" or site == "HB02":
+    # elif site == "HKST" or site == "HKPC" or site == "HKOH":
+    # elif site == "XGXN" or site == "WHXZ" or site == "WHSP":
+    # elif site == "WHYJ" or site == "WUDA" or site == "N047":
+        folium.CircleMarker(location=[blh[0],blh[1]],
+                            radius=20,   # 圆的半径
+                            popup='基站位置',
+                            color='green',
+                            fill=True,
+                            fill_color='green',
+                            fill_opacity=1
+        ).add_to(m)
+    else:
+        folium.CircleMarker(location=[blh[0],blh[1]],
+                            radius=20,   # 圆的半径
+                            popup='基站位置',
+                            color='blue',
+                            fill=True,
+                            fill_color='blue',
+                            fill_opacity=1
+        ).add_to(m)
+    folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=False),icon=folium.Icon(color='blue', icon="info-sign"),tooltip="click").add_to(m)
+    folium.Marker(location=[blh[0],blh[1]], icon=DivIcon(
+                icon_size=(150,36),
+                icon_anchor=(7,20),
+                html='<div style="font-size: 30pt; color : black">'+"{:}".format(site)+'</div>',
+                )).add_to(m)
+
     # if site=="DGXG" or site == "HZHY":
     #     # folium.Marker(location=[blh[0],blh[1]],popup=folium.Popup(site,show=True),icon=folium.Icon(color='green'),tooltip="click").add_to(m)
     #     k=1
@@ -312,24 +364,25 @@ while cur_Lon < maxLon:
     if abs(cur_Lon - maxLon) < 1e-8:
         break
     cur_Lon = cur_Lon + space 
-    folium.PolyLine(locations=[[maxLat,cur_Lon],[minLat,cur_Lon]],color='black',weight = 0.5).add_to(m)    
+    folium.PolyLine(locations=[[maxLat,cur_Lon],[minLat,cur_Lon]],color='black',weight = 3.5).add_to(m)    
 maxLon = cur_Lon
 while cur_Lat > minLat:
     if abs(cur_Lat - minLat) < 1e-8:
         break
     cur_Lat = cur_Lat - space
-    folium.PolyLine(locations=[[cur_Lat,minLon],[cur_Lat,maxLon]],color='black',weight=1).add_to(m)
+    folium.PolyLine(locations=[[cur_Lat,minLon],[cur_Lat,maxLon]],color='black',weight= 3.5).add_to(m)
 minLat = cur_Lat
 cur_Lon = minLon
 while cur_Lon < maxLon:
     cur_Lon = cur_Lon + space
-    folium.PolyLine(locations=[[maxLat,cur_Lon],[minLat,cur_Lon]],color='black',weight=1).add_to(m)
+    folium.PolyLine(locations=[[maxLat,cur_Lon],[minLat,cur_Lon]],color='black',weight= 3.5).add_to(m)
 #plot bound
 cur_Lat = maxLat + space
 cur_Lon = minLon - space
 i=0
 
 #---
+deg = True
 count_lon = 1
 while cur_Lon < maxLon - space:
     cur_Lon = cur_Lon + space
@@ -340,7 +393,7 @@ while cur_Lon < maxLon - space:
     else:
         c = 'black'
         i=0
-    folium.PolyLine(locations=[[maxLat,cur_Lon],[maxLat,cur_Lon + space]],color=c,weight=3).add_to(m)
+    folium.PolyLine(locations=[[maxLat,cur_Lon],[maxLat,cur_Lon + space]],color=c,weight=10).add_to(m)
 #---
 #   |
 #   |
@@ -355,7 +408,7 @@ while cur_Lat > minLat + space:
     else:
         c = 'black'
         i=0
-    folium.PolyLine(locations=[[cur_Lat,maxLon],[cur_Lat - space,maxLon]],color=c,weight=3).add_to(m)
+    folium.PolyLine(locations=[[cur_Lat,maxLon],[cur_Lat - space,maxLon]],color=c,weight=10).add_to(m)
 #---
 #   |
 #   |
@@ -371,7 +424,7 @@ while cur_Lon > minLon:
     else:
         c = 'black'
         i=0
-    folium.PolyLine(locations=[[minLat,cur_Lon-space],[minLat,cur_Lon]],color=c,weight=3).add_to(m)
+    folium.PolyLine(locations=[[minLat,cur_Lon-space],[minLat,cur_Lon]],color=c,weight=10).add_to(m)
     cur_Lon = cur_Lon - space
 # ---
 #|   |
@@ -387,7 +440,7 @@ while cur_Lat < maxLat:
         i=0
     if cur_Lat + space > maxLat:
         break
-    folium.PolyLine(locations=[[cur_Lat,minLon],[cur_Lat + space,minLon]],color=c,weight=3).add_to(m)
+    folium.PolyLine(locations=[[cur_Lat,minLon],[cur_Lat + space,minLon]],color=c,weight=10).add_to(m)
     cur_Lat = cur_Lat + space
 # text ref
 # folium.Marker(location=[maxLat,minLon],popup=folium.Popup("Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space),show=True),icon=folium.Icon(color='red',icon="info-sign"),tooltip="click").add_to(m)
@@ -398,8 +451,8 @@ while cur_Lat < maxLat:
 #         html='<div style="font-size: 18pt; color : black">'+"Ref_Lat:{:.1f}\nRef_Lon:{:.1f}\nSpace:{:.1f}".format(maxLat,minLon,space)+'</div>',
 #         )).add_to(m)
 # plot lines
-# for time in Lines_blh1:
-#     folium.Circle(radius=50,location=[Lines_blh1[time][0],Lines_blh1[time][1]],color="Blue",fill=True,fill_color="#3186cc").add_to(m)
+for time in Lines_blh1:
+    folium.Circle(radius=50,location=[Lines_blh1[time][0],Lines_blh1[time][1]],color="red",fill=True,fill_color="#3186cc").add_to(m)
 # for time in Lines_blh2:
 #     folium.Circle(radius=50,location=[Lines_blh2[time][0],Lines_blh2[time][1]],color="Red",fill=True,fill_color="#DA70D6").add_to(m)
 
@@ -536,7 +589,7 @@ while cur_Lat < maxLat:
 #         else:
 #             folium.PolyLine(locations=[[blh1[0],blh1[1]],[b,l]],color=c,weight=2).add_to(m)
 
-#========================Min Dis Grid ===============#
+# ========================Min Dis Grid ===============#
 minDis = 1e16
 maxDis = 0
 for site_in_list in site_list:
@@ -702,13 +755,25 @@ for cur_site in line_mindis1.keys():
         minDis = diss
     if diss > maxDis:
         maxDis = diss
-    folium.Marker(location=[mark_point_blh[cur_site][0],mark_point_blh[cur_site][1]], icon=DivIcon(
-                icon_size=(150,36),
-                icon_anchor=(7,20),
-                html='<div style="font-size: 10pt; color : red">'+"{:.2f}".format((min1+min2+min3)/3)+'</div>',
-                )).add_to(m)
+    # folium.Marker(location=[mark_point_blh[cur_site][0],mark_point_blh[cur_site][1]], icon=DivIcon(
+    #             icon_size=(150,36),
+    #             icon_anchor=(7,20),
+    #             html='<div style="font-size: 10pt; color : red">'+"{:.2f}".format((min1+min2+min3)/3)+'</div>',
+    #             )).add_to(m)
+Dis_User = []
+for site_in_list in site_list:
+    if site_in_list == site_user:
+        continue
+    xyz_site = mark_point_xyz[site_in_list]
+    xyz_grid = mark_point_xyz[site_user]
+    dx = xyz_site[0] - xyz_grid[0]
+    dy = xyz_site[1] - xyz_grid[1]
+    dz = xyz_site[2] - xyz_grid[2]
+    dis = math.sqrt(dx*dx+dy*dy+dz*dz)
+    Dis_User.append(dis)
 print("{}:{:.2f}".format("AUG",np.mean(cofe_grid)))
 print("Min:{:.1f}km,Max:{:.1f}km".format(minDis/1000,maxDis/1000))
+print("{}:{:.1f}km".format(site_user,np.mean(Dis_User)/1000))
 # line_plot = []
 # i = 0
 # for cur_site in line_mindis2.keys():
@@ -732,7 +797,7 @@ print("Min:{:.1f}km,Max:{:.1f}km".format(minDis/1000,maxDis/1000))
 #         else:
 #             folium.PolyLine(locations=[[blh1[0],blh1[1]],[b,l]],color=c,weight=2).add_to(m)
 # m.save(savedir+"\\AUG-WH-Dynamic-310.html")
-m.save(r"E:\0Project\LX\data\AUG.html")
+m.save(r"E:\1Master_2\2-UPD_Test\UPD.html")
 # webbrowser.open(r'E:\1Master_2\Paper_Grid\crd\AUG_HK2.html')
 
 

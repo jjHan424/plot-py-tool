@@ -48,14 +48,14 @@ REF_XYZ = {
            }
 ENU_ALL = {}
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-site_list = ["WUDA"]
+site_list = ["K057"]
 # site_list = ["A010","V092","K059","K101"]
 # site_list = ["K042","K057","N068","N028","N047"]
 # site_list = ["WHSP","XGXN","WHXZ","WHYJ","WUDA","WHDS"]
 # site_list = ["HKMW","HKLM","HKSC","HKPC","HKST","HKKT","HKSS","HKWS","T430","HKTK","HKLT","HKSL","HKKS","HKCL","HKNP","HKOH"]
 # site_list = ["WUDA","WHYJ"]
-# mode_list = ["Interpolation","Grid-1dm","Grid-Auto"]
-mode_list = ["1","2"]
+# mode_list = ["Interpolation","Grid"]
+mode_list = ["Interpolation-2","Interpolation-4","Interpolation-6","Grid"]
 for cur_mode in mode_list:
     ENU_ALL[cur_mode] = {}
     for cur_site in site_list:
@@ -63,48 +63,54 @@ for cur_mode in mode_list:
 DirectI=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-IonoWhite"
 Direct=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-All"
 DirectT=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-Trp"
-DirectCon = r"D:\A-paper\Project\Res_FromServer\Client_convergence"
-S=14
+# DirectCon = r"D:\A-paper\Project\Res_FromServer\Client_convergence"
+# DirectCon = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_convergence-Site\Trp-0"
+DirectCon = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_convergence-1s\Trp-2"
+S=2
 for Site in site_list:
     Y=2021
-    M=11
-    D=2
-    L=15/60
-    DDD = 3
-    count = 1
+    M=10
+    D=29
+    L=6/60
+    DDD = 1
+    count = 6
     while count > 0:
         doy = tr.ymd2doy(Y,M,D,0,0,00)
         cdoy = "{:0>3}".format(doy)
-        # filename_list = [
-        #     # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA.flt",
-        #     # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-Chk.flt",
-        #     # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-Coef.flt",
-        #     DirectT + "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-        #     DirectT + "\\client-Grid-" + cdoy + "-04" + "\\" + Site + "-GEC.flt",
-        #     # DirectT + "\\client-Grid-" + cdoy + "-04" + "\\" + Site + "-GEC.flt",
-        #     # DirectT + "\\client-Grid-" + cdoy + "-06" + "\\" + Site + "-GEC.flt",
-        #     # DirectT + "\\client-Grid-" + cdoy + "-08" + "\\" + Site + "-GEC.flt",
-        #     # Direct + "\\client-Grid-" + cdoy + "-10" + "\\" + Site + "-GEC.flt",
-        #     # Direct + "\\client-Grid_Ele-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
-        #     # Direct + "\\client-Grid_Ele-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-        #     # Direct + "\\client-Grid_Ele-" + cdoy + "-03" + "\\" + Site + "-GEC.flt",
-        #     # Direct + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
-        #     # Direct + "\\client-Grid_Ele_R-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-        #     # Direct + "\\client-Trp-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-        #     DirectT + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
-        #     # DirectT + "\\client-Grid_Chk-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
-        #     # DirectT + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
-        #     ]
         filename_list = [
-            DirectCon + "\\filter" +  "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-            DirectCon + "\\filter" +  "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
-            # DirectCon + "\\Trp-0"+ "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
-                        ]
-        for i in range(len(mode_list)):
-            data_Raw = rf.open_flt_pvtflt_file_percent(filename_list[i],Year=Y,Mon=M,Day=D,Hour=S,Last=L)
-            # data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
-            data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
-            ENU_ALL[mode_list[i]][Site][cdoy] = data_ENU
+            # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA.flt",
+            # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-Chk.flt",
+            # r"E:\1Master_2\Paper_Grid\Pro_20211205-339\client\WUDA-Coef.flt",
+            # DirectT + "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            DirectCon + "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            DirectCon + "\\client-Aug-" + cdoy + "-04" + "\\" + Site + "-GEC.flt",
+            DirectCon + "\\client-Aug-" + cdoy + "-06" + "\\" + Site + "-GEC.flt",
+            # DirectT + "\\client-Grid-" + cdoy + "-08" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid-" + cdoy + "-10" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele-" + cdoy + "-03" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Grid_Ele_R-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            # Direct + "\\client-Trp-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+            DirectCon + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+            # DirectT + "\\client-Grid_Chk-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+            # DirectT + "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+            ]
+        # filename_list = [
+        #     DirectCon + "\\filter" +  "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
+        #     DirectCon + "\\filter" +  "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+        #     # DirectCon + "\\Trp-0"+ "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+        #                 ]
+        S_Temp = S
+        if cdoy != "308":
+            while S_Temp < 24:
+                for i in range(len(mode_list)):
+                    data_Raw = rf.open_flt_pvtflt_file_percent(filename_list[i],Year=Y,Mon=M,Day=D,Hour=S_Temp,Last=L)
+                    # data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
+                    data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
+                    ENU_ALL[mode_list[i]][Site][cdoy+"{:0>2}".format(S_Temp)] = data_ENU
+                S_Temp = S_Temp + 1
         D = D + 1
         count = count - 1
         # if (count == 0 and M!=12):
@@ -115,5 +121,5 @@ for Site in site_list:
             D = 1
             M = M + 1
 
-dr.plot_e_n_u_percent(site ="10km", data = ENU_ALL,type = ["Position"],modelist = mode_list,sitelist = site_list,ylim = 0.5,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 1,year = Y,mon=M,day=D,percent=0.6,show=True)
+dr.plot_e_n_u_percent(site ="10km", data = ENU_ALL,type = ["Position"],modelist = mode_list,sitelist = site_list,ylim = 0.25,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 1,year = Y,mon=M,day=D,percent=0.7,show=True)
 # dr.plot_e_n_u_percent(site ="10km", data = ENU_ALL,type = ["Horizontal","Vertical"],modelist = mode_list,sitelist = site_list,ylim = 0.5,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,percent=0.6,show=True)

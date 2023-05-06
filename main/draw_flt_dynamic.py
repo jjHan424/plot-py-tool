@@ -38,7 +38,7 @@ ENU_ALL = {}
 mode_list = ["Interpolation","Grid"]
 #site_list = ["HKLM","HKSC","HKTK"]
 site_list = ["SEPT","SEPT","SEPT"]
-Direct3=r"D:\A-paper\Project\Res_FromServer\Client_Dynamic-2"
+Direct3=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2"
 filename_list = [
                 Direct3 + "\\" + "client-Aug-" +  "310" + "-02" + "\\" + site_list[0] + "-GEC.flt",
                 # Direct3 + "\\" + "client-Aug-" +  "310" + "-04" + "\\" + site_list[0] + "-GEC.flt",
@@ -48,7 +48,7 @@ filename_list = [
                 # Direct3 + "\\" + "client-Grid-" + "310" + "-06" + "\\" + site_list[0] + "-GEC.flt",
                 Direct3 + "\\" + "client-Grid_Ele-" + "310" + "-01" + "\\" + site_list[0] + "-GEC.flt",
                 ]
-filename_ref = [r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
+filename_ref = [r"E:\1Master_2\Paper_Grid\Dynamic\2021310_WH\\Ref.txt",
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",]
@@ -65,6 +65,6 @@ for i in range(len(mode_list)):
     ENU_ALL[mode_list[i]] = data_ENU
 
 
-dr.plot_e_n_u(data = ENU_ALL,type = ["NSAT","E","N","U"],mode = mode_list,ylim = 0.2,starttime=S,LastT=50/60,deltaT=10/60,time = "UTC",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=1,year = Y,mon=M,day=D,show = True,all=False)
+dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U","NSAT"],mode = mode_list,ylim = 0.2,starttime=S,LastT=50/60,deltaT=10/60,time = "UTC",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=1,year = Y,mon=M,day=D,show = True,all=False)
 # dr.plot_enu(data = ENU_ALL,type = ["NSAT","ENU"],mode = mode_list,ylim = 2,starttime=S,LastT=50/60,deltaT=10/60,time = "UTC",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=0,year = Y,mon=M,day=D,show = True,all=False)
 

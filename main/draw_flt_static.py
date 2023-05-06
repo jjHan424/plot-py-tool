@@ -20,7 +20,7 @@ import draw as dr
 import trans as tr
 
 REF_XYZ = {
-           "HKSC":[-2414267.6255,5386768.7774,2407459.7930],
+           "HKSC":[-2414267.6526,5386768.7552,2407459.7917],
            "HKTK":[-2418093.0695,5374658.0963,2430428.9388],
            "HKMW":[-2402484.8351,5395262.2062,2400726.7172],
            "HKCL":[-2392741.6793,5397562.8528,2404757.6381],
@@ -76,15 +76,17 @@ ENU_ALL = {}
 # site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA","K042","K057","K059","K101","A010","V092","HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-site_list = ["HKPC"]
+# site_list = ["HKSC","WUDA","K070","K057"]
+# site_list = ["HKSC","K070"]
+site_list = ["HKKT","HKLM"]
 # mode_list = ["2","4","6","Grid-Auto"]
 # mode_list = ["Aug","Grid-2","Grid-4","Coef","Coef-R","Chk"]
 # mode_list = ["Interpolation-2","Interpolation-4","Interpolation-6","Grid"]
-mode_list = ["Interpolation","Grid"]
-Sig = 1
+mode_list = ["HKKT","HKLM"]
+Sig = 0
 # SavePath=r"D:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\Aug"
-SavePath=r"D:\A-paper\Test-Trp\Trp-0"
-S=10
+SavePath=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Client_convergence-Site-1s"
+S=2
 if (not os.path.exists(SavePath)):
     os.mkdir(SavePath)
 for j in range(len(site_list)):
@@ -108,16 +110,18 @@ for j in range(len(site_list)):
 for j in range(len(site_list)):
     Site = site_list[j]
     Y=2021
-    M=11
-    D=1
-    L=6
+    M=10
+    D=31
+    L=22
     DDD = 1
     count = 1
     DirectI=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-IonoWhite"
     Direct=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-All"
-    DirectT=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-Trp"
-    # DirectCon = r"D:\A-paper\Project\Res_FromServer\Client_convergence-2"
-    DirectCon = r"D:\A-paper\Project\Res_FromServer\Client_convergence-5s\Trp-0"
+    # DirectT=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-Trp"
+    DirectCon = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_convergence-Part\Trp-0"
+    # DirectCon = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_convergence-S\Trp-0"
+    # DirectCon = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_convergence-1s"
+    # DirectCon=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client-Trp"
     DirectOld = r"G:\Data\Res\Client-Trp"
     
     while count > 0:
@@ -125,24 +129,30 @@ for j in range(len(site_list)):
         cdoy = "{:0>3}".format(doy)
         filename_list = [
             # DirectCon + "\\filter" +  "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-            # DirectCon + "\\filter" +  "\\client-Aug-" + cdoy + "-04" + "\\" + Site + "-GEC.flt",
+            # DirectCon + "\\filter" +  "\\client-Aug-" + cdoy + "-06" + "\\" + Site + "-GEC.flt",
             # DirectCon + "\\filter" +  "\\client-Aug-" + cdoy + "-06" + "\\" + Site + "-GEC.flt",
             # DirectCon + "\\filter" +  "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
             # r"G:\Data\Res\Client-Trp\client-Aug-305-02\HKMW-GEC.flt",
             # r"G:\Data\Res\Client-Trp\client-Grid_Ele_R-305-01\HKTK-GEC.flt"
+            # DirectT + "" +  "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
             # DirectCon + "" +  "\\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
             # DirectCon + "" +  "\\client-Aug-" + cdoy + "-04" + "\\" + Site + "-GEC.flt",
             # DirectCon + "" +  "\\client-Aug-" + cdoy + "-06" + "\\" + Site + "-GEC.flt",
-            DirectOld + "" +  "\client-Aug-" + cdoy + "-02" + "\\" + Site + "-GEC.flt",
-            DirectCon + "" +  "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+            # # DirectOld + "" +  "\client-Aug-" + cdoy + "-04" + "\\" + Site + "-GEC.flt",
+            # DirectCon + "" +  "\\client-Grid_Ele_R-" + cdoy + "-01" + "\\" + Site + "-GEC.flt",
+            # r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server_cod\WUDA-GEC-AR.flt",
+            # r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server\WUDA-GEC-AR.flt"
+            r"E:\1Master_2\1-ZTD\HK-ZTD-FLT\2021304_ZTD\HKKT-GEC.flt",
+            r"E:\1Master_2\1-ZTD\HK-ZTD-FLT\2021304_ZTD\HKLM-GEC.flt"
                         ]
         for i in range(len(mode_list)):
             data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
             # data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
             data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
             ENU_ALL[mode_list[i]] = data_ENU
-            
-        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 1.0,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True,recovergence=3600)
+        # if doy != 305:    
+        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.5,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True,recovergence=3600)
+        # dr.plot_en_u(site =Site, data = ENU_ALL,type = ["EN","U"],mode = mode_list,ylim = 1,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True,recovergence=3600)
         D = D + 1
         count = count - 1
         # if (count == 0 and M!=12):

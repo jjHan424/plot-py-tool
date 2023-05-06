@@ -19,10 +19,10 @@ import draw as dr
 
 Y=2021
 M=11
-D=2
+D=6
 #all 
-S=12 #21
-L=12
+S=4 #21
+L=3
 #open
 # S=8+43/60 #21
 # L=8/60
@@ -34,7 +34,8 @@ L=12
 # L=34/60
 
 # mode_list = ["DGDC","DGCA","SZYT","HZAD","SWHF"]
-mode_list = ["MLCM","Grid"]
+# mode_list = ["MLCM","Grid"]
+mode_list = ["Global","Regional"]
 # file_list = [
 #             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\GRT3_20220924_SGG_CLK06_S_GEC.aug",
 #             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\N004_20220924_SGG_CLK06_S_GEC.aug",
@@ -50,8 +51,9 @@ mode_list = ["MLCM","Grid"]
 # ]
 
 file_list = [
-    r"D:\A-paper\Project\Res_FromServer\Client_convergence\filter\client-Aug-306-02\WUDA-GEC-I.aug",
-    r"D:\A-paper\Project\Res_FromServer\Client_convergence\filter\client-Grid_Ele_R-306-01\WUDA-GEC-I.aug"
+r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server_cod\WUDA-GEC.aug",
+r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server\WUDA-GEC.aug",
+# r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server\K057-GEC.aug"
 ]
 data_all = {}
 for i in range(len(mode_list)):
@@ -60,4 +62,4 @@ for i in range(len(mode_list)):
     # data = rf.open_epo_file_rtppp(file_list[i])
     data_all[mode_list[i]] = data
 
-dr.plot_aug_NSAT(data_all,mode_list,type = "NSAT",freq = 1,starttime = S,time = "UTC",show = True,deltaT=1,ylim=0.5,LastT=L,year = Y,mon=M,day=D,deltaData=5)
+dr.plot_aug_NSAT(data_all,mode_list,type = "NSAT",freq = 1,starttime = S,time = "UTC",show = True,deltaT=0.5,ylim=0.5,LastT=L,year = Y,mon=M,day=D,deltaData=5)

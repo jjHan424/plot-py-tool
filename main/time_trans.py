@@ -11,12 +11,13 @@ import sys
 sys.path.insert(0,os.path.dirname(__file__)+'/..')
 
 import trans as tr
+import matplotlib.pyplot as plt
 
 year=2021
 mon=11
 day=6
 
-print("GPST(Week Sow): ",tr.ymd2gpst(year,mon,day,9,31,0))
+print("GPST(Week Sow): ",tr.ymd2gpst(year,mon,day,10,50,0))
 print("Day of Year: ",tr.ymd2doy(year,mon,day,0,0,00))
 [week,sow]=tr.ymd2gpst(year,mon,day,0,0,00)
 [week,sow]=tr.ymd2gpst(year,mon,day,16,22,0)

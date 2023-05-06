@@ -24,11 +24,12 @@ import math
 # site_list = ["K101","A010","V092","K059"]
 # site_list = ["K042","N028","N047","N068","K057"]
 # site_list = ["WHYJ","WUDA","WHDS","WHSP","XGXN","WHXZ"]
-site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # site_list = ["10km","55km","90km","160km"]
+site_list = ["WUDA"]
 
 site_list_plot = site_list
-Mode_Plot = "Mean"
+Mode_Plot = "Site"
 Fix_mode = "FixSig"
 com_mode = "Grid"
 Site = "WUDA"
@@ -62,7 +63,7 @@ DirectTest = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-All\Pos_Test"
 # Direct_Trp
 DirectAll = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\All"
 DirectAug = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\Aug"
-DirectAll = r"D:\A-paper\Test-Trp\Trp-2"
+# DirectAll = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Client_convergence-Site-1s"
 site_num = len(site_list)
 show = True
 data_save = {}
@@ -72,10 +73,10 @@ for i in range(site_num):
     if cur_site not in data_save.keys():
         data_save[cur_site] = {}
     # data_save[cur_site]["Aug"] = rf.H_open_rms(DirectAug + "\\" + cur_site + "-Sigma-1-02.txt",1)
-    data_save[cur_site]["Interpolation2"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-10.txt",1)
-    data_save[cur_site]["Interpolation4"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-10.txt",2)
-    data_save[cur_site]["Interpolation6"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-10.txt",3)
-    data_save[cur_site]["Grid"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-10.txt",4)
+    data_save[cur_site]["Interpolation2"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",1)
+    data_save[cur_site]["Interpolation4"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",2)
+    data_save[cur_site]["Interpolation6"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",3)
+    data_save[cur_site]["Grid"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",4)
     # data_save[cur_site]["Grid-Auto"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",4)
     # data_save[cur_site]["Chk"] = rf.H_open_rms(DirectAC + "\\" + cur_site + "-Sigma-0-03.txt",2)
     # data_save[cur_site]["Grid-2"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",1)

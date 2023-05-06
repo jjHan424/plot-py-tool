@@ -84,6 +84,32 @@ def pre_aug_new(head_I = {}, data_I = {}, data_S = {}):
         if time not in all_data.keys():
             all_data[time] = {}
             ref_data[time] = {}
+        Ele_index,Ele_cur,Ele_sort,ref_sat = {},{},{},{}
+        for sat in data_I[time].keys():
+            if sat not in data_S[time].keys():
+                continue
+            if sat[0] not in Ele_index.keys():
+                Ele_index[sat[0]],Ele_cur[sat[0]],Ele_sort[sat[0]] = [],[],[]
+            Ele_index[sat[0]].append(sat)
+            Ele_cur[sat[0]].append(data_S[time][sat]["ELE"])
+            Ele_sort[sat[0]].append(data_S[time][sat]["ELE"])
+        
+        for sys_cur in Ele_cur.keys():
+            Ele_sort[sys_cur].sort(reverse = True)
+            for j in range(len(Ele_sort[sys_cur])):
+                for i in range(len(Ele_sort[sys_cur])):
+                    if Ele_cur[sys_cur][i] == Ele_sort[sys_cur][j]:
+                        ref_sat[sys_cur] = Ele_index[sys_cur][i]
+                        break
+                if sys_cur in ref_sat.keys():
+                    for type in data_I[time][sat].keys():
+                        sys_type = ref_sat[sys_cur][0] + "_" + type
+                        if type not in data_S[time][ref_sat[sys_cur]].keys():
+                            continue                
+                        ref_data[time][sys_cur] = 0                
+                        ref_data[time][sys_type] = data_I[time][ref_sat[sys_cur]][type] - data_S[time][ref_sat[sys_cur]][type]
+                    break
+
         for sat in data_I[time].keys():
             if sat not in data_S[time].keys():
                 continue
@@ -95,7 +121,8 @@ def pre_aug_new(head_I = {}, data_I = {}, data_S = {}):
                     continue               
                 if sys_type not in ref_data[time]:   
                     ref_data[time][sat[0]] = 0                
-                    ref_data[time][sys_type] = data_I[time][sat][type] - data_S[time][sat][type]
+                    ref_data[time][sys_type] = data_I[time][ref_sat[sat[0]]][type] - data_S[time][ref_sat[sat[0]]][type]
+                    # ref_data[time][sys_type] = data_I[time][sat][type] - data_S[time][sat][type]
                 else:
                     if type == "TRP1":
                         all_data[time][sat][type] = (data_I[time][sat][type] - data_S[time][sat][type])
