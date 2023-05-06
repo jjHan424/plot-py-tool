@@ -1751,6 +1751,7 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
     ##=== Plot set ===##
     figP,axP = plt.subplots(N_plot,1,figsize=(13.7,12),sharey=False,sharex=True)
     axP[N_plot - 1].set_xlabel('Time' + '(' + time + ')',font_label)
+    axP[2].set_title(site,font_title)
     ## Only ENU
     if N_plot == 3:
         for i in range(N_plot):
@@ -1990,12 +1991,14 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
         if cur_type in type_enu:
             ax_range = axP[i].axis()
             # axP[i].text(ax_range[0],ax_range[3]+ylim/15,RMS_str[0:9*N_mode+2],font_text)
-            if cur_type == "E":
-                axP[i].text(ax_range[0],ax_range[3]-ylim/2,"East",font_title)
-            if cur_type == "N":
-                axP[i].text(ax_range[0],ax_range[3]-ylim/2,"North",font_title)
-            if cur_type == "U":
-                axP[i].text(ax_range[0],ax_range[3]-ylim/2,"Up",font_title)
+            #----Directions-----#
+            # if cur_type == "E":
+            #     axP[i].text(ax_range[0],ax_range[3]-ylim/2,"East",font_title)
+            # if cur_type == "N":
+            #     axP[i].text(ax_range[0],ax_range[3]-ylim/2,"North",font_title)
+            # if cur_type == "U":
+            #     axP[i].text(ax_range[0],ax_range[3]-ylim/2,"Up",font_title)
+
         # if cur_type == "NSAT":
         #     ax_range = axP[i].axis()
         #     axP[i].text(ax_range[0],ax_range[3]+ylim/15,MEAN_str[0:7*N_mode+3],font_text)
@@ -2195,7 +2198,7 @@ def plot_enu(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"],
         axP[i+plus_index].scatter(time_plot[mode[i]],data_plot[mode[i]]["U"],s=5.5)
         axP[i+plus_index].set_ylim(-0.5,0.5)
         axP[i+plus_index].set_title(mode[i],font,loc = "left")
-        axP[i+plus_index].fill_between(time_plot["Interpolation"][1000:1100],-0.5,0.5,facecolor = "gray",alpha=0.3)
+        # axP[i+plus_index].fill_between(time_plot["Interpolation"][1000:1100],-0.5,0.5,facecolor = "gray",alpha=0.3)
         
     
     axP[0+plus_index].legend(["East direction","North direction","Up direction"],prop=font,

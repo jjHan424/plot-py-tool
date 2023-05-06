@@ -61,7 +61,6 @@ for i in range(len(filename_list)):
                 if soweek not in all_data.keys():
                     all_data[mode_list[i]][soweek]=ztd
 #data convert
-figP,axP = plt.subplots(1,1,figsize=(16,7),sharey=True,sharex=True)
 [XLabel,XTick,cov_Time,begT,LastT]=dr.xtick(time,year,mon,day,starttime,LastT,deltaT)
 time_plot,data_plot = {},{}
 for cur_mode in all_data.keys():
@@ -72,6 +71,7 @@ for cur_mode in all_data.keys():
             time_plot[cur_mode].append(plot_time)
             data_plot[cur_mode].append(all_data[cur_mode][cur_time])
 #plot
+figP,axP = plt.subplots(1,1,figsize=(16,7),sharey=True,sharex=True)
 for i in range(len(mode_list)):
     axP.scatter(time_plot[mode_list[i]],data_plot[mode_list[i]],color = color_list[i%9],s=5)
 axP.set_xticks(XTick)
