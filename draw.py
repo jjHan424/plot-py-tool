@@ -3577,3 +3577,61 @@ def plot_en_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"]
             # file.write("=========================="+"{:0>3}".format(doy)+"==========================\n")
             # file.write("==========="+"{:0>3}".format(doy)+"===========\n")
             # file1.write('%04f' % abs(data_Diff[time][sat][sys_type[sat[0]]]) + "   " + '%04f' % data_Ele[time][sat]["ELE"] + "   " + '%04f' % data_ROTI[time][sat] + "\n")
+
+def plot_upd(mode = ["upd_NL"], data = {},type = ["G","E","C"],ylim = 1,starttime=0,LastT=24,deltaT=4,time = "UTC",all=False,year = 2023,mon=1,day=1,save="./",show=True):
+    sub_plot_num = len(type)
+    figP,axP = plt.subplots(sub_plot_num,1,figsize=(15,9.5),sharey=False,sharex=True)
+    plot_index = {}
+    for i in range(sub_plot_num):
+        # axP[i].set_title(type[i],font_title)
+        axP[1].set_ylabel(mode[0] + "(Cycle)",font_label)
+        plot_index[type[i]] = i
+        axP[sub_plot_num-1].set_xlabel("Time" + " (" + time + ")",font_label)
+    box = axP[0].get_position()
+    axP[0].set_position([box.x0,box.y0 + box.height * 0.23, box.width, box.height])
+    box = axP[1].get_position()
+    axP[1].set_position([box.x0,box.y0 + box.height * 0.1, box.width, box.height])
+    box = axP[2].get_position()
+    axP[2].set_position([box.x0,box.y0 - box.height * 0.1, box.width, box.height])
+    [XLabel,XTick,cov_Time,begT,LastT]=xtick(time,year,mon,day,starttime,LastT,deltaT)
+    ##=== Data convert && convergence time ===##
+    data_plot,time_plot,legend_plot = {},{},{}
+    type_list = ["E","N","U","NSAT","PDOP","AMB"]
+    type_enu = ["E","N","U"]
+    for cur_mode in mode:
+        time_plot[cur_mode],data_plot[cur_mode],legend_plot[cur_mode] = {},{},{}
+    legend_plot[cur_mode]["G"],legend_plot[cur_mode]["E"],legend_plot[cur_mode]["C"]=[],[],[]
+    sat_list = []
+    for cur_mode in mode:
+        for cur_time in data[cur_mode].keys():
+            plot_time = (cur_time-cov_Time) / 3600
+            if ((plot_time >= begT and plot_time <= (begT + LastT)) or all):
+                if len(data[cur_mode][cur_time]) == 0:
+                    continue
+                for cur_sat in data[cur_mode][cur_time].keys():
+                    if cur_sat not in data_plot[cur_mode].keys():
+                        time_plot[cur_mode][cur_sat] = []
+                        data_plot[cur_mode][cur_sat] = []
+                        sat_list.append(cur_sat)
+                    time_plot[cur_mode][cur_sat].append(plot_time)
+                    data_plot[cur_mode][cur_sat].append(data[cur_mode][cur_time][cur_sat][0])
+    sat_list.sort()
+    for cur_mode in data_plot.keys():
+        for cur_sat in sat_list:
+            axP[plot_index[cur_sat[0]]].scatter(time_plot[cur_mode][cur_sat],data_plot[cur_mode][cur_sat],s=2)
+            labels = axP[plot_index[cur_sat[0]]].get_yticklabels() + axP[plot_index[cur_sat[0]]].get_xticklabels()
+            [label.set_fontsize(xtick_size) for label in labels]
+            [label.set_fontname('Arial') for label in labels]
+            legend_plot[cur_mode][cur_sat[0]].append(cur_sat)
+    #Xtick
+    if not all:
+        axP[sub_plot_num-1].set_xticks(XTick)
+        axP[sub_plot_num-1].set_xticklabels(XLabel)
+
+    #legend
+    font_legend = {'family' : 'Arial', 'weight' : 500, 'size' : 10}
+    for cur_type in type:
+        axP[plot_index[cur_type]].legend(legend_plot[cur_mode][cur_type],prop = font_legend,
+            framealpha=0,facecolor='none',ncol=13,numpoints=5,markerscale=4, 
+            borderaxespad=0,bbox_to_anchor=(1,1.27),loc=1) 
+    plt.show()  

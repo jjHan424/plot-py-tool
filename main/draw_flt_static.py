@@ -78,7 +78,7 @@ ENU_ALL = {}
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # site_list = ["HKSC","WUDA","K070","K057"]
 # site_list = ["HKSC","K070"]
-site_list = ["HKSL","HKSL","HKSL"]
+site_list = ["HKWS","HKWS","HKWS"]
 # mode_list = ["2","4","6","Grid-Auto"]
 # mode_list = ["Aug","Grid-2","Grid-4","Coef","Coef-R","Chk"]
 # mode_list = ["Interpolation-2","Interpolation-4","Interpolation-6","Grid"]
@@ -110,8 +110,8 @@ for j in range(len(site_list)):
 for j in range(len(site_list)):
     Site = site_list[j]
     Y=2021
-    M=11
-    D=1
+    M=10
+    D=31
     L=22
     DDD = 2
     count = 1
@@ -128,12 +128,12 @@ for j in range(len(site_list)):
         doy = tr.ymd2doy(Y,M,D,0,0,00)
         cdoy = "{:0>3}".format(doy)
         filename_list = [
-            r"E:\1Master_2\1-ZTD\HK-ZTD-FLT\2021305_PPP\HKSL-GEC-AR.flt",
-            r"E:\1Master_2\1-ZTD\HK-ZTD-FLT\2021305_AR\HKSL-GEC-AR.flt",
-            r"E:\1Master_2\1-ZTD\HK-ZTD-FLT\2021305_ZTD\HKSL-GEC.flt"
+            r"E:\1Master_2\1-ZTD\HK-ZTD-FLT\HKWS-GEC-304-PPP.flt",
+            r"E:\1Master_2\1-ZTD\HK-ZTD-FLT\HKWS-GEC-304-PPPAR.flt",
+            r"E:\1Master_2\1-ZTD\HK-ZTD-FLT\HKWS-GEC-304-PPPRTK.flt",
                         ]
         for i in range(len(mode_list)):
-            if i <= 1:
+            if i <= 2:
                 data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
             else:
                 data_Raw = rf.open_flt_pvtflt_file(filename_list[i])

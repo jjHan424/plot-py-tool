@@ -26,6 +26,7 @@ import shapely.geometry
 import math
 import matplotlib as mpl
 import numpy as np
+import imgkit
 
 def get_angel(blh1,blh2):
     blh = [blh2[0] - blh1[0],blh2[1] - blh1[1]]
@@ -241,7 +242,8 @@ title='https://webrd02.is.autonavi.com/appmaptile?lang=en&size=1&scale=1&style=8
 # title='https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}' # google 卫星图
 # title = "Stamen Terrain"
 # title = "QuadTree"
-m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11.2, tiles=title, attr='default',control_scale = True)
+# m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11.2, tiles=title, attr='default',control_scale = True)
+m = folium.Map(location=[center_bl[0], center_bl[1]], zoom_start=11.2, tiles="Stamen Terrain", attr='default',control_scale = True)
 # m = folium.Map(location = [center_bl[0], center_bl[1]],zoom_start = 15,control_scale = True)
 mark_point_blh={}
 points = []
@@ -798,6 +800,15 @@ print("{}:{:.1f}km".format(site_user,np.mean(Dis_User)/1000))
 #             folium.PolyLine(locations=[[blh1[0],blh1[1]],[b,l]],color=c,weight=2).add_to(m)
 # m.save(savedir+"\\AUG-WH-Dynamic-310.html")
 m.save(r"E:\1Master_2\2-UPD_Test\UPD.html")
+ 
+# path_wkimg = r'D:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'  # 工具路径
+# cfg = imgkit.config(wkhtmltoimage=path_wkimg)
+# 1、将html文件转为图片
+# imgkit.from_file(r'E:\1Master_2\2-UPD_Test\UPD.html', 'helloworld.jpg', config=cfg)
+# 2、从url获取html，再转为图片
+# imgkit.from_url('https://www.whu.edu.cn/', 'ip.jpg', config=cfg)
+# 3、将字符串转为图片
+# imgkit.from_string('Hello!','hello.jpg', config=cfg)
 # webbrowser.open(r'E:\1Master_2\Paper_Grid\crd\AUG_HK2.html')
 
 

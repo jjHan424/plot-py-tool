@@ -1,11 +1,3 @@
-'''
-Author: Han Junjie
-Date: 2021-11-23 20:07:41
-LastEditTime: 2022-08-28 20:58:51
-LastEditors: HanJunjie HanJunjie@whu.edu.cn
-Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
-FilePath: /plot-py-tool/main/draw_upd.py
-'''
 import os
 import sys
 sys.path.insert(0,os.path.dirname(__file__)+'/..')
@@ -19,15 +11,12 @@ import draw as dr
 #import seaborn as sns
 import trans as tr
 
+all_data = {}
+file_NL = r"E:\1Master_2\2-UPD_Test\Pro_2023001\data\upd_nl_2023001_GEC"
+file_WL = r"E:\1Master_2\2-UPD_Test\Pro_2023001\data\upd_wl_2023001_GEC"
+rf.open_upd_great(file_NL,all_data)
+rf.open_upd_great(file_WL,all_data)
 
-file_nl = {}
-file_wl = {}
-file_nl[0] = r'E:\0Project\Tencent\NRTK_20220829_SGG_CLK06_S_GEC.upd'
-# Save_dir = r'E:\0Project\Tencent\'
-
-file_wl[0] = '/Users/hjj/Documents/HJJ/Master_1/Project_MeiTuan/GERAT_UPDLSQ/ambupd/upd_wl_2020001_G_UC'
-week,sec = tr.ymd2gpst(2020,9,6,0,0,0)
-nl = rf.open_upd_rtpppfile(file_nl)
-#wl = rf.open_upd_wl_onedayfile(file_wl)
-#dr.plot_upd_wl_oneday_GEC(wl,'/Users/hjj/Desktop/','UPD WL',True)
-dr.plot_upd_nl_GEC(nl,"E:\\0Project\\Tencent\\",'UPD NL',True)
+Y,M,D = 2023,1,1
+S,L,DDD = 0,24,4
+dr.plot_upd(mode = ["upd_WL"], data = all_data,type = ["G","E","C"],ylim = 1,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,year = Y,mon=M,day=D,show=True)

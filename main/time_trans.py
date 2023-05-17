@@ -20,9 +20,9 @@ day=6
 print("GPST(Week Sow): ",tr.ymd2gpst(year,mon,day,10,50,0))
 print("Day of Year: ",tr.ymd2doy(year,mon,day,0,0,00))
 [week,sow]=tr.ymd2gpst(year,mon,day,0,0,00)
-[week,sow]=tr.ymd2gpst(year,mon,day,16,22,0)
+[week,sow]=tr.ymd2gpst(year,mon,day,1,37,30)
 print("GPST(Day of Week): ",sow/3600/24)
-print(tr.mjd2gpst(59519,32405))
+print(tr.mjd2gpst(60138.00,0))
 
 xyz = [-2141844.0708,5071953.6039,3209315.6304]
 

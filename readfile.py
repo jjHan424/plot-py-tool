@@ -1286,3 +1286,21 @@ def open_flt_pvtflt_file_percent(filename,Year=1999,Mon=4,Day=24,Hour=2,Last=2):
                     all_data[soweek_save]['AMB'] = 0
                 
     return all_data
+
+def open_upd_great(filename,all_data = {}):
+    w_last = 0
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if value[0] == "%":
+                all_data[value[4]] = {}
+                mode = value[4]
+                continue
+            if value[0] == "EPOCH-TIME":
+                [w,soweek] = tr.mjd2gpst(float(value[1]),float(value[2]))
+                if (w_last==0):
+                    w_last = w
+                soweek = soweek + (w-w_last)*604800
+                all_data[mode][soweek] = {}
+                continue
+            all_data[mode][soweek][value[0]] = [float(value[1]),float(value[3])]
