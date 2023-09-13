@@ -300,7 +300,8 @@ def open_flt_pvtflt_file(filename):
                 all_data[soweek]['Z'] = float(value[3])
                 all_data[soweek]['NSAT'] = float(value[13])
                 all_data[soweek]['PDOP'] = float(value[14])
-                if value[16] == 'Fixed':
+                all_data[soweek]['Q'] = float(value[18])
+                if value[16] == 'Fixed' and all_data[soweek]['Q']  == 1:
                     all_data[soweek]['AMB'] = 1
                 else:
                     all_data[soweek]['AMB'] = 0
@@ -320,6 +321,7 @@ def open_flt_pos_rtpppfile(filename):
             value = line.split()
             if line[0] != "%":
                 soweek = float(value[1])
+                # soweek = float(value[3])*3600+float(value[4])*60+float(value[5])
                 if (soweek < soweek_last):
                     w_last = w_last + 1
                 soweek_last = soweek
@@ -330,6 +332,11 @@ def open_flt_pos_rtpppfile(filename):
                 all_data[soweek]['X'] = float(value[2])
                 all_data[soweek]['Y'] = float(value[3])
                 all_data[soweek]['Z'] = float(value[4])
+
+                # all_data[soweek]['X'] = float(value[17])
+                # all_data[soweek]['Y'] = float(value[18])
+                # all_data[soweek]['Z'] = float(value[19])
+
                 all_data[soweek]['Q'] = float(value[5])
                 all_data[soweek]['NSAT'] = float(value[5])
                 all_data[soweek]['PDOP'] = float(value[5])
@@ -337,6 +344,7 @@ def open_flt_pos_rtpppfile(filename):
                 #     all_data[soweek]['AMB'] = 1
                 # else:
                 #     all_data[soweek]['AMB'] = 0
+                # all_data[soweek]['AMB'] = 1
                 if value[15] == 'Fixed':
                     all_data[soweek]['AMB'] = 1
                 else:
@@ -693,6 +701,7 @@ def open_aug_file_rtppp(filename):
                 all_data[soweek][sat]["P2"] = float(value[4])
                 all_data[soweek][sat]["TRP1"] = satnum
                 all_data[soweek][sat]["NSAT"] = satnum
+                all_data[soweek][sat]["ELE"] = satnum
 
     head_info["G"]={}
     head_info["G"]["L1"]=1
@@ -866,10 +875,10 @@ def open_ppprtk_rtpppfile(filename):
                 all_data[soweek]['Z'] = float(value[31])
                 all_data[soweek]['Q'] = float(value[20])
                 # all_data[soweek]['NSAT'] = float(value[24])
-                all_data[soweek]['NSAT'] = float(value[12])
-                # all_data[soweek]['NSAT'] = float(value[18])
-                all_data[soweek]['PDOP'] = float(value[20])
-                if (all_data[soweek]['NSAT'] <= 0):
+                # all_data[soweek]['NSAT'] = float(value[12])
+                all_data[soweek]['NSAT'] = float(value[18])
+                all_data[soweek]['PDOP'] = float(value[23])
+                if (all_data[soweek]['NSAT'] <= 5):
                     all_data[soweek]['AMB'] = 0
                 else:
                     all_data[soweek]['AMB'] = 1
@@ -879,9 +888,10 @@ def open_ppprtk_rtpppfile(filename):
 
 
 def open_upd_rtpppfile(filename_list,sys="G"):
-    all_data = {} 
+    all_data = {}
+    all_data["upd_NL"],all_data["upd_WL"] = {},{}
     for index in filename_list:
-        filename = filename_list[index]
+        filename = index
         w_last = 0
         with open(filename,'rt') as f:
             for line in f:
@@ -899,14 +909,15 @@ def open_upd_rtpppfile(filename_list,sys="G"):
                     if (w_last==0):
                         w_last = w
                     soweek = soweek + (w-w_last)*604800
-                    if soweek not in all_data.keys():
-                        all_data[soweek]={}
+                    if soweek not in all_data["upd_NL"].keys():
+                        all_data["upd_NL"][soweek],all_data["upd_WL"][soweek]={},{}
                     w_last = w
                     continue
                 
                 sat = value[0]
-                if 'x' not in sat and sat not in all_data[soweek].keys():
-                    all_data[soweek][sat] = (float(value[1]))
+                if 'x' not in sat and sat not in all_data["upd_NL"][soweek].keys():
+                    all_data["upd_NL"][soweek][sat] = [float(value[2]),float(value[2])]
+                    all_data["upd_WL"][soweek][sat] = [float(value[1]),float(value[2])]
                     continue
     return all_data
 
@@ -1155,7 +1166,7 @@ def open_diff_file_new(filename):
 
     return (head_info,all_data)
 
-def H_open_rms(filename,index=1):
+def H_open_rms(filename,index=1,all_num = 1):
     all_data={}
     file_exist = os.path.exists(filename)
     if (not file_exist):
@@ -1179,6 +1190,15 @@ def H_open_rms(filename,index=1):
             all_data[doy]["E"] = float(value[Total*2+index])
             all_data[doy]["N"] = float(value[Total*3+index])
             all_data[doy]["U"] = float(value[Total*4+index])
+            all_data[doy]["3D"] = math.sqrt(all_data[doy]["E"]*all_data[doy]["E"]+all_data[doy]["N"]*all_data[doy]["N"]+all_data[doy]["U"]*all_data[doy]["U"])
+            if len(value) > (1+5*all_num):
+                reconver_num = int((len(value)-1-all_num*5-4*all_num) / all_num / 6)
+                for i in range(int(reconver_num)):
+                    # print(Total*5+2*index-1+i*Total*2)
+                    cur_acc = int(value[Total*5+2*index-1+i*Total*2][0:3])
+                    all_data[doy]["{:0>3}-3".format(cur_acc)] = float(value[Total*5+2*index-1+i*Total*2+1])
+                    all_data[doy]["{:0>3}-V".format(cur_acc)] = float(value[Total*5+2*index-1+i*Total*2+1+2*reconver_num*Total])
+                    all_data[doy]["{:0>3}-H".format(cur_acc)] = float(value[Total*5+2*index-1+i*Total*2+1+2*reconver_num*Total+2*reconver_num*Total])
     
     return all_data
 
@@ -1304,3 +1324,157 @@ def open_upd_great(filename,all_data = {}):
                 all_data[mode][soweek] = {}
                 continue
             all_data[mode][soweek][value[0]] = [float(value[1]),float(value[3])]
+
+
+def H_open_aug_file_for_heat(filename,year,mon,day,hour,min,sec,s_length):
+    all_data={}
+    new_all_data = []
+    head_info={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = False
+    num_sat = 0
+    last_day = 0
+    # day=0
+    file_exist = os.path.exists(filename)
+    [w_need,soweek_need] = tr.ymd2gpst(year,mon,day,hour,min,sec)
+    if (not file_exist):
+        return all_data
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if "SYS / # / AUG TYPES" in line:
+                head_end = True
+                head_index = 1
+                for cur_value in value:
+                    if (cur_value == "SYS"):
+                        break
+                    if (len(cur_value) != 1):
+                        if line[0] not in head_info.keys():
+                            head_info[line[0]]={}
+                        head_info[line[0]][cur_value] = head_index
+                        head_index = head_index + 1                   
+            if ">" in line:
+                value=line.split()
+                year=(float(value[1]))
+                month=(float(value[2]))
+                day=(float(value[3]))
+                hour=(float(value[4]))
+                minute=(float(value[5]))
+                second=(float(value[6]))
+                [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+                if w<w_need:
+                    continue
+                if w>w_need:
+                    return new_all_data
+                if soweek<soweek_need:
+                    continue
+                if soweek > soweek_need + s_length:
+                    return new_all_data
+                
+                if (not epoch_flag):
+                    min_sow = soweek
+                if (soweek < min_sow):
+                    soweek = soweek + 604800
+                epoch_flag = True
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+            
+            # if ((value[0][0] == "C" or value[0][0] == "E" or value[0][0] == "G") and epoch_flag):
+            if ((value[0][0] == "G") and epoch_flag):
+                if (len(line) <= 4):
+                    continue
+                sat = value[0]
+                if (sat not in all_data[soweek].keys()):
+                    all_data[soweek][sat] = {}
+                i = 1
+                for type in head_info[sat[0]].keys():
+                    if 12*i-9 > len(line) - 1 or 12*i+3 > len(line) - 1:
+                        break
+                    # cur_value = line[12*i-9:12*i+3].strip()
+                    cur_value = line[12*i-8:12*i+4].strip()
+                    
+                    if (len(cur_value) > 1):
+                        all_data[soweek][sat][type] = float(cur_value)
+                        if i == 2:
+                            new_all_data.append(float(cur_value))
+                    i = i+1
+
+
+    return all_data
+
+def H_open_grid_file_for_heat(filename,year,mon,day,hour,min,sec,s_length):
+    all_data={}
+    new_all_data = []
+    head_info={}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = False
+    num_sat = 0
+    last_day = 0
+    # day=0
+    file_exist = os.path.exists(filename)
+    [w_need,soweek_need] = tr.ymd2gpst(year,mon,day,hour,min,sec)
+    if (not file_exist):
+        return all_data
+    with open(filename,'rt') as f:
+        for line in f:
+            value = line.split()
+            if "SYS / # / AUG TYPES" in line:
+                head_end = True
+                head_index = 1
+                for cur_value in value:
+                    if (cur_value == "SYS"):
+                        break
+                    if (len(cur_value) != 1):
+                        if line[0] not in head_info.keys():
+                            head_info[line[0]]={}
+                        head_info[line[0]][cur_value] = head_index
+                        head_index = head_index + 1
+            if "OBS TYPES" in line:
+                grid_node = int(value[5][10:13])
+                data_all = [[] for i in range(grid_node)]
+                all_data_new = []                  
+            if ">" in line:
+                value=line.split()
+                year=(float(value[1]))
+                month=(float(value[2]))
+                day=(float(value[3]))
+                hour=(float(value[4]))
+                minute=(float(value[5]))
+                second=(float(value[6]))
+                [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+                if w<w_need:
+                    continue
+                if w>w_need:
+                    return new_all_data
+                if soweek<soweek_need:
+                    continue
+                if soweek > soweek_need + s_length:
+                    break
+                
+                if (not epoch_flag):
+                    min_sow = soweek
+                if (soweek < min_sow):
+                    soweek = soweek + 604800
+                epoch_flag = True
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+            
+            if ((value[0][0] == "C" or value[0][0] == "E" or value[0][0] == "G") and epoch_flag):
+            # if ((value[0][0] == "T") and epoch_flag):
+                for i in range(grid_node):
+                    cur_node_diff = float(value[grid_node+5+i])  # Diff
+                    # cur_node_diff = float(value[grid_node+grid_node+5+i])  # Dis
+                    if cur_node_diff == 9.9999:
+                        continue
+                    data_all[i].append(cur_node_diff)
+    for i in range(grid_node):
+        data_all[i].remove(np.max(data_all[i]))
+        data_all[i].remove(np.max(data_all[i]))
+        data_all[i].remove(np.min(data_all[i]))
+        all_data_new.append(np.mean(data_all[i]))
+
+    return all_data_new

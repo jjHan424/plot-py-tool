@@ -23,6 +23,14 @@ import dataprocess as dp
 import draw as dr
 import seaborn as sns
 import trans as tr
+font_title = {'family' : 'Arial', 'weight' : 300, 'size' : 35}
+font_label = {'family' : 'Arial', 'weight' : 300, 'size' : 32}
+font_tick = {'family' : 'Arial', 'weight' : 300, 'size' : 35}
+font_legend = {'family' : 'Arial', 'weight' : 300, 'size' : 20}
+# font_legend = {'family' : 'Times New Roman', 'weight' : 600, 'size' : 15}
+font_text = {'family' : 'Arial','weight' : 300,'size'   : 28}
+
+xtick_size = 28
 #path set
 path_list = [#r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\E0332021339_GEC.ismr",
 # r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKCL2021339_GEC.ismr",
@@ -57,29 +65,33 @@ r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\HKKS2021339_GEC.ismr",
 r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\XGXN2021339_GEC.ismr",]
 # path_list = [r"E:\1Master_2\Paper_Grid\Pro_20211205-339\roti\WHYJ2021339_GEC.ismr"]
 path_list = [r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI\2021305\HKSC2021305_GEC.ismr"]
-site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA","HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-site_list = ["HKSC"]
+site_list = ["HKKS","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# site_list = ["HKSC"]
+# site_list = ["TERS","IJMU","DELF","VLIS","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
+# sitestring = "TRO1 VARS HETT OVE6 ROM2 OST6 OLK2 PYHA LEK6 METG LOV6 IRBE NOR7 SPT7 VAIN HAS6 RANT REDZ LAMA HELG GELL LDB2 GOML GOET BRTS LEIJ WARE INVR ARIS TLL1 SNEO WTZZ AUBG BUTE BACA MIKL POLV COMO EGLT SWAS MARS ZADA AJAC SCOA ACOR ALME MMET ORID IZMI NICO SAVU SUN6 MNSK TER2 SMLA IJMU DYNG DEVA MALL MAH1 LODZ ZYWI AUTN ENTZ VILL"
+# site_list = sitestring.split()
+# site_list = ["TERS","IJMU","DELF","VLIS","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
 count = 1
-Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,0,24,2
+Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,6,12,1
 while count > 0:
-   
     doy = tr.ymd2doy(Year,Mon,Day,0,00,00)
     cdoy = "{:0>3}".format(doy)
     for i in range(len(site_list)):
         cur_site = site_list[i]
         
-        path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI-30" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
-        save_dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\ROTI-30" + "\\" + "{:0>4}".format(Year) + cdoy
+        path_roti = r"E:\1Master_2\3-IUGG\Result_Server\ROTI" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
+        save_dir = r"E:\1Master_2\3-IUGG\Result_Server\ROTI\Fig" + "\\" + "{:0>4}".format(Year) + cdoy
+        path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI-30\2021305"+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
         if (not os.path.exists(save_dir)):
             os.mkdir(save_dir)
         # path_roti = r"D:\GREAT\GREAT_Project\Allystar\ROTI_20220722\30s\DGCA2022203_GEC.ismr"
         # path_roti = r"D:\GREAT\GREAT_Project\Allystar\ROTI_20220722\30s\SWHF2022203_GEC.ismr"
 
-        figP,axP = plt.subplots(3,1,figsize=(12,7),sharey=False,sharex=True)
+        figP,axP = plt.subplots(3,1,figsize=(8,10),sharey=False,sharex=True)
         #Time
-        time="UTC+8"
+        time="UTC"
         t=time
-        starttime=0
+        starttime=8
         deltaT=2
         all=False
         colormap = sns.color_palette(['xkcd:green','xkcd:blue','xkcd:red', 'xkcd:brown', 'xkcd:pink', 'xkcd:purple'],100)
@@ -100,12 +112,12 @@ while count > 0:
         starttime = begT - deltaT
         for i in range(delta_X):
             starttime = starttime + deltaT
-            cur_Str_X = '%02d' % (starttime % 24) + ":00"
+            cur_Str_X = '%02d' % (starttime % 24)
             XLabel.append(cur_Str_X)
             XTick.append(int(starttime))       
         while starttime < math.ceil(end_Time):
             starttime = starttime + deltaT
-            cur_Str_X = '%02d' % (starttime % 24) + ":00"
+            cur_Str_X = '%02d' % (starttime % 24)
             XLabel.append(cur_Str_X)
             XTick.append(int(starttime))
 
@@ -168,12 +180,12 @@ while count > 0:
         font3 = { 'weight' : 500,
                 'size'   : 15, }
 
-        axP[2].set_xlabel("Time("+t+')',font3)
-        axP[1].set_ylabel("ROTI(TECU/min)",font3)
+        axP[2].set_xlabel("Time("+t+')',font_label)
+        axP[1].set_ylabel("ROTI(TECU/min)",font_label)
 
-        axP[0].set_title('G',font3)
-        axP[1].set_title('E',font3)
-        axP[2].set_title('C',font3)
+        axP[0].set_title('GPS',font_label)
+        axP[1].set_title('GAL',font_label)
+        axP[2].set_title('BDS',font_label)
 
         axP[0].set_xticks(XTick)
         axP[1].set_xticks(XTick)
@@ -184,18 +196,22 @@ while count > 0:
         axP[1].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
         axP[2].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
 
-        # axP[0].set_ylim(0,1)
-        # axP[1].set_ylim(0,1)
-        # axP[2].set_ylim(0,1)
+        axP[0].set_ylim(0,1)
+        axP[1].set_ylim(0,1)
+        axP[2].set_ylim(0,1)
 
         axP[0].grid(False)
         axP[1].grid(False)
         axP[2].grid(False)
 
+        labels = axP[0].get_yticklabels() + axP[1].get_yticklabels() + axP[2].get_yticklabels() + axP[2].get_xticklabels()
+        [label.set_fontsize(xtick_size) for label in labels]
+        [label.set_fontname('Arial') for label in labels]
+
         # plt.savefig(save_dir+"\\"+cur_site+'.png')
         plt.show()
-        Day = Day + 1
-        count = count - 1
-        if (Day > 31):
-            Day = 1
-            Mon = Mon + 1
+    Day = Day + 1
+    count = count - 1
+    if (Day > 31):
+        Day = 1
+        Mon = Mon + 1

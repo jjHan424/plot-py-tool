@@ -14,56 +14,16 @@ import trans as tr
 plt.style.use(['science','grid','no-latex'])
 import math
 
-# site_list = ["WUDA","WHYJ","N028","HKSC","HKMW","HKTK","K057"]
-# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-# site_list = ["HKSC","HKMW","HKTK"]
-# site_list = ["K042","K057","K059","K101","A010","V092"]
-
-# site_list = ["K101"]
-# site_list = ["K101","A010","V092","K059"]
-# site_list = ["K042","N028","N047","N068","K057"]
-# site_list = ["WHYJ","WUDA","WHDS","WHSP","XGXN","WHXZ"]
-# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-# site_list = ["10km","55km","90km","160km"]
-site_list = ["WUDA"]
-
+site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
+site_list = ["TERS"]
 site_list_plot = site_list
 Mode_Plot = "Site"
-Fix_mode = "FixSig"
-com_mode = "Grid"
+Fix_mode = "FixRaw"
+com_mode = "Auto"
 Site = "WUDA"
-# Direct_Old
-Direct7 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-7"
-Direct8 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-8"
-Direct9 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-9"
-Direct10 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-10"
-Direct11 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-11"
-Direct_Coef10 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-10"
-Direct_Coef11 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-11"
-Direct_Coef12 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-12"
-Direct_Coef13 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-13"
-Direct_Coef145 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-14-15"
-Direct_Coef16 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-16"
-Direct_Coef178 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-17-18"
-Direct_Coef1920 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-19-20"
-Direct_Coef41 = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos4-Coef-4-1"
-Direct_Grid = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Pos3-Grid"
-DirectSave=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-SetRef\Bar"
-# Direct_New
-# DirectGrid = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-IonoWhite\Pos_Grid"
-# DirectCoef = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-IonoWhite\Pos_Coef"
-# DirectCoefR = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-IonoWhite\Pos_Coef_R"
-DirectAC = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-IonoWhite\Pos_Aug_Chk"
-# Direct_All
-DirectGrid = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-All\Pos_Grid"
-DirectCoef = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-All\Pos_Other"
-DirectRoti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-All\Pos_Roti"
-DirectTest = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-All\Pos_Test"
-# Direct_Trp
-DirectAll = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\All"
-DirectAug = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\Aug"
-# DirectAll = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Client_convergence-Site-1s"
+mode_list = ["1-1","5-5","5-1","Auto"]
+DirectAll = r"E:\1Master_2\3-IUGG\Result_Server\Client_20230629\RES_RE300"
+DirectSave = r"E:\1Master_2\3-IUGG\Result_Server\Client_20230629\RES_RE600"
 site_num = len(site_list)
 show = True
 data_save = {}
@@ -72,33 +32,8 @@ for i in range(site_num):
     # file_path = Direct1 + "\\" + cur_site + "-Sigma-1.txt"
     if cur_site not in data_save.keys():
         data_save[cur_site] = {}
-    # data_save[cur_site]["Aug"] = rf.H_open_rms(DirectAug + "\\" + cur_site + "-Sigma-1-02.txt",1)
-    data_save[cur_site]["Interpolation2"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",1)
-    data_save[cur_site]["Interpolation4"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",2)
-    data_save[cur_site]["Interpolation6"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",3)
-    data_save[cur_site]["Grid"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",4)
-    # data_save[cur_site]["Grid-Auto"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",4)
-    # data_save[cur_site]["Chk"] = rf.H_open_rms(DirectAC + "\\" + cur_site + "-Sigma-0-03.txt",2)
-    # data_save[cur_site]["Grid-2"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",1)
-    # data_save[cur_site]["Grid"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1-02.txt",2)
-    # data_save[cur_site]["Grid-4"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",2)
-    # data_save[cur_site]["Grid-6"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-02.txt",3)
-    # data_save[cur_site]["8"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1-02.txt",3)
-    # data_save[cur_site]["10"] = rf.H_open_rms(DirectGrid + "\\" + cur_site + "-Sigma-1-02.txt",5)
-    # data_save[cur_site]["6"] = rf.H_open_rms(Direct_Coef178 + "\\" + cur_site + "-Sigma-1.txt",1)
-    # data_save[cur_site]["C-1"] = rf.H_open_rms(DirectCoefR + "\\" + cur_site + "-Sigma-0-03.txt",1)
-    # data_save[cur_site]["C-2"] = rf.H_open_rms(DirectCoefR + "\\" + cur_site + "-Sigma-0-03.txt",2)
-    # data_save[cur_site]["Coef"] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-0-02.txt",4)
-    # data_save[cur_site]["Grid-4"] = rf.H_open_rms(DirectRoti + "\\" + cur_site + "-Sigma-1-10.txt",1)
-    # data_save[cur_site]["Grid-6"] = rf.H_open_rms(DirectRoti + "\\" + cur_site + "-Sigma-1-10.txt",2)
-    # data_save[cur_site]["Coef"] = rf.H_open_rms(DirectRoti + "\\" + cur_site + "-Sigma-1-10.txt",3)
-    # data_save[cur_site]["Chk"] = rf.H_open_rms(DirectRoti + "\\" + cur_site + "-Sigma-1-10.txt",4)
-    # data_save[cur_site]["Grid-2"] = rf.H_open_rms(DirectTest + "\\" + cur_site + "-Sigma-1-02.txt",1)
-    # data_save[cur_site]["Grid-4"] = rf.H_open_rms(DirectTest + "\\" + cur_site + "-Sigma-1-02.txt",2)
-    # data_save[cur_site]["Grid-6"] = rf.H_open_rms(DirectTest + "\\" + cur_site + "-Sigma-1-02.txt",3)
-    # data_save[cur_site]["Coef"] = rf.H_open_rms(DirectTest + "\\" + cur_site + "-Sigma-1-02.txt",4)
-    # data_save[cur_site]["CoefR"] = rf.H_open_rms(DirectTest + "\\" + cur_site + "-Sigma-1-02.txt",5)
-    # data_save[cur_site]["Chk"] = rf.H_open_rms(DirectTest + "\\" + cur_site + "-Sigma-1-02.txt",6)
+    for i in range(len(mode_list)):
+        data_save[cur_site][mode_list[i]] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-0-02.txt",i+1,len(mode_list))
 
 #===========Day============#
 if Mode_Plot=="Site":
@@ -118,7 +53,7 @@ if Mode_Plot=="Site":
             for mode in data_save[cur_site].keys():
                 compare_data_Fix,compare_data_E,compare_data_N,compare_data_U,compare_data_3D=[],[],[],[],[]
                 if mode == com_mode:
-                    for cdoy in data_save[cur_site][mode]:
+                    for cdoy in data_save[cur_site][mode].keys():
                         if Fix_mode == "FixRaw" or Fix_mode == "FixSig":
                             compare_data_Fix.append(data_save[cur_site][mode][cdoy][Fix_mode])
                         compare_data_E.append(data_save[cur_site][mode][cdoy]["E"])
@@ -223,6 +158,7 @@ if Mode_Plot=="Site":
                 plt.show()
             else:
                 plt.savefig(DirectSave+"\\"+Site+"-Chk-Grid-Coef"+".png",dpi=600)
+
 
 if Mode_Plot=="Mean":
 #===========Site============#

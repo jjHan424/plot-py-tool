@@ -27,28 +27,24 @@ import dataprocess as dp
 import draw as dr
 
 import trans as tr
-Y=2021
-M=11
-D=6
-# S=6+35/60+17/3600
-S=10
+Y=2023
+M=9
+D=12
+S=3+27/60
+# S=10
 
 ENU_ALL = {}
-#mode_list = ["HKLM","HKSC","HKTK"]
-mode_list = ["Interpolation","Grid"]
+# mode_list = ["Grid-Const","Grid-Ele-Dis","Grid-Auto"]
+mode_list = ["BDS2","BDS3"]
 #site_list = ["HKLM","HKSC","HKTK"]
 site_list = ["SEPT","SEPT","SEPT"]
-Direct3=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2"
+DirectOld=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2"
+Direct3 =r"E:\1Master_2\3-IUGG\Result_Server\Client_Dynamic"
 filename_list = [
-                Direct3 + "\\" + "client-Aug-" +  "310" + "-02" + "\\" + site_list[0] + "-GEC.flt",
-                # Direct3 + "\\" + "client-Aug-" +  "310" + "-04" + "\\" + site_list[0] + "-GEC.flt",
-                # Direct3 + "\\" + "client-Aug-" +  "310" + "-06" + "\\" + site_list[0] + "-GEC.flt",
-                # Direct3 + "\\" + "client-Grid-" + "339" + "-02" + "\\" + site_list[0] + "-GEC.flt",
-                # Direct3 + "\\" + "client-Grid-" + "339" + "-06" + "\\" + site_list[0] + "-GEC.flt",
-                # Direct3 + "\\" + "client-Grid-" + "310" + "-06" + "\\" + site_list[0] + "-GEC.flt",
-                Direct3 + "\\" + "client-Grid_Ele-" + "310" + "-01" + "\\" + site_list[0] + "-GEC.flt",
+                r"E:\0Project\ZHD_Data\20230912_Dynamic\rtppp\rtppp_2023_0911_BDS2\res\20230912\SEPT_20230912_SGG_CLK06_K_GEC.ppprtk",
+                r"E:\0Project\ZHD_Data\20230912_Dynamic\rtppp\rtppp_2023_0911_BDS3\res\20230912\SEPT_20230912_SGG_CLK06_K_GEC.ppprtk"
                 ]
-filename_ref = [r"E:\1Master_2\Paper_Grid\Dynamic\2021310_WH\\Ref.txt",
+filename_ref = [r"E:\0Project\ZHD_Data\20230912_Dynamic\SEPT.txt",
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",]
@@ -59,12 +55,13 @@ filename_ref = [r"E:\1Master_2\Paper_Grid\Dynamic\2021310_WH\\Ref.txt",
 #                 "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021100/clientHKTK/3.flt"
 #                  ]
 for i in range(len(mode_list)):
-    data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
+    # data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
+    data_Raw = rf.open_ppprtk_rtpppfile(filename_list[i])
     REF_XYZ = rf.open_pos_ref_IE(filename_ref[0])
     data_ENU = dp.XYZ2ENU_dynamic(XYZ = data_Raw,REF_XYZ = REF_XYZ)
     ENU_ALL[mode_list[i]] = data_ENU
 
 
-dr.plot_e_n_u(data = ENU_ALL,type = ["E","N","U","NSAT"],mode = mode_list,ylim = 0.2,starttime=S,LastT=50/60,deltaT=10/60,time = "UTC",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=1,year = Y,mon=M,day=D,show = True,all=False)
+dr.plot_e_n_u(site =site_list[0], data = ENU_ALL,type = ["E","N","U","NSAT"],mode = mode_list,ylim = 1,starttime=S,LastT=15/60,deltaT=3/60,time = "UTC+8",Fixed=True,delta_data = 1,Sigma=5,Sigma_num=0,year = Y,mon=M,day=D,show = True,all=False)
 # dr.plot_enu(data = ENU_ALL,type = ["NSAT","ENU"],mode = mode_list,ylim = 2,starttime=S,LastT=50/60,deltaT=10/60,time = "UTC",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=0,year = Y,mon=M,day=D,show = True,all=False)
 

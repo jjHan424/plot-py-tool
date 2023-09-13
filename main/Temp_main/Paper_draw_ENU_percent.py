@@ -44,12 +44,15 @@ mode_list = ["Interpolation","Grid"]
 site_list = ["SEPT","SEPT","SEPT"]
 ENU_ALL = {}
 #-----dynamic-------#
-Direct3=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2"
-filename_list = [Direct3 + "\\" + "client-Aug-" +  "310" + "-02" + "\\" + site_list[0] + "-GEC.flt",
+DirectOld=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2"
+Direct3 =r"E:\1Master_2\3-IUGG\Result_Server\Client_Dynamic"
+filename_list = [
+                # Direct3 + "\\" + "client-Aug-" +  "310" + "-06" + "\\" + site_list[0] + "-GEC.flt",
                 # Direct3 + "\\" + "client-Grid-" + "310" + "-02" + "\\" + site_list[0] + "-GEC.flt",
                 # Direct3 + "\\" + "client-Grid-" + "339" + "-06" + "\\" + site_list[0] + "-GEC.flt",
                 # Direct3 + "\\" + "client-Grid-" + "310" + "-06" + "\\" + site_list[0] + "-GEC.flt",
-                Direct3 + "\\" + "client-Grid_Ele-" + "310" + "-01" + "\\" + site_list[0] + "-GEC.flt",
+                DirectOld + "\\" + "client-Grid_Ele-" + "310" + "-01" + "\\" + site_list[0] + "-GEC.flt",
+                Direct3 + "\\" + "client-Grid_CrossChk-" + "310" + "-01" + "\\" + site_list[0] + "-GEC.flt",
                 ]
 filename_ref = [r"E:\1Master_2\Paper_Grid\Dynamic\2021310_WH\\Ref.txt",
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
@@ -229,7 +232,7 @@ if plot_type == "2D":
     for cur_mode in plot_all.keys():
         axP[0].bar(step_plot[cur_mode]["3D"],plot_all[cur_mode]["H"],width = step_in,label='value')
         axP[1].bar(step_plot[cur_mode]["3D"],plot_all[cur_mode]["U"],width = step_in,label='value')
-plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-4\Fig12.svg")
-plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-4\Fig12.png",dpi=600)
+# plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-4\Fig12.svg")
+# plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-4\Fig12.png",dpi=600)
 plt.show()
-print("HJJ")
+# print("HJJ")

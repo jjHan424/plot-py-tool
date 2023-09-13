@@ -27,9 +27,10 @@ font_text = {'family' : 'Arial','weight' : 300,'size'   : 20}
 xtick_size = 16
 color_list = sns.color_palette("Set1")
 
-site_list = ["HKMW"]
+site_list = ["HKSC"]
 count = 1
-Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,5,16,4
+# Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,5,16,4
+Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,3,21,4
 time="UTC"
 
 plot_type = "ALL"
@@ -41,28 +42,30 @@ while count > 0:
     for i in range(len(site_list)):
         cur_site = site_list[i]
         
-        path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
-        save_dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\ROTI-30" + "\\" + "{:0>4}".format(Year) + cdoy
-        diff_dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Diff-New" + "\\" + "{:0>4}{:0>3}".format(Year,doy) + "\\" + cur_site + "-GEC-5.diff"
-        # path_roti = r"G:\Data\Res\ROTI" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
-        # save_dir = r"G:\Data\Res\ROTI-30" + "\\" + "{:0>4}".format(Year) + cdoy
-        # diff_dir = r"G:\Data\Res\Diff-New" + "\\" + "{:0>4}{:0>3}".format(Year,doy) + "\\" + cur_site + "-GEC-5.diff"
-        [Diff_Head,Diff_Data] = rf.open_aug_file_new(diff_dir)
-        if (not os.path.exists(save_dir)):
-            os.mkdir(save_dir)
-        # path_roti = r"D:\GREAT\GREAT_Project\Allystar\ROTI_20220722\30s\DGCA2022203_GEC.ismr"
-        # path_roti = r"D:\GREAT\GREAT_Project\Allystar\ROTI_20220722\30s\SWHF2022203_GEC.ismr"
+        # path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
+        # save_dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\ROTI-30" + "\\" + "{:0>4}".format(Year) + cdoy
+        # diff_dir = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Diff-New" + "\\" + "{:0>4}{:0>3}".format(Year,doy) + "\\" + cur_site + "-GEC-5.diff"
+        # # path_roti = r"G:\Data\Res\ROTI" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
+        # # save_dir = r"G:\Data\Res\ROTI-30" + "\\" + "{:0>4}".format(Year) + cdoy
+        # # diff_dir = r"G:\Data\Res\Diff-New" + "\\" + "{:0>4}{:0>3}".format(Year,doy) + "\\" + cur_site + "-GEC-5.diff"
+        # [Diff_Head,Diff_Data] = rf.open_aug_file_new(diff_dir)
+        # if (not os.path.exists(save_dir)):
+        #     os.mkdir(save_dir)
+        # # path_roti = r"D:\GREAT\GREAT_Project\Allystar\ROTI_20220722\30s\DGCA2022203_GEC.ismr"
+        # # path_roti = r"D:\GREAT\GREAT_Project\Allystar\ROTI_20220722\30s\SWHF2022203_GEC.ismr"
 
-        figP,axP = plt.subplots(2,3,figsize=(12,8),sharey=False,sharex=True)
-        # figP,axP = plt.subplots(1,3,figsize=(11,5),sharey=False,sharex=True)
-        #Time
+        # figP,axP = plt.subplots(2,3,figsize=(12,8),sharey=False,sharex=True)
+        # # figP,axP = plt.subplots(1,3,figsize=(11,5),sharey=False,sharex=True)
+        # #Time
         
-        t=time
-        all=False
-        colormap = sns.color_palette(['xkcd:green','xkcd:blue','xkcd:red', 'xkcd:brown', 'xkcd:pink', 'xkcd:purple'],100)
-        ###-------------Time Set in Plot--------------##
+        # t=time
+        # all=False
+        # colormap = sns.color_palette(['xkcd:green','xkcd:blue','xkcd:red', 'xkcd:brown', 'xkcd:pink', 'xkcd:purple'],100)
+        # ###-------------Time Set in Plot--------------##
         [XLabel,XTick,cov_Time,begT,LastT]=dr.xtick(time,Year,Mon,Day,Hour,LastT,deltaT)
 
+        ##mean_max_roti###
+        path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
         ###-------------ROTI-------------###
         data = rf.open_ismr(path_roti)
         # print(data)
@@ -82,10 +85,12 @@ while count > 0:
         Num_G,Num_E,Num_C=[],[],[]
         for time in data.keys():
             plot_time = (time - cov_Time) / 3600
-            if time not in Diff_Data.keys():
-                continue
+            # if time not in Diff_Data.keys():
+            #     continue
             if (plot_time > begT and plot_time < begT + LastT) or all:
                 temp_mean_G,temp_mean_E,temp_mean_C=[],[],[]
+                # if time not in Diff_Data.keys():
+                #         continue
                 for sat in data[time].keys():
                     # if sat not in Diff_Data[time].keys():
                     #     continue
@@ -107,8 +112,10 @@ while count > 0:
                         temp_mean_E.append(data[time][sat])
                         time_E[prn-1].append(plot_time)
                 tempNum=0
-                if len(temp_mean_G)>0:
+                if len(temp_mean_G)>3:
                     mean_temp = np.mean(temp_mean_G)
+                    if mean_temp > 6:
+                        continue
                     mean_G.append(mean_temp)
                     min_G.append(np.min(temp_mean_G))
                     meanT_G.append(plot_time)
@@ -118,14 +125,16 @@ while count > 0:
                             tempNum = tempNum + 1
                     Num_G.append(tempNum)
                 else:
-                    mean_G.append(1.25)
+                    mean_G.append(0)
                     min_G.append(0)
                     meanT_G.append(plot_time)
                     All_G.append(len(temp_mean_G))
                     Num_G.append(len(temp_mean_G))
                 tempNum=0
-                if len(temp_mean_E)>0:
+                if len(temp_mean_E)>3:
                     mean_temp = np.mean(temp_mean_E)
+                    if mean_temp > 6:
+                        continue
                     mean_E.append(mean_temp)
                     min_E.append(np.min(temp_mean_E))
                     meanT_E.append(plot_time)
@@ -135,14 +144,16 @@ while count > 0:
                             tempNum = tempNum + 1
                     Num_E.append(tempNum)
                 else:
-                    mean_E.append(1.25)
+                    mean_E.append(0)
                     min_E.append(0)
                     meanT_E.append(plot_time)
                     All_E.append(len(temp_mean_E))
                     Num_E.append(len(temp_mean_E))
                 tempNum=0
-                if len(temp_mean_C)>0:
+                if len(temp_mean_C)>3:
                     mean_temp = np.mean(temp_mean_C)
+                    if mean_temp > 6:
+                        continue
                     mean_C.append(mean_temp)
                     min_C.append(np.min(temp_mean_C))
                     meanT_C.append(plot_time)
@@ -152,7 +163,7 @@ while count > 0:
                             tempNum = tempNum + 1
                     Num_C.append(tempNum)
                 else:
-                    mean_C.append(1.25)
+                    mean_C.append(0)
                     min_C.append(0)
                     meanT_C.append(plot_time)
                     All_C.append(len(temp_mean_C))
@@ -170,7 +181,16 @@ while count > 0:
             axP[1][1].set_ylim(0, 2)
             axP[1][2].set_ylim(0, 2)
         
-        
+        print("GPS:{:.4f}".format(np.max(np.array(mean_G))))
+        print("GAL:{:.4f}".format(np.max(np.array(mean_E))))
+        print("BDS:{:.4f}".format(np.max(np.array(mean_C))))
+        figP,axP = plt.subplots(3,1,figsize=(11,5),sharey=False,sharex=True)
+        axP[0].scatter(meanT_G, mean_G,s=1)
+        axP[1].scatter(meanT_E, mean_E,s=1)
+        axP[2].scatter(meanT_C, mean_C,s=1)
+        axP[2].set_xticks(XTick)
+        axP[2].set_xticklabels(XLabel)
+        plt.show()
 
         # axP[0][0].plot(meanT_G, All_G,color = color_list[0])
         # axP[0][1].plot(meanT_E, All_E,color = color_list[0])
@@ -262,9 +282,9 @@ while count > 0:
         # axP[1].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
         # axP[2].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
 
-        axP[0][0].set_ylim(0,12)
-        axP[0][1].set_ylim(0,12)
-        axP[0][2].set_ylim(0,12)
+        axP[0][0].set_ylim(0,6)
+        axP[0][1].set_ylim(0,6)
+        axP[0][2].set_ylim(0,6)
 
         # axP[0].grid(False)
         # axP[1].grid(False)
@@ -415,7 +435,7 @@ while count > 0:
         box = axP[1][2].get_position()
         axP[1][2].set_position([box.x0,box.y0 + box.y0*0.5, box.width, box.height])
 
-        plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-3\HKMW-ROTI-ROTI-New.png",dpi=600)
+        # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-3\HKMW-ROTI-ROTI-New.png",dpi=600)
         # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-3\HKMW-ROTI-ROTI.svg")
         plt.show()
         Day = Day + 1

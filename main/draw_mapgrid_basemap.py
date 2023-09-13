@@ -2,26 +2,34 @@ from math import ceil
 import os
 import sys
 from turtle import width
-
 from numpy import size
 sys.path.insert(0,os.path.dirname(__file__)+'/..')
 import folium
 from folium.features import DivIcon
+import matplotlib.pyplot as plt
 import webbrowser
 import trans as tr
 import glv
 import readfile as rf
 from shapely.ops import triangulate
 from shapely import wkt
-from shapely.geometry import MultiPoint
-import shapely.geometry
 import math
 import matplotlib as mpl
 import numpy as np
+from folium.plugins import HeatMap
+import seaborn as sns
+from mpl_toolkits.basemap import Basemap
+font_title = {'family' : 'Arial', 'weight' : 300, 'size' : 35}
+font_label = {'family' : 'Arial', 'weight' : 300, 'size' : 33}
+font_tick = {'family' : 'Arial', 'weight' : 300, 'size' : 35}
+font_legend = {'family' : 'Arial', 'weight' : 300, 'size' : 30}
+# font_legend = {'family' : 'Times New Roman', 'weight' : 600, 'size' : 15}
+font_text = {'family' : 'Arial','weight' : 300,'size'   : 4}
+tick_size = 4
 
 def draw_grid(minLon,maxLat,maxLon,minLat,space,m):
-    lat_split = 16*1.3
-    lon_split = 16*1.4
+    lat_split = 16
+    lon_split = 16*1.8
     #----- Plot Grid -----#
     print("Top Left Corner : ({:>.4f},{:>.4f})".format(minLon,maxLat))
     print("Lower Right Corner : ({:>.4f},{:>.4f})".format(maxLon,minLat))
@@ -92,7 +100,7 @@ def draw_grid(minLon,maxLat,maxLon,minLat,space,m):
     #---
     cur_Lon = cur_Lon + space
     cur_Lat = cur_Lat - space
-    while cur_Lon > minLon:
+    while cur_Lon >= minLon:
         # if (cur_Lon-space) < minLon:
         #     break
         if i==0:
@@ -112,14 +120,14 @@ def draw_grid(minLon,maxLat,maxLon,minLat,space,m):
                 icon_anchor=(7,20),
                 html='<div style="font-size: 20pt; color : black">'+"{:.1f}\u00B0E".format(cur_Lon+space)+'</div>',
                 )).add_to(m)
-    # folium.Marker(location=[minLat - space/5,cur_Lon-space/5],
-    #             icon=DivIcon(
-    #             icon_size=(150,36),
-    #             icon_anchor=(7,20),
-    #             html='<div style="font-size: 20pt; color : black">'+"{:.1f}\u00B0E".format(cur_Lon)+'</div>',
-    #             )).add_to(m)
-    # folium.Polygon(locations=[[minLat,cur_Lon],[minLat,cur_Lon-space / lat_split],[minLat - space / lon_split,cur_Lon - space / lat_split],[minLat - space / lon_split,cur_Lon]]
-    #                    ,color = 'black',fill = True,fill_color = c, fill_opacity=1,weight = 3).add_to(m)
+    folium.Marker(location=[minLat - space/5,cur_Lon-space/5],
+                icon=DivIcon(
+                icon_size=(150,36),
+                icon_anchor=(7,20),
+                html='<div style="font-size: 20pt; color : black">'+"{:.1f}\u00B0E".format(cur_Lon)+'</div>',
+                )).add_to(m)
+    folium.Polygon(locations=[[minLat,cur_Lon],[minLat,cur_Lon-space / lat_split],[minLat - space / lon_split,cur_Lon - space / lat_split],[minLat - space / lon_split,cur_Lon]]
+                       ,color = 'black',fill = True,fill_color = c, fill_opacity=1,weight = 3).add_to(m)
     # ---
     #|   |
     #|   |
@@ -163,11 +171,9 @@ def cal_dis_interpolation(client_server,crd_data):
         for server_site in client_server[cur_site]:
             if server_site not in crd_data.keys():
                 continue
-            if server_site == cur_site:
-                continue
             cur_server = crd_data[server_site]["XYZ"]
             delta_xyz = np.array(crd_data[client_site]["XYZ"]) - np.array(crd_data[server_site]["XYZ"])
-            dis = math.sqrt(np.sum(delta_xyz*delta_xyz)) / 1000
+            dis = math.sqrt(np.sum(delta_xyz*delta_xyz))/1000
             all_dis.append(dis)
             print("{}-{}: {:.2f} km".format(client_site,server_site,dis))
         print("{}-{}: {:.2f} km".format(client_site,"MEAN",np.mean(np.array(all_dis))))
@@ -188,8 +194,9 @@ def cal_dis_Grid(client_server,crd_data):
             # print("{}-{}: {:.2f} km".format(client_site,server_site,dis))
         all_site_dis[cur_site] = all_dis
         # print("{}: {:.2f} km".format(client_site,np.mean(np.array(all_dis))))
-    mean_length = 6
+    mean_length = 3
     dis_site = {}
+    site_dis = {}
     for cur_site in all_site_dis.keys():
         cur_dis = all_site_dis[cur_site]
         cur_dis.sort()
@@ -197,54 +204,31 @@ def cal_dis_Grid(client_server,crd_data):
             mean_length = len(cur_dis)
         # print("{}: {:.2f} km".format(cur_site,np.mean(np.array(cur_dis[0:mean_length-1]))))
         dis_site[np.mean(np.array(cur_dis[0:mean_length-1]))] = cur_site
+        site_dis[cur_site] = np.mean(np.array(cur_dis[0:mean_length-1]))
     dis_sort = sorted(dis_site)
+    dis_site_new = {}
     for cur_dis in dis_sort:
         print("{}: {:.2f} km".format(dis_site[cur_dis],cur_dis))
-    print("{}: {:.2f} km".format("MEAN",np.mean(dis_sort)))
+        dis_site_new[cur_dis] = dis_site[cur_dis]
+    return site_dis
     
+def rgb2hex(RGB):
+    a = hex(int(int(RGB)/16))[-1]
+    b = hex(int(int(RGB)%16))[-1]
+    return (a+b)
 
-crd_file = r"E:\0Project\ZHD_Data\ZHD_html.crd"
-# crd_file = r"E:\1Master_2\3-IUGG\crd\AUG_HK_xml.crd"
-space = 0.5 # Grid space deg
-# client_server = ["TERS","KARL","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","HOBU","PTBB","GOET"]
-site_list1 = ["BRUX","DOUR","WARE","REDU","EIJS","BADH","FFMJ","KLOP"]
-site_list2 = ["KOS1","DENT","WSRT","TIT2","DIEP","EUSK"]
-site_list3 = ["KARL","TERS","IJMU","HOBU","DILL","PTBB","GOET"]
-
+crd_file = r"E:\1Master_2\3-IUGG\crd\UPD_CHN.crd"
+space = 1.5 # Grid space deg
+# client_server = ["IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","HOBU","PTBB","GOET"]
+client_server = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # site_list1 = ["KOS1","BRUX","DOUR","WARE","REDU","EIJS","BADH"]
 # site_list2 = ["DENT","WSRT","TIT2","DILL","DIEP","KLOP","FFMJ","PTBB"]
 # site_list3 = ["KARL","TERS","IJMU","EUSK","HOBU","GOET"]
 
-site_list3 = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# site_list1 = ["BRUX","DOUR","WARE","REDU","EIJS","BADH","FFMJ","KLOP"]
+# site_list2 = ["KOS1","DENT","WSRT","TIT2","DIEP","EUSK"]
+# site_list3 = ["KARL","TERS","IJMU","HOBU","DILL","PTBB","GOET"]
 
-client_server = {"ES32":["ES32","ES33","ES34","ES35","ES36","ES37","ES38","ES41","ES42","ES43"],
-                 "ES33":["ES32","ES33","ES34","ES35","ES36","ES37","ES38","ES41","ES42","ES43"],
-                 "ES34":["ES32","ES33","ES34","ES35","ES36","ES37","ES38","ES41","ES42","ES43"],
-                 "ES35":["ES32","ES33","ES34","ES35","ES36","ES37","ES38","ES41","ES42","ES43"],
-                 "ES36":["ES32","ES33","ES34","ES35","ES36","ES37","ES38","ES41","ES42","ES43"],
-                 "ES37":["ES32","ES33","ES34","ES35","ES36","ES37","ES38","ES41","ES42","ES43"],
-                 "ES38":["ES32","ES33","ES34","ES35","ES36","ES37","ES38","ES41","ES42","ES43"],
-                 "ES41":["ES32","ES33","ES34","ES35","ES36","ES37","ES38","ES41","ES42","ES43"],
-                 "ES42":["ES32","ES33","ES34","ES35","ES36","ES37","ES38","ES41","ES42","ES43"],
-                 "ES43":["ES32","ES33","ES34","ES35","ES36","ES37","ES38","ES41","ES42","ES43"]}
-# client_server = {"ES43":["ES42","ES38","ES35"],
-#                  "ES38":["ES43","ES33","ES39"]}
-# client_server = {"JFNG":["WHDX"],
-#                  }
-
-# client_server = {"DIEP1":["WSRT","HOBU","GOET"],
-#                  "DIEP2":["WSRT","HOBU","PTBB"],
-#                  "DELF":["IJMU","KOS1","VLIS"],
-#                  "EIJS":["TIT2","EUSK","WARE"],
-#                  "WARE":["EIJS","BRUX","DOUR"],
-#                  "WSRT":["TERS","KOS1","DIEP"],
-#                  "BRUX":["DENT","WARE","DOUR"]}
-# client_server = {"DIEP1":["WSRT","HOBU","GOET"],
-#                  "DELF":["IJMU","KOS1","VLIS"],
-#                  "EIJS":["TIT2","EUSK","WARE"],
-#                  "WSRT":["TERS","KOS1","DIEP"],
-#                  "BRUX":["DENT","WARE","DOUR"]}
-# client_server = {"TIT2":["REDU"]}
 #read crd file
 crd_data,B,L = {},[],[]
 with open(crd_file,'rt') as f:
@@ -256,87 +240,59 @@ with open(crd_file,'rt') as f:
         xyz = [float(value[1]),float(value[2]),float(value[3])]
         crd_data[value[0]]["XYZ"] = xyz
         blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-        # print("{}: {:.5f} {:.5f} {:.5f}".format(value[0],blh[0] / glv.deg,blh[1] / glv.deg,blh[2]))
         blh = [blh[0] / glv.deg,blh[1] / glv.deg,blh[2]]
         if blh[1] > 180:
             blh = [blh[0],blh[1] - 360,blh[2]]
         crd_data[value[0]]["BLH"] = blh
         B.append(blh[0])
         L.append(blh[1])
-        print("{:.2f},{:.2f}".format(blh[0],blh[1]))
         crd_data[value[0]]["SYS"] = ""
         for i in range(len(value)-1):
             if i >= 4:
                 crd_data[value[0]]["SYS"] = crd_data[value[0]]["SYS"] + value[i]
         crd_data[value[0]]["VALUE"] = value[len(value)-1]
 mean_bl = [np.mean(B),np.mean(L)] 
-title='https://webrd02.is.autonavi.com/appmaptile?lang=en&size=1&scale=1&style=8&x={x}&y={y}&z={z}' #常规英文      
-# title = 'http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetGray/MapServer/tile/{z}/{y}/{x}'
-# title = 'Stamen Watercolor'
-# title = 'Stamen Toner'
-m = folium.Map(location=[mean_bl[0], mean_bl[1]], zoom_start=5, tiles=title, attr='default',control_scale = True)
-# m = folium.Map(location=[mean_bl[0], mean_bl[1]], zoom_start=5, attr='default',control_scale = True)
-# cal_dis_interpolation(client_server,crd_data)
-# cal_dis_Grid(site_list3,crd_data)
-#-----mark site-----#
-cmap4 = ['red','cyan','blue','purple','yellow','lime','magenta','orange','green','black','red','cyan','blue','purple','yellow','lime','magenta','orange','green','black']
-color_set = {}
-color_set["G"],color_set["GE"],color_set["GEC3"],color_set["GEC2C3"],color_set["GC2C3"] = 'purple','green','blue','blue','yellow'
-# color_set["G"],color_set["GC2"],color_set["GEC3"],color_set["GEC3C2"],color_set["GC3C2"] = 'purple','green','blue','red','yellow'
-minLat = 90
-minLon = 180
-maxLat = -90
-maxLon = -180
+
+plt.figure(figsize=(1.65,1.4),dpi=6000)
+##---EPN_UPD---##
+# map = Basemap(llcrnrlon=-11, llcrnrlat=34, urcrnrlon=35, urcrnrlat=72, resolution='c',projection='cyl')
+# map.drawparallels(circles=np.linspace(34, 72, 5),labels=[1, 0, 0, 0], color='gray',fontsize = tick_size,linewidth=0.5)
+# map.drawmeridians(meridians=np.linspace(-11, 35, 5),labels=[0, 0, 0, 1], color='gray',fontsize = tick_size,linewidth=0.5)
+##---GER_AUG---##
+# map = Basemap(llcrnrlon=3.3, llcrnrlat=49.1, urcrnrlon=10.8, urcrnrlat=53.6, resolution='c',projection='cyl')
+# map.drawparallels(circles=np.linspace(49.1, 53.6, 4),labels=[1, 0, 0, 0], color='gray',fontsize = tick_size,linewidth=0.5)
+# map.drawmeridians(meridians=np.linspace(3.3, 10.8, 6),labels=[0, 0, 0, 1], color='gray',fontsize = tick_size,linewidth=0.5)
+##---CHN_UPD---##
+# map = Basemap(llcrnrlon=76,urcrnrlon=123.5, llcrnrlat=18,  urcrnrlat=46, resolution='c',projection='cyl')
+# map.drawparallels(circles=np.linspace(18, 46, 5),labels=[1, 0, 0, 0], color='gray',fontsize = tick_size,linewidth=0.5)
+# map.drawmeridians(meridians=np.linspace(76, 123.5, 5),labels=[0, 0, 0, 1], color='gray',fontsize = tick_size,linewidth=0.5)
+##---HK_AUG---##
+map = Basemap(llcrnrlon=113.85, llcrnrlat=22.2, urcrnrlon=114.35, urcrnrlat=22.6, resolution='c',projection='cyl')
+map.drawparallels(circles=np.linspace(22.2, 22.6, 5),labels=[1, 0, 0, 0], color='gray',fontsize = tick_size,linewidth=0.5)
+map.drawmeridians(meridians=np.linspace(113.9, 114.4, 6),labels=[0, 0, 0, 1], color='gray',fontsize = tick_size,linewidth=0.5)
+
+map.readshapefile(r'D:\Tools\gadm36_CHN_shp\gadm36_CHN_0','states',drawbounds=True)
+map.readshapefile(r'D:\Tools\gadm36_HKG_shp\gadm36_HKG_0','states',drawbounds=True)
+
+# map.readshapefile(r'D:\Tools\gadm36_DEU_shp\gadm36_DEU_0','states',drawbounds=True)
+# map.readshapefile(r'D:\Tools\gadm36_FRA_shp\gadm36_FRA_0','states',drawbounds=True)
+# map.readshapefile(r'D:\Tools\gadm36_NLD_shp\gadm36_NLD_0','states',drawbounds=True)
+# map.readshapefile(r'D:\Tools\gadm36_BEL_shp\gadm36_BEL_0','states',drawbounds=True)
+# map.readshapefile(r"D:\Tools\ne_110m_admin_0_countries\ne_110m_admin_0_countries",'states',drawbounds=True)
+# ##---Marker---##
 for cur_site in crd_data:
-    # Circle
-    if cur_site == "ES44" or cur_site == "ES31":
-        folium.CircleMarker(location=[crd_data[cur_site]["BLH"][0],crd_data[cur_site]["BLH"][1]],
-                                radius=10,   # 圆的半径
-                                popup=cur_site,
-                                color='red',
-                                fill=True,
-                                fill_color=color_set[crd_data[cur_site]["SYS"]],
-                                fill_opacity=1
-                        ).add_to(m)
-    else:
-        folium.CircleMarker(location=[crd_data[cur_site]["BLH"][0],crd_data[cur_site]["BLH"][1]],
-                            radius=10,   # 圆的半径
-                            popup=cur_site,
-                            color='blue',
-                            fill=True,
-                            fill_color=color_set[crd_data[cur_site]["SYS"]],
-                            fill_opacity=1
-                    ).add_to(m)
-    # Name
-    folium.Marker(location=[crd_data[cur_site]["BLH"][0]+space/10,crd_data[cur_site]["BLH"][1]],
-                icon=DivIcon(
-                icon_size=(150,36),
-                icon_anchor=(7,20),
-                html='<div style="font-size: 18pt; color : black">'+"{:}".format(cur_site)+'</div>',
-                )).add_to(m)
-    # Find Max and Min
-    if crd_data[cur_site]["BLH"][0] < minLat:
-        minLat = crd_data[cur_site]["BLH"][0]
-    if crd_data[cur_site]["BLH"][1] < minLon:
-        minLon = crd_data[cur_site]["BLH"][1]
-    if crd_data[cur_site]["BLH"][0] > maxLat:
-        maxLat = crd_data[cur_site]["BLH"][0]
-    if crd_data[cur_site]["BLH"][1] > maxLon:
-        maxLon = crd_data[cur_site]["BLH"][1]
-draw_grid(minLon,maxLat,maxLon,minLat,space,m)
-# m.add_child(folium.ClickForMarker(popup="marker"))
-m.save(r"E:\0Project\ZHD_Data\temp.html")
+    # if cur_site in site_list1:
+    #     map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=10,facecolor='green',edgecolor='k', linewidth=0.3)
+    # if cur_site in site_list2:
+    #     map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=10,facecolor='yellow',edgecolor='k', linewidth=0.3)
+    # if cur_site in site_list3:
+    #     map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=10,facecolor='red',edgecolor='k', linewidth=0.3)
+    if cur_site in client_server:
+        map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='o',s=9,facecolor='blue',edgecolor='k', linewidth=0.3)
+        plt.text(crd_data[cur_site]["BLH"][1] - 0.025,crd_data[cur_site]["BLH"][0] + 0.015,cur_site,color = "red",fontdict=font_text)
+    # else:
+    #     map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=6,facecolor='#4169E1',edgecolor='k', linewidth=0.3)
 
 
-
-# out_xml_path = r"E:\1Master_2\3-IUGG\crd\AUG_GER_21.xml"
-# for cur_site in crd_data.keys():
-#     # G,E,C2,C3 = False,False,False,False
-#     with open(out_xml_path,'a') as file:
-#         str_write = "<rec X=\"{:.4f}\" Y=\"{:.4f}\" Z=\"{:.4f}\" id = \"{}\" />\n".format(crd_data[cur_site]["XYZ"][0],crd_data[cur_site]["XYZ"][1],crd_data[cur_site]["XYZ"][2],cur_site)
-#         file.write(str_write)
-# for cur_site in crd_data.keys():
-#     G,E,C2,C3 = False,False,False,False
-#     with open(out_xml_path,'a') as file:
-#         str_write = "<STA ID=\"{}\" sigCLK=\"9000\" sigPOS=\"0.1_0.1_0.1\" sigSION=\"9000\" sigTropPd=\"0.015\" sigZTD=\"0.201\" />\n".format(cur_site)
-#         file.write(str_write)
+plt.savefig(r"E:\0Project\LX\HK_AUG.jpg")
+# plt.show()

@@ -122,12 +122,19 @@ def pre_aug_new(head_I = {}, data_I = {}, data_S = {}):
                 if sys_type not in ref_data[time]:   
                     ref_data[time][sat[0]] = 0                
                     ref_data[time][sys_type] = data_I[time][ref_sat[sat[0]]][type] - data_S[time][ref_sat[sat[0]]][type]
-                    # ref_data[time][sys_type] = data_I[time][sat][type] - data_S[time][sat][type]
+                    ref_data[time][sys_type] = data_I[time][sat][type] - data_S[time][sat][type]
                 else:
                     if type == "TRP1":
                         all_data[time][sat][type] = (data_I[time][sat][type] - data_S[time][sat][type])
                     else:
                         all_data[time][sat][type] = (data_I[time][sat][type] - data_S[time][sat][type]) - ref_data[time][sys_type]
+        for sat in data_I[time].keys():
+            if sat not in all_data[time].keys():
+                continue
+            for type in data_I[time][sat].keys():
+                if type[0] != "d":
+                    continue
+                all_data[time][sat][type] = data_I[time][sat][type]
     return all_data
 
 def pre_Bias(data = {},INT = 30):
@@ -338,6 +345,7 @@ def XYZ2ENU_const(XYZ = {},REF_XYZ = {},site = "HKLM"):
             all_data[time]["NSAT"] = XYZ[time]["NSAT"]
             all_data[time]["PDOP"] = XYZ[time]["PDOP"]
             all_data[time]["AMB"] = XYZ[time]["AMB"]
+            all_data[time]["Q"] = XYZ[time]["Q"]
     return all_data
 
 def XYZ2ENU_dynamic(XYZ = {},REF_XYZ = {}):

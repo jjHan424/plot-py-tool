@@ -17,12 +17,12 @@ import matplotlib.pyplot as plt
 import dataprocess as dp
 import draw as dr
 
-Y=2021
-M=11
-D=6
+Y=2023
+M=9
+D=10
 #all 
-S=4 #21
-L=3
+S=17 #21
+L=7
 #open
 # S=8+43/60 #21
 # L=8/60
@@ -33,33 +33,21 @@ L=3
 # S=8+57/60
 # L=34/60
 
-# mode_list = ["DGDC","DGCA","SZYT","HZAD","SWHF"]
-# mode_list = ["MLCM","Grid"]
-mode_list = ["Global","Regional"]
-# file_list = [
-#             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\GRT3_20220924_SGG_CLK06_S_GEC.aug",
-#             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\N004_20220924_SGG_CLK06_S_GEC.aug",
-#             r"E:\0Project\NORINCO\0Project\3_20220924_0925(414-Novatel3-302-Trimble2)\20220923AUG_GRT3_414_CLK06\res\20220924\N047_20220924_SGG_CLK06_S_GEC.aug",
-#             r"E:\0Project\NORINCO\0Project\20220923AUG_GRT3_414_CLK06\res\20220925\N004_20220925_SGG_CLK06_S_GEC.aug"
-# ]
-# file_list = [
-#             # r"E:\1Master_2\Paper_Grid\Res_FromServer\Grid_Sig_Wgt_dIon_New\client-Wgt-WUDA\WUDA-GEC-I.aug",
-#             r"E:\0Project\NORINCO\0Project\AUG_Fig\N004_20221008_SGG_CLK01_S_GEC.aug",
-#             r"E:\0Project\NORINCO\0Project\AUG_Fig\N047_20221008_SGG_CLK01_S_GEC.aug",
-#             r"E:\0Project\NORINCO\0Project\AUG_Fig\GRT1_20221008_SGG_CLK01_S_GEC.aug"
-#             # r"E:\0Project\NORINCO\0Project\CLK06\PPPRTK-WUH2\20220926\WUH2_20220926_SGG_CLK06_K_GEC.aug"
-# ]
+mode_list = ["WH","GZ"]
+# mode_list = ["Server1","Server2","Server3","Client"]
 
 file_list = [
-r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server_cod\WUDA-GEC.aug",
-r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server\WUDA-GEC.aug",
-# r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server\K057-GEC.aug"
+# r"E:\0Project\ZHD_Data\20230910_Data_Test\BDS2\ppprtk\ES43_20230910_SGG_CLK06_K_GEC.aug",
+r"E:\0Project\ZHD_Data\20230910_Data_Test\BDS2\aug_rt\SGG__20230910_SGG_CLK06_S_GEC.aug",
+r"E:\0Project\ZHD_Data\20230910_Data_Test\BDS2\aug_rt\GZLH_20230910_SGG_CLK06_S_GEC.augi",
+r"E:\0Project\ZHD_Data\20230910_Data_Test\BDS2\aug_rt\ES42_20230910_SGG_CLK06_S_GEC.aug",
+r"E:\0Project\EXSUN_Data\20230909_Data_Test\BDS2\ppprtk\ES43_20230909_SGG_CLK06_K_GEC.aug",
 ]
 data_all = {}
 for i in range(len(mode_list)):
-    # [head,data] = rf.open_aug_file_rtppp(file_list[i])
-    [head,data] = rf.open_aug_file_new(file_list[i])
+    [head,data] = rf.open_aug_file_rtppp(file_list[i])
+    # [head,data] = rf.open_aug_file_new(file_list[i])
     # data = rf.open_epo_file_rtppp(file_list[i])
     data_all[mode_list[i]] = data
 
-dr.plot_aug_NSAT(data_all,mode_list,type = "NSAT",freq = 1,starttime = S,time = "UTC",show = True,deltaT=0.5,ylim=0.5,LastT=L,year = Y,mon=M,day=D,deltaData=5)
+dr.plot_aug_NSAT(data_all,mode_list,type = "NSAT",freq = 1,starttime = S,time = "UTC+8",show = True,deltaT=1,ylim=0.5,LastT=L,year = Y,mon=M,day=D,deltaData=5)

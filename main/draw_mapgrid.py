@@ -193,8 +193,8 @@ mark_point_xyz = {'HKCL':[-2392740.9396,5397563.0493,2404757.8653],
 site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # # site_list = ["AUG-HK2"]
 # site_user = "HKSC"
-mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\UPD_CHN.crd")
-space_set = 1
+mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\3-IUGG\crd\AUG_HK_xml.crd")
+space_set = 0.1
 site_user = "HKSC"
 # mark_point_xyz = rf.open_crd_gridmap(r"E:\1Master_2\Paper_Grid\crd\2021\AUG_WH.crd")
 # space_set = 0.5
@@ -294,7 +294,7 @@ for site in mark_point_xyz.keys():
         ).add_to(m)
     else:
         folium.CircleMarker(location=[blh[0],blh[1]],
-                            radius=20,   # 圆的半径
+                            radius=10,   # 圆的半径
                             popup='基站位置',
                             color='blue',
                             fill=True,
@@ -799,7 +799,7 @@ print("{}:{:.1f}km".format(site_user,np.mean(Dis_User)/1000))
 #         else:
 #             folium.PolyLine(locations=[[blh1[0],blh1[1]],[b,l]],color=c,weight=2).add_to(m)
 # m.save(savedir+"\\AUG-WH-Dynamic-310.html")
-m.save(r"E:\1Master_2\2-UPD_Test\UPD.html")
+m.save(r"E:\1Master_2\3-IUGG\crd\AUG_HK.html")
  
 # path_wkimg = r'D:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'  # 工具路径
 # cfg = imgkit.config(wkhtmltoimage=path_wkimg)

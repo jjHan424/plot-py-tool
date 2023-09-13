@@ -22,8 +22,8 @@ import trans as tr
 #path = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/060/client-rank//GREAT-GEC-S.bias"
 
 
-site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKPC","HKNP","HKMW","HKLM","HKOH"]
-# site_list = ["WHYJ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA"]
+# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKPC","HKNP","HKMW","HKLM","HKOH"]
+site_list = ["WHYJ","WHDS","WHSP","N028","N047","N068","XGXN","WHXZ"]
 # site_list = ["HB01","HB02","HB03","HB04","HB05","HB06","HB07"] 
 # site_list = ["K042","K057","K059","K101","A010","V092"]
 
@@ -41,14 +41,16 @@ site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKC
 count = 1
 Y=2021
 M=11
-D=5
-L=21
+D=6
+L=24
 while count > 0:
     doy = tr.ymd2doy(Y,M,D,0,0,00)
     cdoy = "{:0>3}".format(doy)
-    path = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Server\Bias" + "\\GREAT-GEC-5-HK-" + cdoy + ".bias"
+    # path = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Server\Bias" + "\\GREAT-GEC-5-HK-" + cdoy + ".bias"
+    path = r"E:\1Master_2\3-IUGG\Pro_2021310_Aug2Grid\Grid_BDS3\GREAT-GEC-5.bias"
     alldata = rf.open_bias_file_grid(path)
-    dr.plot_bias_grid(data = alldata,type = ["G","E","C"],mode=site_list,ylim = 0.1,starttime = 3,year=Y,mon=M,day=D,LastT=L,time="UTC",deltaT = 3)
+    alldata_pre = dp.pre_Bias(alldata,5)
+    dr.plot_bias_grid(data = alldata_pre,type = ["G","E","C","STD"],mode=site_list,ylim = 0.1,starttime = 0,year=Y,mon=M,day=D,LastT=L,time="UTC",deltaT = 4)
     D = D + 1
     count = count - 1
     # if (count == 0 and M!=12):

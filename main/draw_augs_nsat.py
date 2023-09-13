@@ -93,15 +93,15 @@ import draw as dr
 # path_S = "/Volumes/SAMSUNG USB/20220626Static302/2022_0626AUG06/res/20220626/NOVA_20220626_SGG_CLK06_S_GEC.aug"   # PPPAR算的改正数
 # path_I = "/Volumes/SAMSUNG USB/20220626Static302/2022_0626Static06/res/20220626/NOVA_20220626_SGG_CLK06_K_GEC.aug"# 内插改正数
 
-path_S = [r"F:\Data_20220923_CLK06\AUG_GRT3\res\20220923\GRT3_20220923_SGG_CLK06_S_GEC.aug",
-            r"F:\Data_20220923_CLK06\AUG_GRT3\res\20220923\N004_20220923_SGG_CLK06_S_GEC.aug"
+path_S = [r"E:\0Project\EXSUN_Data\20230907_Data_Test\BDS2\ES43_20230907_SGG_CLK01_K_GEC.aug",
+            r"E:\0Project\EXSUN_Data\20230907_Data_Test\BDS3\ES43_20230907_SGG_CLK01_K_GEC.aug"
             # r"E:\0Project\NORINCO\0Project\Epo_post_CLK01\WUH2_20220922_SGG_CLK01_S_GEC.aug"
           ]  # PPPAR算的改正数
-path_S = [
-r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server_cod\HKSC-GEC.aug",
-r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server_cod\WUDA-GEC.aug",
-r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server_cod\K057-GEC.aug"
-]
+# path_S = [
+# r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server_cod\HKSC-GEC.aug",
+# r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server_cod\WUDA-GEC.aug",
+# r"E:\1Master_2\Paper_Grid\2-IUGG\2021310\server_cod\K057-GEC.aug"
+# ]
 # path_S = [r"D:\GREAT\GREAT_Project\Allystar/20220720\CLK06\DGCA_20220720_SGG_CLK06_S_GEC.aug" ,
 #           r"D:\GREAT\GREAT_Project\Allystar/20220720\CLK06\DGDC_20220720_SGG_CLK06_S_GEC.aug" ,
 #           r"D:\GREAT\GREAT_Project\Allystar/20220720\CLK06\HCLH_20220720_SGG_CLK06_S_GEC.aug" ,
@@ -133,7 +133,7 @@ path_I = "E:\Tencent/20220719\Tencent\PPP-RTK_CLK01_SGGW/res/20220719\SGGW_20220
 
 for i in range(len(path_S)):
     [head_S, data_S] = rf.open_aug_file_rtppp(path_S[i])
-    dr.plot_aug_GEC_new(data_S, head_S, type="NSAT", freq=1, starttime=4, time="UTC", show=False, deltaT=0.5, ylim=0.2, LastT=13, year=2021, mon=11, day=6,save=path_S[i])
+    dr.plot_aug_GEC_new(data_S, head_S, type="NSAT", freq=1, starttime=0, time="UTC", show=True, deltaT=0.5, ylim=0.2, LastT=24, year=2023, mon=8, day=25,save=path_S[i])
 
 
 
