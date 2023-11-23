@@ -875,8 +875,8 @@ def open_ppprtk_rtpppfile(filename):
                 all_data[soweek]['Z'] = float(value[31])
                 all_data[soweek]['Q'] = float(value[20])
                 # all_data[soweek]['NSAT'] = float(value[24])
-                # all_data[soweek]['NSAT'] = float(value[12])
-                all_data[soweek]['NSAT'] = float(value[18])
+                all_data[soweek]['NSAT'] = float(value[12])
+                # all_data[soweek]['NSAT'] = float(value[18])
                 all_data[soweek]['PDOP'] = float(value[23])
                 if (all_data[soweek]['NSAT'] <= 5):
                     all_data[soweek]['AMB'] = 0

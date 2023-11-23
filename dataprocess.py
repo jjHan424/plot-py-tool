@@ -14,6 +14,7 @@ from numpy.core.numeric import NaN
 
 from numpy.lib.function_base import append
 import trans as tr
+import glv
 
 def pre_aug(Self_time = [], Self_aug = [], Inte_time = [], Inte_aug = [], ref = []):
     P1,P2,L1,L2 = [[] for i in range(60)],[[] for i in range(60)],[[] for i in range(60)],[[] for i in range(60)]
@@ -341,11 +342,11 @@ def XYZ2ENU_const(XYZ = {},REF_XYZ = {},site = "HKLM"):
             xyz.clear()
             all_data[time]["E"] = enu[0]
             all_data[time]["N"] = enu[1]
-            all_data[time]["U"] = enu[2]
+            all_data[time]["U"] = enu[2] + 0.0710
             all_data[time]["NSAT"] = XYZ[time]["NSAT"]
             all_data[time]["PDOP"] = XYZ[time]["PDOP"]
             all_data[time]["AMB"] = XYZ[time]["AMB"]
-            all_data[time]["Q"] = XYZ[time]["Q"]
+            # all_data[time]["Q"] = XYZ[time]["Q"]
     return all_data
 
 def XYZ2ENU_dynamic(XYZ = {},REF_XYZ = {}):
@@ -375,3 +376,24 @@ def XYZ2ENU_dynamic(XYZ = {},REF_XYZ = {}):
             all_data[time]["PDOP"] = XYZ[time]["PDOP"]
             all_data[time]["AMB"] = XYZ[time]["AMB"]
     return all_data
+
+
+def get_H_sun(year,month,day,hour,length,step,lon,lat):
+    doy = tr.ymd2doy(year,month,day,0,0,00)
+    N0 = 79.6764+0.2422*(year-1985) - int((year-1985)/4)
+    t = doy-N0
+    theta = 2*math.pi*t/365.2422
+    ED = 0.3723+23.2567*math.sin(theta)+0.1149*math.sin(2*theta) - 0.1712*math.sin(3*theta) - 0.758*math.cos(theta) + 0.3656*math.cos(2*theta) + 0.0201*math.cos(3*theta)
+    # hour,length,step = 0,24,30
+    cur_hour = hour
+    H_sun_list,time_plot = [],[]
+    while cur_hour < hour + length:
+        sin_h = math.sin(lat*glv.deg) * math.sin(ED*glv.deg) + math.cos(lat*glv.deg) * math.cos(ED*glv.deg) * math.cos((-180+15*(cur_hour+lon/15))*glv.deg)
+        H_sun = math.asin(sin_h)
+        if H_sun < 0:
+            cur_hour = cur_hour + step/3600
+            continue
+        H_sun_list.append(H_sun/glv.deg)
+        time_plot.append(cur_hour-2)
+        cur_hour = cur_hour + step/3600
+    return H_sun_list,time_plot

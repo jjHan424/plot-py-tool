@@ -14,21 +14,15 @@ import trans as tr
 import matplotlib.pyplot as plt
 
 year=2023
-mon=5
-day=16
+mon=4
+day=30
 
-print("GPST(Week Sow): ",tr.ymd2gpst(year,mon,day,10,50,0))
+print("GPST(Week Sow): ",tr.ymd2gpst(year,mon,day,0,0,0))
 print("Day of Year: ",tr.ymd2doy(year,mon,day,0,0,00))
 [week,sow]=tr.ymd2gpst(year,mon,day,0,0,00)
-[week,sow]=tr.ymd2gpst(year,mon,day,1,37,30)
 print("GPST(Day of Week): ",sow/3600/24)
-print(tr.mjd2gpst(60051.00,0))
-
-xyz = [-2141844.0708,5071953.6039,3209315.6304]
-
-blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
-xyz2 = tr.blh2xyz(blh[0],blh[1],blh[2])
-xyz = [-2141844.0708,5071953.6039,3209315.6304]
-print(xyz[0]-xyz2[0])
-print(xyz[1]-xyz2[1])
-print(xyz[2]-xyz2[2])
+print(tr.mjd2gpst(60208,0))
+xyz =     [3370667.1984,711818.7219,5349787.8726]
+ref_xyz = [3370658.8291,711876.9374,5349786.7382]
+enu = tr.xyz2enu(xyz,ref_xyz)
+print(enu)

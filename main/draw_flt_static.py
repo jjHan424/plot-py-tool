@@ -60,7 +60,7 @@ REF_XYZ = {
             "DIEP":[3842152.8194,563402.1377,5042888.5867],
             "DILL":[4132892.1702,485479.4981,4817740.6139],
             "DOUR":[4086778.3935,328452.3169,4869783.3870],
-            "EIJS":[4023086.0223,400395.3763,4916655.7058],
+            "EIJS":[4023086.0249,400395.3758,4916655.7120],
             "EUSK":[4022105.9954,477011.3699,4910840.9268],
             "FFMJ":[4053455.6499,617729.9464,4869395.9060],
             "GOET":[3918911.7424,687523.9507,4968545.6780],
@@ -77,21 +77,28 @@ REF_XYZ = {
             "WARE":[4031947.2820,370151.3545,4911906.5505],
             "WSRT":[3828735.8359,443305.2549,5064885.1890],
             "ES32":[-2232659.2519,5029348.8036,3214426.9336],
-            "ES38":[-2253351.8448,5027804.0163,3202439.2174],
+            "ES38":[-2253351.9081,5027804.0855,3202439.2626],
             # "ES43":[-2260116.4546,4991192.4489,3254167.3558],#CLK01
             "ES43":[-2260116.5742,4991192.4669,3254167.3800],
             "AHAQ":[-2502023.7806,4895810.7927,3222095.0954],
             "GZLH":[-2342399.0698,5388187.6595,2473904.3069],
-            "JFNG":[-2279829.2625,5004706.5393,3219777.4320],
+            "JFNG":[-2279829.2449,5004706.4642,3219777.3940],
+            "WUH2":[-2267750.3355,5009154.6262,3221294.4506],
+            "SPT0":[3328984.3188,761910.5194,5369033.9330],
+            "SPT7":[3328988.1263,761918.2170,5369031.8796],
+            "TRO1":[2102928.1650,721619.6044,5958196.3742],
+            "VARS":[1844608.5317,1109720.2844,5983941.4368],
            }
 ENU_ALL = {}
 # site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-site_list = ["GZLH","GZLH"]
+# site_list = ["EIJS","WSRT","BADH","KLOP","FFMJ"]
+site_list = ["TRO1","VARS"]
 # mode_list = ["Grid-1-1","Grid-5-5","Grid-5-1","Grid-Auto"]
 # mode_list = ["1-1","2-1","3-1","4-1","5-1","6-1","7-1","8-1","5-5","Auto"]
-mode_list = ["GZLH-BDS2","GZLH-BDS3"]
-# mode_list = ["ES43"]
+# mode_list = ["FLOAT","FIXED","CORR","VIRTUAL"]
+# mode_list = ["FLOAT","FIXED","IONO_CON"]
+mode_list = ["PPP","IONO_CON"]
 Sig = 0
 # SavePath=r"D:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\Aug"
 SavePath=r"E:\1Master_2\3-IUGG\Result_Server\Client_20230704_5S\RES_30S_10"
@@ -118,10 +125,10 @@ if (not os.path.exists(SavePath)):
 for j in range(len(site_list)):
     Site = site_list[j]
     Y=2023
-    M=9
-    D=11
+    M=1
+    D=29
     L=4
-    S=7.5
+    S=22
     DDD = 60/60
     count = 1
     # Direct = r"E:\1Master_2\3-IUGG\Result_Server\Client_20230629"
@@ -148,31 +155,27 @@ for j in range(len(site_list)):
             os.path.join(cur_file_path,Site+"-GEC"+"-CROSS"+"-10-10.flt"),
                         ]
         filename_list = [
-            # r'I:\EXSUN_Data_Test\20230907_CLK01\BDS2\PPPRTK\ES43_20230907_SGG_CLK01_K_GEC.pppar.pos',
-            # r"I:\EXSUN_Data_Test\20230907_Data_Test\BDS2\ES43_20230907_SGG_CLK01_S_GEC.ppp",
-            # r"E:\0Project\EXSUN_Data\20230909_Data_Test\BDS2\ppprtk\ES43_20230909_SGG_CLK06_K_GEC.ppprtk",
-            # r"E:\0Project\EXSUN_Data\20230909_Data_Test\BDS3\ppprtk\ES43_20230909_SGG_CLK06_K_GEC.ppprtk",
-            r"E:\0Project\ZHD_Data\20230911_Data_Test\BDS2\ppprtk\GZLH_20230911_SGG_CLK06_K_GEC.ppprtk",
-            r"E:\0Project\ZHD_Data\20230911_Data_Test\BDS3\ppprtk\GZLH_20230911_SGG_CLK06_K_GEC.ppprtk",
-            # r"E:\0Project\EXSUN_Data\rtppp_test\20230908_BDS2_ES43_ES43\res\20230908\ES43_20230908_epo_K_GEC.ppprtk",
-            r'E:\0Project\EXSUN_Data\20230908_Data_Test\BDS2\ppprtk\ES43_20230908_epo_K_GEC.ppprtk',
-            r'E:\0Project\EXSUN_Data\rtppp_test\ES\ES34_20230824_SGG_CLK01_S_GE.ppp'
+            # os.path.join(r"E:\1Master_3\2_ZTD\2021310\ShortBaseLine_RND_RECON",Site+"-GEC-FLOAT.flt"),
+            # os.path.join(r"E:\1Master_3\2_ZTD\2021310\ShortBaseLine_RND_RECON",Site+"-GEC-FIXED.flt"),
+            # os.path.join(r"E:\1Master_3\2_ZTD\2021310\ShortBaseLine_RND_RECON",Site+"-GEC-GRID-VIRTUAL.flt"),
+            r"E:\1Master_3\2_ZTD\2023029\upd\TRO1-GEC-F.flt",
+            r"E:\1Master_3\2_ZTD\2023029\upd\VARS-GEC-F.flt",
                         ]
         for i in range(len(mode_list)):
-            Site = site_list[i]
-            if i <= -1:
+            # Site = site_list[0]
+            if i <= 1:
                 data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
             else:
-                # data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
+                data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
                 # data_Raw = rf.open_flt_pos_rtpppfile(filename_list[i])
-                data_Raw = rf.open_ppprtk_rtpppfile(filename_list[i])
+                # data_Raw = rf.open_ppprtk_rtpppfile(filename_list[i])
                 # data_Raw = rf.open_flt_ppp_rtpppfile(filename_list[i])
             
             data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
             ENU_ALL[mode_list[i]] = data_ENU
         # if doy != 305: 
         print(Site)   
-        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.5,starttime=S,LastT=L,deltaT=DDD,time = "UTC+8",all=False,Fixed=True,delta_data = 1,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True,recovergence=3600)
+        dr.plot_e_n_u(site =Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.5,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=False,delta_data = 30,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True,recovergence=3600)
         
         # dr.plot_en_u(site =Site, data = ENU_ALL,type = ["EN","U"],mode = mode_list,ylim = 1,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True,recovergence=3600)
         D = D + 1

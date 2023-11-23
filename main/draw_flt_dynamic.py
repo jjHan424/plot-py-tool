@@ -29,22 +29,23 @@ import draw as dr
 import trans as tr
 Y=2023
 M=9
-D=12
-S=3+27/60
+D=14
+S=9+23/60
 # S=10
 
 ENU_ALL = {}
 # mode_list = ["Grid-Const","Grid-Ele-Dis","Grid-Auto"]
-mode_list = ["BDS2","BDS3"]
+# mode_list = ["BDS2","BDS3"]
+mode_list = ["SEPT"]
 #site_list = ["HKLM","HKSC","HKTK"]
 site_list = ["SEPT","SEPT","SEPT"]
 DirectOld=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2"
 Direct3 =r"E:\1Master_2\3-IUGG\Result_Server\Client_Dynamic"
 filename_list = [
-                r"E:\0Project\ZHD_Data\20230912_Dynamic\rtppp\rtppp_2023_0911_BDS2\res\20230912\SEPT_20230912_SGG_CLK06_K_GEC.ppprtk",
-                r"E:\0Project\ZHD_Data\20230912_Dynamic\rtppp\rtppp_2023_0911_BDS3\res\20230912\SEPT_20230912_SGG_CLK06_K_GEC.ppprtk"
+                # r"E:\0Project\ZHD_Data\20230914_Dynamic\RTPPP\BDS2\20230914\SEPT_20230914_SGG_CLK06_K_GEC.ppprtk",
+                r"E:\0Project\ZHD_Data\20230914_Dynamic\RTPPP\BDS3\20230914\SEPT_20230914_SGG_CLK06_K_GEC.ppprtk"
                 ]
-filename_ref = [r"E:\0Project\ZHD_Data\20230912_Dynamic\SEPT.txt",
+filename_ref = [r"E:\0Project\ZHD_Data\20230914_Dynamic\IE\SEPT.txt",
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",]
@@ -62,6 +63,6 @@ for i in range(len(mode_list)):
     ENU_ALL[mode_list[i]] = data_ENU
 
 
-dr.plot_e_n_u(site =site_list[0], data = ENU_ALL,type = ["E","N","U","NSAT"],mode = mode_list,ylim = 1,starttime=S,LastT=15/60,deltaT=3/60,time = "UTC+8",Fixed=True,delta_data = 1,Sigma=5,Sigma_num=0,year = Y,mon=M,day=D,show = True,all=False)
+dr.plot_e_n_u(site =site_list[0], data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 1,starttime=S,LastT=45/60,deltaT=5/60,time = "UTC+8",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=2,year = Y,mon=M,day=D,show = True,all=False)
 # dr.plot_enu(data = ENU_ALL,type = ["NSAT","ENU"],mode = mode_list,ylim = 2,starttime=S,LastT=50/60,deltaT=10/60,time = "UTC",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=0,year = Y,mon=M,day=D,show = True,all=False)
 
