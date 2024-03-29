@@ -9,12 +9,12 @@ import matplotlib.pyplot as plt
 import dataprocess as dp
 import draw as dr
 
-obs_path = r"E:\1Master_3\2_ZTD\Obs_UPD_2023126"
+obs_path = r"/Users/hanjunjie/Master_3/Data/2021/OBS_EPN/311/"
 select_site_file = r"E:\1Master_2\2-UPD_Test\EPN_SITE\EPN_AUG_GER_SITE.txt"
 
-out_crd_path = r"E:\1Master_3\2_ZTD\EPN_SITE\EPN_UPD_65.crd"
+out_crd_path = r"/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/EPN_ALL_2021311.crd"
 is_crd_out = True
-out_xml_path = r"E:\1Master_3\2_ZTD\EPN_SITE\EPN_UPD_65.xml"
+out_xml_path = r"/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/EPN_ALL_2021311.xml"
 is_xml_out = True
 obs_list = os.listdir(obs_path)
 
@@ -25,7 +25,7 @@ all_data,select_site = {},[]
 
 #readfile
 for cur_obs in obs_list:
-    cur_path = obs_path + "\\" + cur_obs
+    cur_path = os.path.join(obs_path, cur_obs)
     cur_marker = ""
     cur_obs_num = 0
     with open(cur_path,'rt') as f:

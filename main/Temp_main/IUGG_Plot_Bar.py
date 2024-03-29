@@ -22,26 +22,32 @@ font_text = {'family' : 'Arial','weight' : 300,'size'   : 28}
 xtick_size = 5
 
 # site_list = ["KARL","TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","HOBU","PTBB","GOET"]
+site_list = ["KARL","IJMU","DENT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","PTBB","GOET"]
+# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# site_list = ["HKTK","T430","HKLT","HKKT","HKWS","HKST","HKKS","HKCL","HKSC","HKNP","HKLM"]
 # site_list_string = "EIJS WARE EUSK TIT2 BRUX REDU DOUR KOS1 BADH KLOP FFMJ DILL DENT IJMU DIEP GOET WSRT PTBB HOBU"
 # site_list = site_list_string.split(" ")
-site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+# site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # site_list = ["TIT2"]
 # site_list1 = ["BRUX","DOUR","WARE","REDU","EIJS","BADH","FFMJ","KLOP"]
 # site_list2 = ["KOS1","DENT","WSRT","TIT2","DIEP","EUSK"]
 # site_list3 = ["KARL","TERS","IJMU","HOBU","DILL","PTBB","GOET"]
+# site_list = site_list1
 # site_list = ["site_list1"]
 site_list_plot = site_list
 Mode_Plot = "Mean"
 Fix_mode = "FixRaw"
-com_mode = "Auto"
+com_mode = "CON"
 Site = "WUDA"
-mode_list = ["1-1","5-5","5-1","Auto"]
+mode_list = ["CON","COEF","GRID"]
 # mode_list = ["1-1","2-1","3-1","4-1","5-1","6-1","7-1","8-1","5-5","Auto"]
 # mode_list = ["1-1","2-1","Auto"]
 # plot_list = ["E","N","U","3D","FixSig"]
-plot_list = ["E","N","U","3D","010-V","FixSig"]
+plot_list = ["E","N","U","3D","010-3","FixRaw"]
+# plot_list = ["005-H","005-V","005-3","010-H","010-V","010-3","020-H","020-V","020-3"]
+# plot_list = ["3D","010-H","010-V","FixRaw"]
 # DirectAll = r"E:\1Master_2\3-IUGG\Result_Server\Client_20230704_5S\RES_30S_10"
-DirectAll = r"E:\1Master_2\3-IUGG\Result_Server\Client_20230629\Mean_Dis.txt"
+DirectAll = "/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/Statistic"
 # DirectAll = r"E:\1Master_2\3-IUGG\Result_Server\Client_20230629\RES_FIX\PNG_HK_305_10_16"
 DirectSave = r"E:\1Master_2\3-IUGG\Result_Server\Client_20230629\RES_RE600"
 site_num = len(site_list)
@@ -54,7 +60,7 @@ for i in range(site_num):
         data_save[cur_site] = {}
     for i in range(len(mode_list)):
         # data_save[cur_site][mode_list[i]] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-10.txt",i+1,len(mode_list))
-        data_save[cur_site][mode_list[i]] = rf.H_open_rms(DirectAll,i+1,len(mode_list))
+        data_save[cur_site][mode_list[i]] = rf.H_open_rms(os.path.join(DirectAll , cur_site + "-Sigma-0-08.txt"),i+1,len(mode_list))
 
 
 W=0.8/len(mode_list)

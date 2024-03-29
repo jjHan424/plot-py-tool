@@ -68,11 +68,12 @@ REF_XYZ = {
             "WSRT":[3828735.5991,443305.2281,5064884.8827]
            }
 ENU_ALL = {}
-# site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
+site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
+site_list = ["KARL","IJMU","DENT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","PTBB","GOET"]
 site_list1 = ["BRUX","DOUR","WARE","REDU","EIJS","BADH","FFMJ","KLOP"]
 site_list2 = ["KOS1","DENT","WSRT","TIT2","DIEP","EUSK"]
 site_list3 = ["KARL","TERS","IJMU","HOBU","DILL","PTBB","GOET"]
-site_list = site_list3
+# site_list = site_list1
 # site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL"]
 # site_list = ["TERS","IJMU","DENT"]
 # site_list_string = "EIJS WARE EUSK TIT2 BRUX REDU DOUR KOS1 BADH KLOP FFMJ DILL DENT IJMU DIEP GOET WSRT PTBB HOBU"
@@ -80,7 +81,7 @@ site_list = site_list3
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA"]
 # mode_list = ["1-1","5-5","5-1","Auto"]
-mode_list = ["CON","COEF","GRID"]
+mode_list = ["PPP-AR","Fixed","Semiempirical","Auto"]
 for cur_mode in mode_list:
     ENU_ALL[cur_mode] = {}
     for cur_site in site_list:
@@ -100,7 +101,7 @@ for Site in site_list:
         cdoy = "{:0>3}".format(doy)
         cur_file_path = os.path.join(Direct,"{:0>4}{:0>3}_FLT".format(Y,doy))
         filename_list = [
-            # os.path.join(Direct,"FLT_PPPAR",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
+            os.path.join(Direct,"FLT_PPPAR",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
             os.path.join(Direct,"FLT_CON",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
             os.path.join(Direct,"FLT_COEF", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
             os.path.join(Direct,"FLT_CROSS","{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
@@ -116,6 +117,8 @@ for Site in site_list:
                 data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
                 ENU_ALL[mode_list[i]][Site][cdoy+"{:0>2}".format(S_Temp)] = data_ENU
             S_Temp = S_Temp + 1
+            if S_Temp == 8:
+                S_Temp = 17
         D = D + 1
         count = count - 1
         # if (count == 0 and M!=12):
@@ -126,5 +129,5 @@ for Site in site_list:
             D = 1
             M = M + 1
 
-dr.plot_e_n_u_percent(site ="10km", data = ENU_ALL,type = ["Vertical"],modelist = mode_list,sitelist = site_list,ylim = 25,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=False,delta_data = 30,year = Y,mon=M,day=D,percent=0.9,show=True)
+dr.plot_e_n_u_multi_percent(site ="10km", data = ENU_ALL,type = ["Horizontal","Vertical"],modelist = mode_list,sitelist = site_list,ylim = 25,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=False,delta_data = 30,year = Y,mon=M,day=D,percent=0.9,show=True)
 # dr.plot_e_n_u_percent(site ="10km", data = ENU_ALL,type = ["Horizontal","Vertical"],modelist = mode_list,sitelist = site_list,ylim = 0.5,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,percent=0.6,show=True)

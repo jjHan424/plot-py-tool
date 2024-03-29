@@ -20,13 +20,17 @@ import numpy as np
 from folium.plugins import HeatMap
 import seaborn as sns
 from mpl_toolkits.basemap import Basemap
+from adjustText import adjust_text
+from matplotlib.colors import Normalize
+from matplotlib.colorbar import ColorbarBase
 font_title = {'family' : 'Arial', 'weight' : 300, 'size' : 10}
-font_label = {'family' : 'Arial', 'weight' : 300, 'size' : 5}
+font_label = {'family' : 'Arial', 'weight' : 300, 'size' : 15}
+font_label_new = {'family' : 'Arial', 'size' : 15}
 font_tick = {'family' : 'Arial', 'weight' : 300, 'size' : 35}
 font_legend = {'family' : 'Arial', 'weight' : 300, 'size' : 30}
 # font_legend = {'family' : 'Times New Roman', 'weight' : 600, 'size' : 15}
-font_text = {'family' : 'Arial','weight' : 300,'size'   : 28}
-tick_size = 5
+font_text = {'family' : 'Arial','weight' : 300,'size'   : 15}
+tick_size = 15
 
 def draw_grid(minLon,maxLat,maxLon,minLat,space,m):
     lat_split = 16
@@ -217,10 +221,17 @@ def rgb2hex(RGB):
     a = hex(int(int(RGB)/16))[-1]
     b = hex(int(int(RGB)%16))[-1]
     return (a+b)
-
-crd_file = r"E:\1Master_2\3-IUGG\crd\GER_AUG.crd"
+fig = plt.figure(figsize=(5.5,4))
+# ax = fig.add_subplot(121)
+# box = ax.get_position()
+# ax.set_position([box.x0, box.y0 + box.y0*0.9, box.width, box.height])
+crd_file = "/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/AUG_WH_Shade.crd"
 space = 1.5 # Grid space deg
 client_server = ["IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","HOBU","PTBB","GOET"]
+site_list1 = ["BRUX","DOUR","WARE","REDU","EIJS","BADH","FFMJ","KLOP"]
+site_list2 = ["KOS1","DENT","WSRT","TIT2","DIEP","EUSK"]
+site_list3 = ["KARL","TERS","IJMU","HOBU","DILL","PTBB","GOET"]
+site_list = ["IJMU","DENT","DOUR","WARE","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","TERS","KARL","HOBU","PTBB","GOET"]
 #read crd file
 crd_data,B,L = {},[],[]
 with open(crd_file,'rt') as f:
@@ -228,6 +239,8 @@ with open(crd_file,'rt') as f:
         value = line.split()
         if value[len(value)-1] == "False":
             continue
+        # if value[0] not in site_list:
+        #     continue
         crd_data[value[0]] = {}
         xyz = [float(value[1]),float(value[2]),float(value[3])]
         crd_data[value[0]]["XYZ"] = xyz
@@ -245,137 +258,36 @@ with open(crd_file,'rt') as f:
         crd_data[value[0]]["VALUE"] = value[len(value)-1]
 mean_bl = [np.mean(B),np.mean(L)] 
 
-# ##---Marker---##
-# for cur_site in crd_data:
-#     map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=10,facecolor='#00BFFF',edgecolor='k', linewidth=0.3)
+map = Basemap(llcrnrlon=113.4, llcrnrlat=30.1, urcrnrlon=115.4, urcrnrlat=31.6, resolution='c',projection='cyl')
+
+##---Marker---##
+texts=[]
+lat_list,long_list = [],[]
+for cur_site in crd_data:
+    if cur_site in site_list1:
+        map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=100,facecolor='#0099E5',edgecolor='k', linewidth=0.3)
+    elif cur_site in site_list2:
+        map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=100,facecolor='#FF4C4C',edgecolor='k', linewidth=0.3)
+    else:
+        map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=100,facecolor='#34BF49',edgecolor='k', linewidth=0.3)
+    lat_list.append(crd_data[cur_site]["BLH"][1])
+    long_list.append(crd_data[cur_site]["BLH"][0])
+    texts.append(plt.text(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],cur_site,fontdict=font_text))
+adjust_text(texts)
+
+map.drawparallels(circles=np.linspace(30.1, 31.6, 4),labels=[1, 0, 0, 0], color='gray',fontsize = tick_size,linewidth=0.5)
+map.drawmeridians(meridians=np.linspace(113.4, 115.4, 5),labels=[0, 0, 0, 1], color='gray',fontsize = tick_size,linewidth=0.5)
+# xlabellon = [113.95,114.15,114.35]
+# xlabeltext = []
+# for i in xlabellon:
+#     xlabeltext.append('%.2f$^\circ$E'%(i))
+# plt.xticks(xlabellon,xlabeltext,size = tick_size)
+map.readshapefile('/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/shp/gadm36_CHN_shp/gadm36_CHN_2','states',drawbounds=True)
+# map.readshapefile('/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/shp/gadm36_HKG_shp/gadm36_HKG_0','states',drawbounds=True)
 
 
-#---Heat_Map---###
-Dir_Diff = r"E:\1Master_2\3-IUGG\Result_Server\Diff\2021310"
-grid_diff_file = r"E:\1Master_2\3-IUGG\Result_Server\Diff\2021310\GREAT-GEC-30.grid"
-x = np.linspace(3.31,10.79,200)
-y = np.linspace(49.11,53.59,300)
-data_diff = []
-X, Y = np.meshgrid(x,y)
-p_list = []
-p_all = []
+plt.savefig("/Users/hanjunjie/Desktop/Image-1/WH_SITE_STOCASTIC.jpg",dpi=300)
+plt.show()
+# plt.clf()
+plt.close()
 
-# for i in range(len(y)):
-#     cur_p_list = []
-#     for j in range(len(x)):
-#         p = []
-#         p_sum = 0
-#         for cur_site in crd_data.keys():
-#             dL = crd_data[cur_site]["BLH"][1] - x[j]
-#             dB = crd_data[cur_site]["BLH"][0] - y[i]
-#             cur_p = 1/math.sqrt(math.pow(dL,2)+math.pow(dB,2))
-#             # if (abs(dL)<0.1) or (abs(dB) < 0.1):
-#             #     cur_p = 0
-#             p.append(cur_p)
-#             p_all.append(cur_p)
-#             p_sum = p_sum + cur_p
-#         p = np.array(p) / p_sum
-#         cur_p_list.append(p)
-#     p_list.append(cur_p_list)
-plt.figure(figsize=(2.5,1.5),dpi=600)
-year,mon,day,hour,min,sec,Delta = 2021,11,16,1,55,0,300
-count = 1
-grid_diff_file = r"E:\1Master_2\3-IUGG\Result_Server\Diff\2021310\GREAT-GEC-30.grid"
-for i in range(count):
-    hour,min,sec = 14,35,0
-    day = day + i
-    doy = tr.ymd2doy(year,mon,day,0,0,00)
-    grid_diff_file = r"E:\1Master_2\3-IUGG\Result_Server\Diff" + "\\" + "{:0>4}{:0>3}".format(int(year),int(doy)) + "\\GREAT-GEC-30.grid"
-    while hour<24:
-        plt.gcf().set_size_inches(2.5,1.35)
-        plt.gcf().set_dpi(600)
-        sec = sec + Delta
-        if sec >= 60:
-            min = min + sec/60
-            sec = 0
-        if min >= 60:
-            hour = hour + min/60
-            min = 0
-        if hour == 24:
-            continue
-        ##--From Site--##
-        # Diff_all_Site = {}
-        # for cur_site in crd_data:
-        #     diff_path = os.path.join(Dir_Diff,cur_site+"-GEC-30.diff")
-        #     Diff_all_Site[cur_site] = rf.H_open_aug_file_for_heat(diff_path,year,mon,day,hour,min,sec,300)
-        # Diff_mean_Site = {}
-        # for cur_site in Diff_all_Site:
-        #     Diff_all_Site[cur_site].remove(np.min(Diff_all_Site[cur_site]))
-        #     Diff_all_Site[cur_site].remove(np.max(Diff_all_Site[cur_site]))
-        #     Diff_all_Site[cur_site].remove(np.min(Diff_all_Site[cur_site]))
-        #     Diff_all_Site[cur_site].remove(np.max(Diff_all_Site[cur_site]))
-        #     cur_mean = np.mean(Diff_all_Site[cur_site])
-        #     Diff_mean_Site[cur_site] = cur_mean * 100
-
-        # data_diff = []
-        # for i in range(len(y)):
-        #     cur_diff_list = []
-        #     for j in range(len(x)):
-        #         diff = []
-        #         for cur_site in Diff_all_Site.keys():
-        #             diff.append(Diff_mean_Site[cur_site])
-        #         cur_diff = np.array(diff) * p_list[i][j]
-        #         cur_diff_list.append(cur_diff.sum())
-        #     data_diff.append(cur_diff_list)
-        # data_diff = np.array(data_diff)
-
-        ##--Grid_diff--##
-        grid_diff = rf.H_open_grid_file_for_heat(grid_diff_file,year,mon,day,hour,min,sec,0)
-        data_diff = []
-        for i in range(len(y)):
-            cur_diff_list = []
-            row = int(((-y[i] + 53.6) / 1.5))
-            for j in range(len(x)):
-                dis_diff = []
-                col = int(((x[j] - 3.3) / 1.5))
-                grid_index_1 = row * 6 + col
-                dB = 53.6 - row * 1.5 - y[i]
-                dL = 3.3 + col * 1.5 - x[j]
-                dis_diff.append(1/math.sqrt(math.pow(dB,2) + math.pow(dL,2)))
-                grid_index_2 = grid_index_1 + 1
-                dB = 53.6 - row * 1.5 - y[i]
-                dL = 3.3 + col * 1.5 - x[j] + 1.5
-                dis_diff.append(1/math.sqrt(math.pow(dB,2) + math.pow(dL,2)))
-                grid_index_3 = (row+1) * 6 + col
-                dB = 53.6 - row * 1.5 - y[i] - 1.5
-                dL = 3.3 + col * 1.5 - x[j]
-                dis_diff.append(1/math.sqrt(math.pow(dB,2) + math.pow(dL,2)))
-                grid_index_4 = grid_index_3 + 1    
-                dB = 53.6 - row * 1.5 - y[i] - 1.5
-                dL = 3.3 + col * 1.5 - x[j] + 1.5
-                dis_diff.append(1/math.sqrt(math.pow(dB,2) + math.pow(dL,2)))
-                diff = [grid_diff[grid_index_1],grid_diff[grid_index_2],grid_diff[grid_index_3],grid_diff[grid_index_4]]
-                p = np.array(dis_diff)/np.sum(np.array(dis_diff))
-                cur_diff = np.array(diff) * p
-                cur_diff_list.append(cur_diff.sum() * 100)
-            data_diff.append(cur_diff_list)
-        data_diff = np.array(data_diff)
-
-
-        
-        map = Basemap(llcrnrlon=3.3, llcrnrlat=49.1, urcrnrlon=10.8, urcrnrlat=53.6, resolution='c',projection='cyl')
-        map.drawparallels(circles=np.linspace(49.1, 53.6, 4),labels=[1, 0, 0, 0], color='gray',fontsize = tick_size,linewidth=0.5)
-        map.drawmeridians(meridians=np.linspace(3.3, 10.8, 6),labels=[0, 0, 0, 1], color='gray',fontsize = tick_size,linewidth=0.5)
-
-        map.readshapefile(r'D:\Tools\gadm36_DEU_shp\gadm36_DEU_0','states',drawbounds=True)
-        map.readshapefile(r'D:\Tools\gadm36_FRA_shp\gadm36_FRA_0','states',drawbounds=True)
-        map.readshapefile(r'D:\Tools\gadm36_NLD_shp\gadm36_NLD_0','states',drawbounds=True)
-        map.readshapefile(r'D:\Tools\gadm36_BEL_shp\gadm36_BEL_0','states',drawbounds=True)
-        map.pcolormesh(x, y, data_diff, cmap='jet', zorder=0,vmin = 0,vmax=5)
-        # map.pcolormesh(x, y, data_diff, cmap='jet', zorder=0)
-        cp = plt.colorbar(shrink=0.93,format = "%.0f",ticks = [0,1,2,3,4,5],pad = 0.01)
-        cp.set_label('Iono Error (cm)',fontdict = font_label)
-        cp.set_ticklabels((0,1,2,3,4,5),fontsize = tick_size)
-        plt.title("{:0>4}-{:0>2}-{:0>2} {:0>2}:{:0>2}:{:0>2}".format(int(year),int(mon),int(day),int(hour),int(min),int(sec)),font_title)
-        save_dir = "E:\\1Master_2\\3-IUGG\\Result_Server\\Heat_Save\\{:0>4}{:0>3}_GEC".format(int(year),int(doy))
-        if not os.path.exists(save_dir):
-            os.mkdir(save_dir)
-        save_path = "E:\\1Master_2\\3-IUGG\\Result_Server\\Heat_Save\\{:0>4}{:0>3}_GEC\\{:0>2}{:0>2}{:0>2}.jpg".format(int(year),int(doy),int(hour),int(min),int(sec))
-        plt.savefig(save_path)
-        # plt.show()
-        plt.clf()

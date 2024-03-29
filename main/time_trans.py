@@ -12,17 +12,21 @@ sys.path.insert(0,os.path.dirname(__file__)+'/..')
 
 import trans as tr
 import matplotlib.pyplot as plt
+import glv
 
-year=2023
-mon=4
-day=30
+year=2021
+mon=10
+day=13
 
 print("GPST(Week Sow): ",tr.ymd2gpst(year,mon,day,0,0,0))
 print("Day of Year: ",tr.ymd2doy(year,mon,day,0,0,00))
 [week,sow]=tr.ymd2gpst(year,mon,day,0,0,00)
 print("GPST(Day of Week): ",sow/3600/24)
-print(tr.mjd2gpst(60208,0))
-xyz =     [3370667.1984,711818.7219,5349787.8726]
-ref_xyz = [3370658.8291,711876.9374,5349786.7382]
+print(tr.mjd2gpst(60051,0))
+xyz = [-2380216.3373,5375749.9006,2465024.2995]
+print(tr.xyz2blh(xyz[0],xyz[1],xyz[2]))
+blh = tr.xyz2blh(xyz[0],xyz[1],xyz[2])
+print(blh[0] / glv.deg,blh[1] / glv.deg)
+ref_xyz = [-2380216.3373,5375749.9006,2465024.2995]
 enu = tr.xyz2enu(xyz,ref_xyz)
 print(enu)

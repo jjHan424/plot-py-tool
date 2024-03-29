@@ -11,6 +11,7 @@ import readfile as rf
 import matplotlib as mpl
 mpl.use("TkAgg")
 import matplotlib.pyplot as plt
+import scienceplots
 plt.style.use(['science','no-latex'])
 import dataprocess as dp
 import draw as dr
@@ -27,10 +28,10 @@ font_text = {'family' : 'Arial','weight' : 300,'size'   : 20}
 xtick_size = 16
 color_list = sns.color_palette("Set1")
 
-site_list = ["HKSC"]
+site_list = ["HKLM"]
 count = 1
 # Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,5,16,4
-Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,3,21,4
+Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,2,22,2
 time="UTC"
 
 plot_type = "ALL"
@@ -65,7 +66,8 @@ while count > 0:
         [XLabel,XTick,cov_Time,begT,LastT]=dr.xtick(time,Year,Mon,Day,Hour,LastT,deltaT)
 
         ##mean_max_roti###
-        path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
+        # path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI" + "\\" +"{:0>4}".format(Year) + cdoy+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
+        path_roti = os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/ROTI_5S", cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr")
         ###-------------ROTI-------------###
         data = rf.open_ismr(path_roti)
         # print(data)
@@ -184,13 +186,13 @@ while count > 0:
         print("GPS:{:.4f}".format(np.max(np.array(mean_G))))
         print("GAL:{:.4f}".format(np.max(np.array(mean_E))))
         print("BDS:{:.4f}".format(np.max(np.array(mean_C))))
-        figP,axP = plt.subplots(3,1,figsize=(11,5),sharey=False,sharex=True)
-        axP[0].scatter(meanT_G, mean_G,s=1)
-        axP[1].scatter(meanT_E, mean_E,s=1)
-        axP[2].scatter(meanT_C, mean_C,s=1)
-        axP[2].set_xticks(XTick)
-        axP[2].set_xticklabels(XLabel)
-        plt.show()
+        figP,axP = plt.subplots(1,3,figsize=(11,5),sharey=False,sharex=True)
+        # axP[0].scatter(meanT_G, mean_G,s=1)
+        # axP[1].scatter(meanT_E, mean_E,s=1)
+        # axP[2].scatter(meanT_C, mean_C,s=1)
+        # axP[2].set_xticks(XTick)
+        # axP[2].set_xticklabels(XLabel)
+        # plt.show()
 
         # axP[0][0].plot(meanT_G, All_G,color = color_list[0])
         # axP[0][1].plot(meanT_E, All_E,color = color_list[0])
@@ -201,39 +203,39 @@ while count > 0:
         # axP[0][2].plot(meanT_C, Num_C,color = color_list[1])
         #----------------------------#
 
-        # axP[0].plot(meanT_G, All_G,color = color_list[0])
-        # axP[1].plot(meanT_E, All_E,color = color_list[0])
-        # axP[2].plot(meanT_C, All_C,color = color_list[0])
+        axP[0].plot(meanT_G, All_G,color = color_list[0])
+        axP[1].plot(meanT_E, All_E,color = color_list[0])
+        axP[2].plot(meanT_C, All_C,color = color_list[0])
 
-        # axP[0].plot(meanT_G, Num_G,color = color_list[1])
-        # axP[1].plot(meanT_E, Num_E,color = color_list[1])
-        # axP[2].plot(meanT_C, Num_C,color = color_list[1])
+        axP[0].plot(meanT_G, Num_G,color = color_list[1])
+        axP[1].plot(meanT_E, Num_E,color = color_list[1])
+        axP[2].plot(meanT_C, Num_C,color = color_list[1])
 
-        # axP[2].legend(["All","Scintillating"],prop=font_legend,
-        # framealpha=0,facecolor='none',ncol=2,numpoints=5,markerscale=10,
-        #             borderaxespad=0,bbox_to_anchor=(1,1.3),loc=1)
-        # leg = axP[2].get_legend()
-        # for legobj in leg.legendHandles:
-        #     legobj.set_linewidth(5)
-        # axP[0].set_xticks(XTick)
-        # axP[0].set_xticklabels(XLabel)
-        # labels = axP[0].get_xticklabels() + axP[1].get_xticklabels() + axP[2].get_xticklabels() + axP[0].get_yticklabels() + axP[1].get_yticklabels() + axP[2].get_yticklabels()
-        # [label.set_fontsize(xtick_size) for label in labels]
-        # labels = axP[0].get_xticklabels() + axP[1].get_xticklabels() + axP[2].get_xticklabels()
-        # [label.set_rotation(30) for label in labels]
+        axP[2].legend(["All","Scintillating"],prop=font_legend,
+        framealpha=0,facecolor='none',ncol=2,numpoints=5,markerscale=10,
+                    borderaxespad=0,bbox_to_anchor=(1,1.3),loc=1)
+        leg = axP[2].get_legend()
+        for legobj in leg.legendHandles:
+            legobj.set_linewidth(5)
+        axP[0].set_xticks(XTick)
+        axP[0].set_xticklabels(XLabel)
+        labels = axP[0].get_xticklabels() + axP[1].get_xticklabels() + axP[2].get_xticklabels() + axP[0].get_yticklabels() + axP[1].get_yticklabels() + axP[2].get_yticklabels()
+        [label.set_fontsize(xtick_size) for label in labels]
+        labels = axP[0].get_xticklabels() + axP[1].get_xticklabels() + axP[2].get_xticklabels()
+        [label.set_rotation(30) for label in labels]
         
-        # axP[0].set_ylabel("Num of sat",font_label)
-        # axP[1].set_xlabel("Time (UTC)",font_label)
-        # box = axP[0].get_position()
-        # axP[0].set_position([box.x0,box.y0 + box.y0*1, box.width, box.height*0.8])
-        # box = axP[1].get_position()
-        # axP[1].set_position([box.x0,box.y0 + box.y0*1, box.width, box.height*0.8])
-        # box = axP[2].get_position()
-        # axP[2].set_position([box.x0,box.y0 + box.y0*1, box.width, box.height*0.8])
-        # axP[0].set_title("GPS",font_title)
-        # axP[1].set_title("GAL",font_title)
-        # axP[2].set_title("BDS",font_title)
-
+        axP[0].set_ylabel("Num of sat",font_label)
+        axP[1].set_xlabel("Time (UTC)",font_label)
+        box = axP[0].get_position()
+        axP[0].set_position([box.x0,box.y0 + box.y0*1, box.width, box.height*0.8])
+        box = axP[1].get_position()
+        axP[1].set_position([box.x0,box.y0 + box.y0*1, box.width, box.height*0.8])
+        box = axP[2].get_position()
+        axP[2].set_position([box.x0,box.y0 + box.y0*1, box.width, box.height*0.8])
+        axP[0].set_title("GPS",font_title)
+        axP[1].set_title("GAL",font_title)
+        axP[2].set_title("BDS",font_title)
+        plt.show()
         #----------------------------#
         if plot_type == "ALL":
             for i in range(100):
