@@ -29,19 +29,24 @@ font_text = {'family' : 'Times new roman','weight' : 600,'size'   : 20}
 xtick_size = 25
 color_list = sns.color_palette("Set1")
 site_site = ["EIJS","EUSK"]
-site_site = [["TIT2","EUSK"],
-             ["WARE","EIJS"],
-             ["BADH","FFMJ"],
-             ["BADH","KLOP"],
-             ["FFMJ","KLOP"]]
+# site_site = [["TIT2","EUSK"],
+#              ["WARE","EIJS"],
+#              ["BADH","FFMJ"],
+#              ["BADH","KLOP"],
+#              ["FFMJ","KLOP"]]
+site_site = [
+            #  ["DENT","BRUX"],
+            #  ["WARE","BRUX"],
+             ["FFMJ","KLOP"]
+             ]
 for cur_site_pair in site_site:
-    path_I = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPNBIG_5C_NEW_4_57S/{}-GEC3-30.respoly".format(cur_site_pair[0])
-    path_S = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPNBIG_5C_NEW_4_57S/{}-GEC3-30.respoly".format(cur_site_pair[1])
+    path_I = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPNBIG-R-C-CROSS/{}-GEC3-30.diff".format(cur_site_pair[0])
+    path_S = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPNBIG-R-C-CROSS/{}-GEC3-30.diff".format(cur_site_pair[1])
     [head_I,data1] = rf.open_aug_file_new(path_I)
     [head_S,data2] = rf.open_aug_file_new(path_S)
 
     out_put_sys_sat = ["G","E","C"]
-    plot_type = "RION1"
+    plot_type = "dION1"
     #Dataconvert
     data_plot = {}
     for cur_time in data1.keys():
@@ -68,8 +73,8 @@ for cur_site_pair in site_site:
         if cur_sat[0] not in mean_Coef.keys():
             mean_Coef[cur_sat[0]],diff_res[cur_sat[0]] = [],[]
         figP,axP = plt.subplots(1,1,figsize=(10,10),sharey=True,sharex=True)
-        axP.set_xlabel("{} Reduals (cm)".format(site_site[0]),font_label)
-        axP.set_ylabel("{} Reduals (cm)".format(site_site[1]),font_label)
+        axP.set_xlabel("{} Reduals (cm)".format(cur_site_pair[0]),font_label)
+        axP.set_ylabel("{} Reduals (cm)".format(cur_site_pair[1]),font_label)
         axP.scatter(data_plot[cur_sat]['X'],data_plot[cur_sat]['Y'])
         ylim_max = np.max([np.max(data_plot[cur_sat]['X']),np.max(data_plot[cur_sat]['Y'])])
         ylim_min = np.min([np.min(data_plot[cur_sat]['X']),np.min(data_plot[cur_sat]['Y'])])
@@ -85,6 +90,8 @@ for cur_site_pair in site_site:
         [label.set_fontsize(xtick_size) for label in labels]
         [label.set_fontname('Arial') for label in labels]
         # plt.show()
+        plt.savefig("/Users/hanjunjie/Desktop/Image-1/Site_Site_Aug/{}-{}-{}.jpg".format(cur_site_pair[0],cur_site_pair[1],cur_sat))
+        plt.close()
     # for cur_sys in mean_Coef.keys():
     #     print("{} = {:.4f}, {:.4f} cm".format(cur_sys,np.mean(mean_Coef[cur_sys]),np.mean(diff_res[cur_sys])))
     print("{}-{} {:.4f} {:.4f} {:.4f} {:.4f} {:.4f} {:.4f}".format(cur_site_pair[0],cur_site_pair[1],np.mean(mean_Coef["G"]),np.mean(mean_Coef["E"]),np.mean(mean_Coef["C"]),np.mean(diff_res["G"]),np.mean(diff_res["E"]),np.mean(diff_res["C"])))

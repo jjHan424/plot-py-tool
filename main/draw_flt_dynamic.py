@@ -28,30 +28,28 @@ import draw as dr
 
 import trans as tr
 Y=2021
-M=11
-D=6
-# S=9 + 54/60
-S=10
+M=12
+D=10
+# S=11
+S=8.5
 
 ENU_ALL = {}
 # mode_list = ["Grid-Const","Grid-Ele-Dis","Grid-Auto"]
 # mode_list = ["BDS2","BDS3"]
-mode_list = ["CON","COEF","AUTO"]
+mode_list = ["Fixed","Semiempirical","Auto"]
 #site_list = ["HKLM","HKSC","HKTK"]
 site_list = ["SEPT","SEPT","SEPT"]
 DirectOld=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2"
 Direct3 =r"E:\1Master_2\3-IUGG\Result_Server\Client_Dynamic"
+Direct = r"/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT"
+doy = tr.ymd2doy(Y,M,D,0,0,00)
 filename_list = [
-                # r"E:\0Project\ZHD_Data\20230914_Dynamic\RTPPP\BDS2\20230914\SEPT_20230914_SGG_CLK06_K_GEC.ppprtk",
-                # "/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/FLT_CON/2021310/SEPT-GEC3-FIXED-0-1.flt",
-                "/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/FLT_CON/2021310/SEPT-GEC3-FIXED-0-1-LOW.flt",
-                # "/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/FLT_COEF/2021310/SEPT-GEC3-FIXED-0-1-30S.flt",
-                # "/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/FLT_COEF/2021310/SEPT-GEC3-FIXED-0-1-30S.flt",
-                # "/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/FLT_COEF/2021310/SEPT-GEC3-FIXED-0-1.flt",
-                "/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/FLT_CROSS/2021310/SEPT-GEC3-FIXED-0-1.flt",
-                "/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/FLT_CROSS/2021310/SEPT-GEC3-FIXED-0-1-9Site.flt",
+            os.path.join(Direct,"FLT_CON",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-5-1.flt".format("SEPT")),
+            os.path.join(Direct,"FLT_COEF", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-5-1.flt".format("SEPT")),
+            os.path.join(Direct,"FLT_CROSS","{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-5-1.flt".format("SEPT")),
+            os.path.join(Direct,"FLT_CROSS","{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-5-1-NEW.flt".format("SEPT")),
                 ]
-filename_ref = ["/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/Ref_310_ALL.txt",
+filename_ref = [os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/Dynamic_ref","Ref_{:0>3}.txt".format(doy)),
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",]
@@ -69,6 +67,6 @@ for i in range(len(mode_list)):
     ENU_ALL[mode_list[i]] = data_ENU
 
 
-dr.plot_e_n_u(site =site_list[0], data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.2,starttime=S,LastT=50/60,deltaT=10/60,time = "GPST",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=1,year = Y,mon=M,day=D,show = True,all=False,MEAN=True)
+dr.plot_e_n_u(site =site_list[0], data = ENU_ALL,type = ["E","N","U","NSAT"],mode = mode_list,ylim = 0.5,starttime=S,LastT=180/60,deltaT=30/60,time = "GPST",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=0,year = Y,mon=M,day=D,show = True,all=False,MEAN=True)
 # dr.plot_enu(data = ENU_ALL,type = ["NSAT","ENU"],mode = mode_list,ylim = 2,starttime=S,LastT=50/60,deltaT=10/60,time = "UTC",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=0,year = Y,mon=M,day=D,show = True,all=False)
 

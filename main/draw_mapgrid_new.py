@@ -226,12 +226,13 @@ def cal_min_max_mean_Grid(crd_data,site_list = []):
                 continue
             crt_dis_site1 = "{}-{}".format(cur_site1,cur_site2)
             crt_dis_site2 = "{}-{}".format(cur_site2,cur_site1)
-            # if crt_dis_site1 not in site1_site2 and crt_dis_site2 not in site1_site2:
-            #     site1_site2.append(crt_dis_site1)
-            # else:
-            #     continue
+            if crt_dis_site1 not in site1_site2 and crt_dis_site2 not in site1_site2:
+                site1_site2.append(crt_dis_site1)
+            else:
+                continue
             delta_xyz = np.array(crd_data[cur_site1]["XYZ"]) - np.array(crd_data_temp[cur_site2]["XYZ"])
             dis = math.sqrt(np.sum(delta_xyz*delta_xyz))
+            print("{}-{}:{:.2f}".format(cur_site1,cur_site2,dis))
             # if dis/1000 < 50:
             #     print(crt_dis_site1)
             all_dis.append(dis)
@@ -261,7 +262,7 @@ while i < color_num:
     gradient_map[i/(2*18) + 0.5] = cur_hex
     hex_list.append(cur_hex)
     i = i + 1
-crd_file = r"/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/AUG_WH.crd"
+crd_file = r"/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/EPN_GER_21.crd"
 # crd_file = r"/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/CHN_HK_16.crd"
 client_server = ["WHYJ","WUDA"]
 space = 0.1 # Grid space deg

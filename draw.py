@@ -1954,14 +1954,13 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
     ymin = -ylim
     ymax = ylim
     ##=== Plot set ===##
-    figP,axP = plt.subplots(N_plot,1,figsize=(12,11),sharey=False,sharex=True)
+    figP,axP = plt.subplots(N_plot,1,figsize=(12,14),sharey=False,sharex=True)
     axP[N_plot - 1].set_xlabel("GPS time (hour)",font_label)
     # axP[2].set_title(site,font_title)
     ## Only ENU
     if N_plot == 3:
         for i in range(N_plot):
-            axP[i].set_yticks([-0.4,-0.2,0,0.2,0.4])
-            
+            # axP[i].set_yticks([-0.4,-0.2,0,0.2,0.4])
             if type[i] == "E":
                 axP[i].set_ylabel("East errors (m)",font_label)
             if type[i] == "N":
@@ -1977,13 +1976,13 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
     for i in range(N_plot):
         if type[i] != "NSAT" and type[i] != "PDOP" and ymax != 0.0:
             axP[i].set_ylim(ymin,ymax)
-            # kk=1
-        # else:
-        #     box = axP[i].get_position()
-        #     axP[i].set_position([box.x0, box.y0 - box.y0*0.035, box.width, box.height*1.4])
-            # axP2 = axP[i].twinx()
-            # box = axP2.get_position()
-            # axP2.set_position([box.x0, box.y0 - box.y0*0.035, box.width, box.height*1.4])
+            kk=1
+        else:
+            box = axP[i].get_position()
+            axP[i].set_position([box.x0, box.y0 - box.y0*0.035, box.width, box.height*1.4])
+            axP2 = axP[i].twinx()
+            box = axP2.get_position()
+            axP2.set_position([box.x0, box.y0 - box.y0*0.035, box.width, box.height*1.4])
         box = axP[0].get_position()
         axP[0].set_position([box.x0, box.y0+box.y0*0.02, box.width, box.height])
         box = axP[1].get_position()
@@ -2001,8 +2000,8 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
         with open(SaveTextFile,'a') as file:
             file.write("{:<5}".format(doy))
     ##=== Time Xtick set ===##
-    [XLabel,XTick,cov_Time,begT,LastT]=xtick(time,year,mon,day,starttime,LastT,deltaT)
-    # [XLabel,XTick,cov_Time,begT,LastT]=xtick_min(time,year,mon,day,starttime,LastT,deltaT)
+    # [XLabel,XTick,cov_Time,begT,LastT]=xtick(time,year,mon,day,starttime,LastT,deltaT)
+    [XLabel,XTick,cov_Time,begT,LastT]=xtick_min(time,year,mon,day,starttime,LastT,deltaT)
     ##=== Data convert && convergence time ===##
     time_plot,data_plot,fixed_num,float_num,all_num,RMS_enu,STD_enu,MEAN_enu = {},{},{},{},{},{},{},{}
     type_list = ["E","N","U","NSAT","PDOP","AMB"]
@@ -2017,6 +2016,30 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
             fixed_num[cur_mode],float_num[cur_mode],all_num[cur_mode] = 0,0,math.floor((LastT*3600) / delta_data + 1)
             for cur_type in type_list:
                 data_plot[cur_mode][cur_type] = []
+    NSAT_with0,PDOP_with0,time_NSAT = [],[],[]
+    lasttime = 8*3600+1800
+    i = 0
+    for cur_time in data["Fixed"].keys():
+        if data["Fixed"][cur_time]["AMB"] == 0:
+            continue
+        plot_time = (cur_time-cov_Time)
+        if i == 0:
+            time_NSAT.append(plot_time/3600)
+            NSAT_with0.append(data["Fixed"][cur_time]["NSAT"])
+            PDOP_with0.append(data["Fixed"][cur_time]["PDOP"])
+            i = i + 1
+            lasttime = plot_time
+        else:
+            temp_time = plot_time
+            while temp_time - lasttime > 1:
+                time_NSAT.append((plot_time+1 - (temp_time - lasttime))/3600)
+                NSAT_with0.append(0)
+                PDOP_with0.append(0)
+                temp_time = temp_time - 1
+            time_NSAT.append(plot_time/3600)
+            NSAT_with0.append(data["Fixed"][cur_time]["NSAT"])
+            PDOP_with0.append(data["Fixed"][cur_time]["PDOP"])
+            lasttime = plot_time
     for cur_mode in mode:
         for cur_time in data[cur_mode].keys():
             # if cur_time not in data["AUTO"].keys():
@@ -2041,7 +2064,21 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                     #         data_dNsat.append(data[cur_mode][cur_time][cur_type] - data["IONO_CON"][cur_time][cur_type])
                     #         time_plot_dNsat.append(plot_time)
     
-                    
+    ##=== NSAT Plut ===##
+    # cur_time = begT
+    # NSAT_with0,PDOP_with0,time_NSAT = [],[],[]
+    # i = 0
+    # while cur_time < begT+LastT:
+    #     time_NSAT.append(cur_time)
+    #     if cur_time in time_plot["Fixed"]:
+    #         NSAT_with0.append(data_plot[cur_mode]["NSAT"][i])
+    #         PDOP_with0.append(data_plot[cur_mode]["PDOP"][i])
+    #         i = i+1
+    #     else:
+    #         NSAT_with0.append(0)
+    #         PDOP_with0.append(0)
+    #     cur_time = cur_time + 1/3600
+
 
     ##=== Sigma Edit ===##
     MEAN_CONSTRAINT = {"E":-0.48440511,"N":-2.08745699,"U":-3.884854406083317}
@@ -2184,7 +2221,7 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
     ele_sun_list = np.array(ele_sun_list)
     sunrise = time_list_ele[ele_sun_list>0]
     min_sun,max_sun = (np.min(sunrise) - cov_Time)/3600,(np.max(sunrise) - cov_Time)/3600
-    if 1:
+    if 0:
         for i in range(N_plot):
             for j in range(N_mode):
                 if i==3:
@@ -2198,36 +2235,44 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
         for i in range(N_plot):
             for j in range(N_mode):
                 if type[i] != "NSAT":
-                    axP[i].scatter(time_plot[mode[j]],data_plot[mode[j]][type[i]],color = color_list[j%9],s=35)
-        axP[3].plot(time_plot[mode[0]],data_plot[mode[0]]["NSAT"],color = color_list[3],ls = '-',linewidth = 5)
-        axP[3].plot(time_plot[mode[1]],data_plot[mode[1]]["NSAT"],color = color_list[3],ls=':',linewidth = 5)
-        axP[3].set_ylabel("Num of Sat",font_label,color = color_list[3])
-        axP[3].spines['left'].set(color = color_list[3],linewidth = 2,linestyle = "-")
-        axP[3].tick_params(axis = 'y',length=6, width=2, color=color_list[3], labelcolor=color_list[3])
-        axP[3].legend(["Interpolation","Grid"],prop=font_legend,
-            framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=3, 
-            borderaxespad=0,bbox_to_anchor=(1,1.2),loc=1,frameon = False) 
-        leg = axP[3].get_legend()
-        for legobj in leg.legendHandles:
-            legobj.set_linewidth(5)
-            legobj.set_color("black")
+                    axP[i].scatter(time_plot[mode[j]],data_plot[mode[j]][type[i]],color = color_list[j%3],s=35)
+        x,y = np.array(time_NSAT),np.array(NSAT_with0)
+        y[y==0] = np.nan
+        axP[3].set_ylim(10,26)
+        axP[3].set_yticks([10,14,18,22,26])
+        axP[3].plot(x,y,color = "#0099cc",ls = '-',linewidth = 2)
+        # axP[3].plot(time_plot[mode[1]],data_plot[mode[1]]["NSAT"],color = color_list[3],ls=':',linewidth = 5)
+        axP[3].set_ylabel("Num of Sat",font_label,color = "#0099cc")
+        axP[3].spines['left'].set(color = "#0099cc",linewidth = 2,linestyle = "-")
+        axP[3].tick_params(axis = 'y',length=6, width=2, color="#0099cc", labelcolor="#0099cc")
+        # axP[3].legend(["Interpolation","Grid"],prop=font_legend,
+            # framealpha=1,facecolor='none',ncol=4,numpoints=5,markerscale=3, 
+            # borderaxespad=0,bbox_to_anchor=(1,1.2),loc=1,frameon = False) 
+        # leg = axP[3].get_legend()
+        # for legobj in leg.legendHandles:
+            # legobj.set_linewidth(5)
+            # legobj.set_color("black")
         
         axP2.grid(False)
-        axP2.plot(time_plot[mode[0]],data_plot[mode[0]]["PDOP"],color = color_list[4],ls = '-',linewidth = 5)
-        axP2.plot(time_plot[mode[1]],data_plot[mode[1]]["PDOP"],color = color_list[4],ls = ':',linewidth = 5)
-        axP2.set_ylabel("PDOP",font_label)
-        axP2.spines['right'].set(color = color_list[4],linewidth = 2,linestyle = "-")
-        axP2.tick_params(axis = 'y',length=6, width=2, color=color_list[4], labelcolor=color_list[4])
+        axP2.set_ylim(0.7,4.7)
+        axP2.set_yticks([0.7,1.7,2.7,3.7,4.7])
+        y = np.array(PDOP_with0)
+        y[y==0] = np.nan
+        axP2.plot(x,y,color = "#ff9933",ls = '--',linewidth = 2)
+        # axP2.plot(time_plot[mode[1]],data_plot[mode[1]]["PDOP"],color = color_list[4],ls = ':',linewidth = 5)
+        axP2.set_ylabel("PDOP",font_label,color="#ff9933")
+        axP2.spines['right'].set(color = "#ff9933",linewidth = 2,linestyle = "-")
+        axP2.tick_params(axis = 'y',length=6, width=2, color="#ff9933", labelcolor="#ff9933")
         labels = axP2.get_yticklabels() + axP2.get_xticklabels()
         [label.set_fontsize(xtick_size) for label in labels]
         [label.set_fontname('Arial') for label in labels]
-    xxx = axP[0].axvspan(ymin = 0,ymax = 1,xmin = min_sun,xmax = max_sun,alpha = 0.3,color = "gray")
-    L1 = plt.legend([xxx],["Sunshine"],prop=font_legend,
-            framealpha=0,facecolor='white',ncol=4,numpoints=5,markerscale=4,frameon = True, 
-            borderaxespad=0,bbox_to_anchor=(1,3.45),loc=1)
-    plt.gca().add_artist(L1)
-    axP[1].axvspan(ymin = 0,ymax = 1,xmin = min_sun,xmax = max_sun,alpha = 0.3,color = "gray")
-    axP[2].axvspan(ymin = 0,ymax = 1,xmin = min_sun,xmax = max_sun,alpha = 0.3,color = "gray")
+    # xxx = axP[0].axvspan(ymin = 0,ymax = 1,xmin = min_sun,xmax = max_sun,alpha = 0.3,color = "gray")
+    # L1 = plt.legend([xxx],["Sunshine"],prop=font_legend,
+    #         framealpha=0,facecolor='white',ncol=4,numpoints=5,markerscale=4,frameon = True, 
+    #         borderaxespad=0,bbox_to_anchor=(1,3.45),loc=1)
+    # plt.gca().add_artist(L1)
+    # axP[1].axvspan(ymin = 0,ymax = 1,xmin = min_sun,xmax = max_sun,alpha = 0.3,color = "gray")
+    # axP[2].axvspan(ymin = 0,ymax = 1,xmin = min_sun,xmax = max_sun,alpha = 0.3,color = "gray")
     i=-1
     for cur_type in type:
         i = i+1
@@ -2242,12 +2287,12 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
             ax_range = axP[i].axis()
             # axP[i].text(ax_range[0],ax_range[3]+ylim/15,RMS_str[0:9*N_mode+2],font_text)
             #----Directions-----#
-            # if cur_type == "E":
-            #     axP[i].text(ax_range[0],ax_range[3]-ylim/2,"East",font_title)
-            # if cur_type == "N":
-            #     axP[i].text(ax_range[0],ax_range[3]-ylim/2,"North",font_title)
-            # if cur_type == "U":
-            #     axP[i].text(ax_range[0],ax_range[3]-ylim/2,"Up",font_title)
+            if cur_type == "E":
+                axP[i].text(ax_range[0],ax_range[3]-ylim/3,"East",font_title)
+            if cur_type == "N":
+                axP[i].text(ax_range[0],ax_range[3]-ylim/3,"North",font_title)
+            if cur_type == "U":
+                axP[i].text(ax_range[0],ax_range[3]-ylim/3,"Up",font_title)
 
         # if cur_type == "NSAT":
         #     ax_range = axP[i].axis()
@@ -2260,8 +2305,8 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
     if not all:
         axP[N_plot-1].set_xticks(XTick)
         axP[N_plot-1].set_xticklabels(XLabel)
-    if not all:
-        axP[N_plot-1].set_xticks([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24])
+    # if not all:
+    #     axP[N_plot-1].set_xticks([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24])
         # axP[N_plot-1].set_xticklabels(XLabel)
     E_str=""
     # mode.append("Sunshine")
@@ -2278,10 +2323,10 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
         #     axP[i].legend(["Fixed","Semiempirical","Auto","Sunshine"],prop=font_legend,
         #     framealpha=0,facecolor='none',ncol=3,numpoints=5,markerscale=4, 
         #     borderaxespad=0,bbox_to_anchor=(1,1.27),loc=1) 
-        # if (N_plot==4 and i == 0):
-        #     axP[i].legend(mode,prop=font_legend,
-        #     framealpha=0,facecolor='none',ncol=4,numpoints=5, markerscale=4,
-        #     borderaxespad=0,bbox_to_anchor=(1,1.27),loc=1) 
+        if (N_plot==4 and i == 0):
+            axP[i].legend(mode,prop=font_legend,
+            framealpha=0,facecolor='none',ncol=4,numpoints=5, markerscale=4,
+            borderaxespad=0,bbox_to_anchor=(1,1.27),loc=1) 
         #axP[i].autoscale(tight=True)
         print("\n"+cur_type)
         if cur_type == "E" or cur_type == "N" or cur_type == "U":
@@ -2343,7 +2388,7 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
     #     Add_Str = Add_Str + '     {:.2f}          {:.2f}          {:.2f}          {:.2f}     '.format(Horizon5[cur_mode],Horizon10[cur_mode],Altitude10[cur_mode],Altitude15[cur_mode])
     if show:
         # plt.savefig(r"E:\1Master_2\3-IUGG\Image_PPT\SEPT-305-20mins.png",dpi=600)
-        plt.savefig("/Users/hanjunjie/Desktop/Image-1/IJMU_313.jpg",dpi=300)
+        # plt.savefig("/Users/hanjunjie/Desktop/Image-1/SEPT_2021344_TimeSeries.jpg",dpi=300)
         plt.show()
     else:
         SaveFigFile = save + "\\" + site + "-" + "{:0>3}".format(doy) + "-" "Sigma-" + "{:0>1}".format(Sigma_num) + ".png"
