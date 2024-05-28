@@ -15,8 +15,8 @@ import matplotlib.pyplot as plt
 import glv
 
 year=2021
-mon=10
-day=13
+mon=12
+day=10
 
 print("GPST(Week Sow): ",tr.ymd2gpst(year,mon,day,0,0,0))
 print("Day of Year: ",tr.ymd2doy(year,mon,day,0,0,00))

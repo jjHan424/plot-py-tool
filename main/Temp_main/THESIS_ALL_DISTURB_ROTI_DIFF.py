@@ -31,16 +31,16 @@ color_list = ["#0085c3","#7ab800","#71c6c1","#dc5034","#009bbb",
               "#444444","#eeeeee"]
 # color_list = ["#ffcc2f","#00acee","#2baf2b","#ef5734","#cecece","#543729"]
 
-site_list = ["HKLM"]
+site_list = ["HKLT"]
 count = 1
 # Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,5,16,4
-Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,5,16,4
+Year,Mon,Day,Hour,LastT,deltaT = 2021,10,6,8,16,4
 cur_site = site_list[0]
 [XLabel,XTick,cov_Time,begT,LastT]=dr.xtick("GPST",Year,Mon,Day,Hour,LastT,deltaT)
 doy = tr.ymd2doy(Year,Mon,Day,0,00,00)
 cdoy = "{:0>3}".format(doy)
 path_roti = os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/ROTI", cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr")
-path_diff = "/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/Diff_Static_5S/2021305/HKLM-GEC-5.diff"
+path_diff = "/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/Diff_Static_5S/2021279/HKLT-GEC2-5.diff"
 [head_res,data_diff] = rf.open_aug_file_new(path_diff)
 data = rf.open_ismr(path_roti)
 data_plot,time_plot = {"Scintillating":{},"All":{}},{"Scintillating":{},"All":{}}
@@ -78,7 +78,8 @@ for i in range(2):
         if i == 0:
             axP[i][j].set_ylim(0,1)
         if i == 1:
-            axP[i][j].set_ylim(0,15)
+            axP[i][j].set_ylim(0,40)
+            axP[i][j].set_yticks([0,10,20,30,40])
         if j > 0:
             axP[i][j].set_yticklabels([])
 axP[0][0].set_ylabel('ROTI (TECU/min)',font_label)
@@ -124,12 +125,12 @@ labels = axP[0][1].get_xticklabels()
 for i in range(2):
     for j in range(3):
         labels = labels + axP[i][j].get_xticklabels() + axP[i][j].get_yticklabels()
-        xxx = axP[i][j].axvspan(ymin = 0,ymax = 1,xmin = 10,xmax = 16,alpha = 0.3,color = "gray")
+        xxx = axP[i][j].axvspan(ymin = 0,ymax = 1,xmin = 13,xmax = 17,alpha = 0.3,color = "gray")
 L1 = plt.legend([xxx],["Scintillating"],prop=font_legend,
         framealpha=0,facecolor='white',ncol=4,numpoints=5,markerscale=4,frameon = True, 
         borderaxespad=0,bbox_to_anchor=(1,1.19),loc=1)
 plt.gca().add_artist(L1)
 [label.set_fontsize(xtick_size) for label in labels]
 [label.set_fontname('Arial') for label in labels]
-# plt.savefig("/Users/hanjunjie/Desktop/Image-1/HKLT_DIFF_ROTI.jpg",dpi=300)
+# plt.savefig("/Users/hanjunjie/Desktop/Image-1/HKLT_DIFF_ROTI_2021279.jpg",dpi=300)
 plt.show()

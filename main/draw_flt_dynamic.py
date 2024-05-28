@@ -36,7 +36,7 @@ S=8.5
 ENU_ALL = {}
 # mode_list = ["Grid-Const","Grid-Ele-Dis","Grid-Auto"]
 # mode_list = ["BDS2","BDS3"]
-mode_list = ["Fixed","Semiempirical","Auto"]
+mode_list = ["EC"]
 #site_list = ["HKLM","HKSC","HKTK"]
 site_list = ["SEPT","SEPT","SEPT"]
 DirectOld=r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2"
@@ -44,10 +44,12 @@ Direct3 =r"E:\1Master_2\3-IUGG\Result_Server\Client_Dynamic"
 Direct = r"/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT"
 doy = tr.ymd2doy(Y,M,D,0,0,00)
 filename_list = [
-            os.path.join(Direct,"FLT_CON",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-5-1.flt".format("SEPT")),
-            os.path.join(Direct,"FLT_COEF", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-5-1.flt".format("SEPT")),
-            os.path.join(Direct,"FLT_CROSS","{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-5-1.flt".format("SEPT")),
-            os.path.join(Direct,"FLT_CROSS","{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-5-1-NEW.flt".format("SEPT")),
+            # os.path.join(Direct,"FLT_CON",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-5-1.flt".format("SEPT")),
+            # os.path.join(Direct,"FLT_COEF", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-5-1.flt".format("SEPT")),
+            # os.path.join(Direct,"FLT_CROSS","{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-5-1.flt".format("SEPT")),
+            # os.path.join(Direct,"FLT_CROSS","{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-5-1-NEW.flt".format("SEPT")),
+            "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/2021344/CLIENT/SEPT-B3I_E5a.flt",
+            # "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/2021344/CLIENT/SEPT-GB3I_E5a.flt"
                 ]
 filename_ref = [os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/Dynamic_ref","Ref_{:0>3}.txt".format(doy)),
                 r"G:\Data\Res\Dynamic\2021310_WH\\Ref.txt",
@@ -67,6 +69,6 @@ for i in range(len(mode_list)):
     ENU_ALL[mode_list[i]] = data_ENU
 
 
-dr.plot_e_n_u(site =site_list[0], data = ENU_ALL,type = ["E","N","U","NSAT"],mode = mode_list,ylim = 0.5,starttime=S,LastT=180/60,deltaT=30/60,time = "GPST",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=0,year = Y,mon=M,day=D,show = True,all=False,MEAN=True)
+dr.plot_e_n_u(site =site_list[0], data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.5,starttime=S,LastT=0.5,deltaT=5/60,time = "GPST",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=0,year = Y,mon=M,day=D,show = True,all=False,MEAN=True)
 # dr.plot_enu(data = ENU_ALL,type = ["NSAT","ENU"],mode = mode_list,ylim = 2,starttime=S,LastT=50/60,deltaT=10/60,time = "UTC",Fixed=True,delta_data = 1,Sigma=3,Sigma_num=0,year = Y,mon=M,day=D,show = True,all=False)
 

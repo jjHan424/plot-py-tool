@@ -68,17 +68,18 @@ REF_XYZ = {
             "WSRT":[3828735.5991,443305.2281,5064884.8827]
            }
 ENU_ALL = {}
-site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
-site_list = ["KARL","IJMU","DENT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","PTBB","GOET"]
-site_list1 = ["BRUX","DOUR","WARE","REDU","EIJS","BADH","FFMJ","KLOP"]
-site_list2 = ["KOS1","DENT","WSRT","TIT2","DIEP","EUSK"]
-site_list3 = ["KARL","TERS","IJMU","HOBU","DILL","PTBB","GOET"]
+# site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
+# site_list = ["KARL","IJMU","DENT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","PTBB","GOET"]
+# site_list1 = ["BRUX","DOUR","WARE","REDU","EIJS","BADH","FFMJ","KLOP"]
+# site_list2 = ["KOS1","DENT","WSRT","TIT2","DIEP","EUSK"]
+# site_list3 = ["KARL","TERS","IJMU","HOBU","DILL","PTBB","GOET"]
 # site_list = site_list1
 # site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL"]
 # site_list = ["TERS","IJMU","DENT"]
 # site_list_string = "EIJS WARE EUSK TIT2 BRUX REDU DOUR KOS1 BADH KLOP FFMJ DILL DENT IJMU DIEP GOET WSRT PTBB HOBU"
 # site_list = site_list_string.split(" ")
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+site_list = ["HKLT","HKST"]
 # site_list = ["WHYJ","WHXZ","WHDS","WHSP","N028","N047","N068","XGXN","WUDA"]
 # mode_list = ["1-1","5-5","5-1","Auto"]
 mode_list = ["PPP-AR","Fixed","Semiempirical","Auto"]
@@ -90,26 +91,32 @@ S=2
 for Site in site_list:
     # Site = site_list[j]
     Y=2021
-    M=11
-    D=7
+    M=10
+    D=6
     L=1
     DDD = 10
-    count = 13
+    count = 1
     Direct = r"/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT"
     while count > 0:
         doy = tr.ymd2doy(Y,M,D,0,0,00)
         cdoy = "{:0>3}".format(doy)
         cur_file_path = os.path.join(Direct,"{:0>4}{:0>3}_FLT".format(Y,doy))
+        # filename_list = [
+        #     os.path.join(Direct,"FLT_PPPAR",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
+        #     os.path.join(Direct,"FLT_CON",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
+        #     os.path.join(Direct,"FLT_COEF", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
+        #     os.path.join(Direct,"FLT_CROSS","{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
+        #                 ]
         filename_list = [
-            os.path.join(Direct,"FLT_PPPAR",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
-            os.path.join(Direct,"FLT_CON",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
-            os.path.join(Direct,"FLT_COEF", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
-            os.path.join(Direct,"FLT_CROSS","{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
+            os.path.join(Direct,"FLT_CON",  "{}{:0>3}".format(Y,doy),"{}-GEC2-FIXED-0-30-3600.flt".format(Site)),
+            os.path.join(Direct,"FLT_RAW",  "{}{:0>3}".format(Y,doy),"{}-GEC2-FIXED-20-30-3600.flt".format(Site)),
+            os.path.join(Direct,"FLT_ARIMA","{}{:0>3}".format(Y,doy),"{}-GEC2-FIXED-20-30-3600.flt".format(Site)),
+            os.path.join(Direct,"FLT_LSTM", "{}{:0>3}".format(Y,doy),"{}-GEC2-FIXED-20-30-3600.flt".format(Site)),
                         ]
-        if not os.path.exists(os.path.join(Direct,"FLT_COEF", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site))):
-            D = D + 1
-            count = count - 1
-            continue
+        # if not os.path.exists(os.path.join(Direct,"FLT_COEF", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site))):
+        #     D = D + 1
+        #     count = count - 1
+        #     continue
         S_Temp = S
         while S_Temp < 24:
             for i in range(len(mode_list)):
@@ -117,8 +124,8 @@ for Site in site_list:
                 data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
                 ENU_ALL[mode_list[i]][Site][cdoy+"{:0>2}".format(S_Temp)] = data_ENU
             S_Temp = S_Temp + 1
-            if S_Temp == 8:
-                S_Temp = 17
+            # if S_Temp == 8:
+            #     S_Temp = 17
         D = D + 1
         count = count - 1
         # if (count == 0 and M!=12):

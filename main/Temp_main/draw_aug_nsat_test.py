@@ -83,7 +83,7 @@ while count > 0:
     grid_path_S = "/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/{}{:0>3}/EPNGER-R-C-KOS1/GREAT-GEC3-30.grid".format(Year,doy)
     [grid_data_S,lat,lon] = rf.open_grid_file(grid_path_S)
     data_site["With DCB"] = grid_data_S
-    dr.plot_aug_NSAT_G_E_C_Sites(data_site,head_I,type = "NSAT",freq = 1,starttime = Hour,time = "GPST",show = False,ylim=0,deltaT=DeltaT,LastT=lastT,year = Year,mon=Mon,day=Day,min_ele = Min_ele,max_ele = Max_ele,Site = cur_site,Mode = "OLD_DAY",Sun = "ALL")
+    dr.plot_aug_NSAT_G_E_C_Sites(data_site,head_I,type = "NSAT",freq = 1,starttime = Hour,time = "GPST",show = True,ylim=0,deltaT=DeltaT,LastT=lastT,year = Year,mon=Mon,day=Day,min_ele = Min_ele,max_ele = Max_ele,Site = cur_site,Mode = "OLD_DAY",Sun = "ALL")
                 # Min_ele,Max_ele = Min_ele+Step_ele,Max_ele+Step_ele
     count = count - 1
     Day = Day+1

@@ -222,10 +222,10 @@ def rgb2hex(RGB):
     a = hex(int(int(RGB)/16))[-1]
     b = hex(int(int(RGB)%16))[-1]
     return (a+b)
-fig = plt.figure(figsize=(5.5,4))
-# ax = fig.add_subplot(121)
+fig = plt.figure(figsize=(5,4))
+# ax = fig.add_subplot(111)
 # box = ax.get_position()
-# ax.set_position([box.x0, box.y0 + box.y0*0.9, box.width, box.height])
+# ax.set_position([box.x0, box.y0, 1, 1])
 crd_file = "/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/AUG_WH_Shade.crd"
 space = 1.5 # Grid space deg
 client_server = ["IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","HOBU","PTBB","GOET"]
@@ -258,37 +258,6 @@ with open(crd_file,'rt') as f:
                 crd_data[value[0]]["SYS"] = crd_data[value[0]]["SYS"] + value[i]
         crd_data[value[0]]["VALUE"] = value[len(value)-1]
 mean_bl = [np.mean(B),np.mean(L)] 
-
-map = Basemap(llcrnrlon=113.4, llcrnrlat=30.1, urcrnrlon=115.4, urcrnrlat=31.6, resolution='c',projection='cyl')
-
-##---Marker---##
-texts=[]
-lat_list,long_list = [],[]
-for cur_site in crd_data:
-    if cur_site in site_list1:
-        map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=100,facecolor='#0099E5',edgecolor='k', linewidth=0.3)
-    elif cur_site in site_list2:
-        map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=100,facecolor='#FF4C4C',edgecolor='k', linewidth=0.3)
-    else:#0099E5
-        map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=100,facecolor='#0099E5',edgecolor='k', linewidth=0.3)
-    lat_list.append(crd_data[cur_site]["BLH"][1])
-    long_list.append(crd_data[cur_site]["BLH"][0])
-    texts.append(plt.text(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],cur_site,fontdict=font_text))
-adjust_text(texts)
-
-map.drawparallels(circles=np.linspace(30.1, 31.6, 4),labels=[1, 0, 0, 0], color='gray',fontsize = tick_size,linewidth=0.5)
-map.drawmeridians(meridians=np.linspace(113.4, 115.4, 5),labels=[0, 0, 0, 1], color='gray',fontsize = tick_size,linewidth=0.5)
-# xlabellon = [113.95,114.15,114.35]
-# xlabeltext = []
-# for i in xlabellon:
-#     xlabeltext.append('%.2f$^\circ$E'%(i))
-# plt.xticks(xlabellon,xlabeltext,size = tick_size)
-map.readshapefile('/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/shp/gadm36_CHN_shp/gadm36_CHN_2','states',drawbounds=True)
-# map.readshapefile('/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/shp/planet_114.202_30.405_e6b1e48f-shp/shape/roads',"ways")
-# map.readshapefile('/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/shp/gadm36_HKG_shp/gadm36_HKG_0','states',drawbounds=True)
-
-
-## == DYNAMIC == ##
 ref_file = "/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/Dynamic_ref/Ref_344.txt"
 REF_XYZ = rf.open_pos_ref_IE(ref_file)
 B,L,amb = [],[],[]
@@ -302,17 +271,50 @@ for cur_time in REF_XYZ:
     crd_data[value[0]]["BLH"] = blh
     B.append(blh[0])
     L.append(blh[1])
-    amb.append(REF_XYZ[cur_time]["AMB"])
-x,y = map(L,B)
+    if cur_time - 432000 > 33840 and cur_time - 432000 < 38160:
+        amb.append(1)
+    else:
+        amb.append(0)
+    # amb.append(REF_XYZ[cur_time]["AMB"])
+L_max,L_min = np.max(L),np.min(L)
+B_max,B_min = np.max(B),np.min(B)
+map = Basemap(llcrnrlon=L_min - (L_max - L_min) / 15, llcrnrlat=B_min - (B_max - B_min) / 15, urcrnrlon=L_max+ (L_max - L_min) / 15, urcrnrlat=B_max + (B_max - B_min) / 15, resolution='c',projection='cyl')
+# L_min = L_min - (L_max - L_min) / 15
+# B_min = B_min - (B_max - B_min) / 15
+# L_max = L_max + (L_max - L_min) / 15
+# B_max = B_max + (B_max - B_min) / 15
+##---Marker---##
+texts=[]
+lat_list,long_list = [],[]
+for cur_site in crd_data:
+    if cur_site == "HB08":
+        map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=100,facecolor='#ff6a00',edgecolor='#ff6a00', linewidth=0.3)
+        lat_list.append(crd_data[cur_site]["BLH"][1])
+        long_list.append(crd_data[cur_site]["BLH"][0])
+        texts.append(plt.text(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],cur_site,fontdict=font_text,color = "#ff6a00"))
+adjust_text(texts)
+
+map.drawparallels(circles=np.linspace(B_min - (B_max - B_min) / 15, B_max + (B_max - B_min) / 15, 4),labels=[0, 0, 0, 0], color='gray',fontsize = tick_size,linewidth=0.5)
+map.drawmeridians(meridians=np.linspace(L_min - (L_max - L_min) / 15, L_max + (L_max - L_min) / 15, 4),labels=[0, 0, 0, 0], color='gray',fontsize = tick_size,linewidth=0.5)
+# xlabellon = [113.95,114.15,114.35]
+# xlabeltext = []
+# for i in xlabellon:
+#     xlabeltext.append('%.2f$^\circ$E'%(i))
+# plt.xticks(xlabellon,xlabeltext,size = tick_size)
+# map.readshapefile('/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/shp/gadm36_CHN_shp/gadm36_CHN_2','states',drawbounds=True)
+map.readshapefile('/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/shp/planet_114.202_30.405_e6b1e48f-shp/shape/roads',"ways")
+# map.readshapefile('/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/shp/gadm36_HKG_shp/gadm36_HKG_0','states',drawbounds=True)
+
+
+## == DYNAMIC == ##
 for i in range(len(L)):
     if amb[i] == 1:
-        map.scatter(L[i],B[i],marker='.',s=10,facecolor='#34BF49',edgecolor='#34BF49', linewidth=0.3)
+        map.scatter(L[i],B[i],marker='.',s=20,facecolor='#34BF49',edgecolor='#34BF49', linewidth=0.3)
     else:
-        map.scatter(L[i],B[i],marker='.',s=10,facecolor='#FF4C4C',edgecolor='#FF4C4C', linewidth=0.3)
+        map.scatter(L[i],B[i],marker='.',s=20,facecolor='#FF4C4C',edgecolor='#FF4C4C', linewidth=0.3)
 
 
-# plt.savefig("/Users/hanjunjie/Desktop/Image-1/WH_SITE_DYNAMIC_BIG.jpg",dpi=300)
+# plt.savefig("/Users/hanjunjie/Desktop/Image-1/WH_SITE_DYNAMIC_SMALL_NEW.jpg",dpi=300)
 plt.show()
 # plt.clf()
 plt.close()
-

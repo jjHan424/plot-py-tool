@@ -80,94 +80,143 @@ ENU_ALL = {}
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # site_list = ["EIJS","WSRT","BADH","KLOP","FFMJ"]
 # site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL"]
-site_list = ["IJMU"]
+site_list = ["EIJS"]
+# site_list = ["HKLT","HKST"]
+# site_list = ["REDU","BRUX","KOS1","WSRT"]
 # mode_list = ["Grid-1-1","Grid-5-5","Grid-5-1","Grid-Auto"]
 # mode_list = ["1-1","2-1","3-1","4-1","5-1","6-1","7-1","8-1","5-5","Auto"]
 # mode_list = ["FLOAT","FIXED","CORR","VIRTUAL"]
 # mode_list = ["FLOAT","FIXED","IONO_CON"]
 # mode_list = ["BNC","COD","GFZ"]
-mode_list = ["Fixed","Semiempirical","Auto"]
+# mode_list = ["Fixed","Semiempirical","Auto"]
+mode_list = ["BEST","RAW","ARIMA","LSTM"]
+mode_list = ["No prediction","ARIMA","LSTM"]
+# mode_list = ["NO","ARIM"]
+mode_list = ["B3I","B2a","E5a","E5b","G+E"]
 Sig = 0
 # SavePath=r"D:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\Aug"
-SavePath=r"/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/Statistic"
+SavePath=r"/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/Statistic_Prediction"
 S=2
 if (not os.path.exists(SavePath)):
     os.mkdir(SavePath)
-for jj in range(len(site_list)):
-    SavePathSite = os.path.join(SavePath , site_list[jj] + "-Sigma-"+"{:0>1}".format(Sig) + "-{:0>2}".format(S)+".txt")
-    SHOW = True
-    if not SHOW:
-        with open(SavePathSite,'a') as file:
-            file.write("{:<5}".format("DOY"))
-            for i in range(len(mode_list)):
-                file.write("{:<10}".format("Fix1-"+mode_list[i]))
-            for i in range(len(mode_list)):
-                file.write("{:<10}".format("Fix2-"+mode_list[i]))
-            # file.write("       ")
-            for i in range(len(mode_list)):
-                file.write("{:<12}".format("E-"+mode_list[i]))
-            for i in range(len(mode_list)):
-                file.write("{:<12}".format("N-"+mode_list[i]))
-            for i in range(len(mode_list)):
-                file.write("{:<12}".format("U-"+mode_list[i]))
-            for j in [2,5,10,15,20]:
-                for i in range(len(mode_list)):
-                    file.write("{:<12}".format("3-{:0>3}".format(j)+"-"+mode_list[i]))
-            for j in [2,5,10,15,20]:
-                for i in range(len(mode_list)):
-                    file.write("{:<12}".format("V-{:0>3}".format(j)+"-"+mode_list[i]))
-            for j in [2,5,10,15,20]:
-                for i in range(len(mode_list)):
-                    file.write("{:<12}".format("H-{:0>3}".format(j)+"-"+mode_list[i]))
+# for jj in range(len(site_list)):
+#     SavePathSite = os.path.join(SavePath , site_list[jj] + "-Sigma-"+"{:0>1}".format(Sig) + "-{:0>2}".format(S)+".txt")
+#     SHOW = False
+#     if not SHOW:
+#         with open(SavePathSite,'a') as file:
+#             file.write("{:<5}".format("DOY"))
+#             for i in range(len(mode_list)):
+#                 file.write("{:<10}".format("Fix1-"+mode_list[i]))
+#             for i in range(len(mode_list)):
+#                 file.write("{:<10}".format("Fix2-"+mode_list[i]))
+#             # file.write("       ")
+#             for i in range(len(mode_list)):
+#                 file.write("{:<12}".format("E-"+mode_list[i]))
+#             for i in range(len(mode_list)):
+#                 file.write("{:<12}".format("N-"+mode_list[i]))
+#             for i in range(len(mode_list)):
+#                 file.write("{:<12}".format("U-"+mode_list[i]))
+#             for j in [2,5,10,15,20]:
+#                 for i in range(len(mode_list)):
+#                     file.write("{:<12}".format("3-{:0>3}".format(j)+"-"+mode_list[i]))
+#             for j in [2,5,10,15,20]:
+#                 for i in range(len(mode_list)):
+#                     file.write("{:<12}".format("V-{:0>3}".format(j)+"-"+mode_list[i]))
+#             for j in [2,5,10,15,20]:
+#                 for i in range(len(mode_list)):
+#                     file.write("{:<12}".format("H-{:0>3}".format(j)+"-"+mode_list[i]))
 
-            file.write("\n")
+#             file.write("\n")
 
 for j in range(len(site_list)):
     Site = site_list[j]
-    Y=2021
-    M=11
-    D=9
+    Y=2023
+    M=1
+    D=1
     # D = 19
-    L=22
+    L=6
     # S=14
-    DDD = 2
+    DDD = 1
     count = 1
     # Direct = r"E:\1Master_2\3-IUGG\Result_Server\Client_20230629"
     Direct = r"/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT"
     ConP,ConV,ConH = {},{},{}
+    
     while count > 0:
-        
         doy = tr.ymd2doy(Y,M,D,0,0,00)
+        # for jj in range(len(site_list)):
+        SavePathSite = os.path.join(SavePath , Site + "-{:0>3}".format(doy) + "-Sigma-"+"{:0>1}".format(Sig) + "-{:0>2}".format(S)+".txt")
+        SHOW = True
+        if not SHOW:
+            with open(SavePathSite,'a') as file:
+                file.write("{:<5}".format("DOY"))
+                for i in range(len(mode_list)):
+                    file.write("{:<10}".format("Fix1-"+mode_list[i]))
+                for i in range(len(mode_list)):
+                    file.write("{:<10}".format("Fix2-"+mode_list[i]))
+                # file.write("       ")
+                for i in range(len(mode_list)):
+                    file.write("{:<12}".format("E-"+mode_list[i]))
+                for i in range(len(mode_list)):
+                    file.write("{:<12}".format("N-"+mode_list[i]))
+                for i in range(len(mode_list)):
+                    file.write("{:<12}".format("U-"+mode_list[i]))
+                for j in [2,5,10,15,20]:
+                    for i in range(len(mode_list)):
+                        file.write("{:<12}".format("3-{:0>3}".format(j)+"-"+mode_list[i]))
+                for j in [2,5,10,15,20]:
+                    for i in range(len(mode_list)):
+                        file.write("{:<12}".format("V-{:0>3}".format(j)+"-"+mode_list[i]))
+                for j in [2,5,10,15,20]:
+                    for i in range(len(mode_list)):
+                        file.write("{:<12}".format("H-{:0>3}".format(j)+"-"+mode_list[i]))
+
+                file.write("\n")
         # if doy == 313:
         #     D = D + 1
         #     count = count - 1
         #     continue
         cdoy = "{:0>3}".format(doy)
         # cur_file_path = os.path.join(Direct,"{:0>4}{:0>3}_FLT".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site))
-        filename_list = [
-            os.path.join(Direct,"FLT_CON",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
-            os.path.join(Direct,"FLT_COEF", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
-            os.path.join(Direct,"FLT_CROSS","{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
-                        ]
         # filename_list = [
-        #     r"/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/2021310/TEST/HKLT-VIR-1-1.flt",
-        #     r"/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/2021310/TEST/HKLT-VIR-CHK.flt"
+        #     os.path.join(Direct,"FLT_CON",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
+        #     os.path.join(Direct,"FLT_COEF", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
+        #     os.path.join(Direct,"FLT_CROSS","{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
         #                 ]
-        for i in range(len(mode_list)):
-            # Site = site_list[0]
-            if i <= -1:
-                data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
-            else:
-                data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
-                # data_Raw = rf.open_flt_pos_rtpppfile(filename_list[i])
-                # data_Raw = rf.open_ppprtk_rtpppfile(filename_list[i])
-                # data_Raw = rf.open_flt_ppp_rtpppfile(filename_list[i])
-            
-            data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
-            ENU_ALL[mode_list[i]] = data_ENU
-        # if doy != 305: 
-        print(Site)   
-        [ConP[doy],ConV[doy],ConH[doy]] = dr.plot_e_n_u(site = Site, data = ENU_ALL,type = ["E","N","U"],mode = mode_list,ylim = 0.4,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 30,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=SHOW,recovergence=3600,recon_list = [2,5,10,15,20],MEAN = False)
+        for cur_delay in range(20,21):
+            # filename_list = [
+            #     # os.path.join(Direct,"FLT_CON", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
+            #     # os.path.join(Direct,"FLT_CON", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
+            #     # os.path.join(Direct,"FLT_COEF", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-0-30-3600.flt".format(Site)),
+            #     os.path.join(Direct,"FLT_RAW",   "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-{}-30-3600.flt".format(Site,cur_delay)),
+            #     os.path.join(Direct,"FLT_ARIMA", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-{}-30-3600.flt".format(Site,cur_delay)),
+            #     os.path.join(Direct,"FLT_LSTM", "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-{}-30-3600.flt".format(Site,cur_delay)),
+            #     # os.path.join(Direct,"FLT_LSTM_EPN_NEW",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-{}-30-3600.flt".format(Site,cur_delay)),
+            #                 ]
+            filename_list = [
+                "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/{}{:0>3}/CLIENT/EIJS-B1I_B3I.flt".format(Y,doy),
+                "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/{}{:0>3}/CLIENT/EIJS-B1I_B2a.flt".format(Y,doy),
+                "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/{}{:0>3}/CLIENT/EIJS-E1_E5a.flt".format(Y,doy),
+                "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/{}{:0>3}/CLIENT/EIJS-E1_E5b.flt".format(Y,doy),
+                # "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/{}{:0>3}/CLIENT/EIJS-B3I_E5a_15.flt".format(Y,doy),
+                "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/{}{:0>3}/CLIENT/EIJS-B3I_E5a.flt".format(Y,doy),
+                # r"/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/2021310/TEST/HKLT-VIR-CHK.flt"
+                            ]
+            for i in range(len(mode_list)):
+                # Site = site_list[0]
+                if i <= -1:
+                    data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
+                else:
+                    data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
+                    # data_Raw = rf.open_flt_pos_rtpppfile(filename_list[i])
+                    # data_Raw = rf.open_ppprtk_rtpppfile(filename_list[i])
+                    # data_Raw = rf.open_flt_ppp_rtpppfile(filename_list[i])
+                
+                data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
+                ENU_ALL[mode_list[i]] = data_ENU
+            # if doy != 305: 
+            print(Site)   
+            [ConP[doy],ConV[doy],ConH[doy]] = dr.plot_e_n_u(site = Site, data = ENU_ALL,type = ["E","N","U","NSAT"],mode = mode_list,ylim = 0.2,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 30,year = Y,mon=M,day=D,Sigma=5,Sigma_num=Sig,save=SavePath,show=SHOW,recovergence=3600,recon_list = [2,5,10,15,20],MEAN = False,augdelay = cur_delay)
         
         # dr.plot_en_u_thesis(site =Site, data = ENU_ALL,type = ["EN","U"],mode = mode_list,ylim = 1,starttime=S,LastT=L,deltaT=DDD,time = "GPST",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True,recovergence=3600)
         D = D + 1

@@ -1264,27 +1264,37 @@ def H_open_rms(filename,index=1,all_num = 1):
                 doy = int(value[0][1:])
             else:
                 doy = int(value[0])
-            if doy not in all_data.keys():
-                all_data[doy]={}
-            Fix = value[Total+index]
-            all_data[doy]["FixSig"] = float(Fix)
-            Fix = value[index]
-            all_data[doy]["FixRaw"] = float(Fix)
-            all_data[doy]["E"] = float(value[Total*2+index])
-            all_data[doy]["N"] = float(value[Total*3+index])
-            all_data[doy]["U"] = float(value[Total*4+index])
-            all_data[doy]["3D"] = math.sqrt(all_data[doy]["E"]*all_data[doy]["E"]+all_data[doy]["N"]*all_data[doy]["N"]+all_data[doy]["U"]*all_data[doy]["U"])
-            if len(value) > (1+5*all_num):
-                # reconver_num = int((len(value)-1-all_num*5) / all_num / 3)
-                for i in range(int(reconver_num)):
-                    # print(Total*5+2*index-1+i*Total*2)
-                    # print(float(value[0+Total*5+i*3+index]))
-                    # print(float(value[0+Total*5+i*3+index+reconver_num*Total]))
-                    # print(float(value[0+Total*5+i*3+index+2*reconver_num*Total]))
-                    cur_acc = recover_list[i]
-                    all_data[doy]["{:0>3}-3".format(cur_acc)] = float(value[0+Total*5+i*3+index])
-                    all_data[doy]["{:0>3}-V".format(cur_acc)] = float(value[0+Total*5+i*3+index+reconver_num*Total])
-                    all_data[doy]["{:0>3}-H".format(cur_acc)] = float(value[0+Total*5+i*3+index+2*reconver_num*Total])
+            # if doy == 2 or doy == 8 or doy == 14 or doy == 20:
+            if 1:
+                # continue
+            # if doy != 8:
+            #     continue
+            # if doy != 14:
+            #     continue
+            # if doy != 20:
+            #     continue
+                if doy not in all_data.keys():
+                    all_data[doy]={}
+                Fix = value[Total+index]
+                all_data[doy]["FixSig"] = float(Fix)
+                Fix = value[index]
+                all_data[doy]["FixRaw"] = float(Fix)
+                all_data[doy]["E"] = float(value[Total*2+index])
+                all_data[doy]["N"] = float(value[Total*3+index])
+                all_data[doy]["U"] = float(value[Total*4+index])
+                all_data[doy]["3D"] = math.sqrt(all_data[doy]["E"]*all_data[doy]["E"]+all_data[doy]["N"]*all_data[doy]["N"]+all_data[doy]["U"]*all_data[doy]["U"])
+                all_data[doy]["2D"] = math.sqrt(all_data[doy]["E"]*all_data[doy]["E"]+all_data[doy]["N"]*all_data[doy]["N"])
+                if len(value) > (1+5*all_num):
+                    # reconver_num = int((len(value)-1-all_num*5) / all_num / 3)
+                    for i in range(int(reconver_num)):
+                        # print(Total*5+2*index-1+i*Total*2)
+                        # print(float(value[0+Total*5+i*3+index]))
+                        # print(float(value[0+Total*5+i*3+index+reconver_num*Total]))
+                        # print(float(value[0+Total*5+i*3+index+2*reconver_num*Total]))
+                        cur_acc = recover_list[i]
+                        all_data[doy]["{:0>3}-3".format(cur_acc)] = float(value[0+Total*5+i*3+index])
+                        all_data[doy]["{:0>3}-V".format(cur_acc)] = float(value[0+Total*5+i*3+index+reconver_num*Total])
+                        all_data[doy]["{:0>3}-H".format(cur_acc)] = float(value[0+Total*5+i*3+index+2*reconver_num*Total])
     
     return all_data
 

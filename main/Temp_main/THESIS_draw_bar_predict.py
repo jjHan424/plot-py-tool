@@ -32,7 +32,7 @@ file_path_arima = "/Users/hanjunjie/Master_3/1-IUGG/CLIENT_LSTM_SERVER"
 data_lstm,data_arima,data_raw = {"G":{},"E":{},"C":{}},{"G":{},"E":{},"C":{}},{"G":{},"E":{},"C":{}}
 delay_list = range(1,21)
 for i in delay_list:
-    cur_file = os.path.join(file_path_lstm,"HK-{}-LSTM-ACTIVE.txt".format(i))
+    cur_file = os.path.join(file_path_lstm,"GER-{}-LSTM-DAY.txt".format(i))
     if i not in data_lstm.keys():
         data_lstm["G"][i],data_lstm["E"][i],data_lstm["C"][i] = [],[],[]
     with open(cur_file,"rt") as f:
@@ -42,7 +42,7 @@ for i in delay_list:
             data_lstm["E"][i].append(float(value[1]))
             data_lstm["C"][i].append(float(value[2]))
 for i in delay_list:
-    cur_file = os.path.join(file_path_arima,"HK-{}-ARIMA-ACTIVE.txt".format(i))
+    cur_file = os.path.join(file_path_arima,"GER-{}-ARIMA-DAY.txt".format(i))
     if i not in data_arima.keys():
         data_arima["G"][i],data_arima["E"][i],data_arima["C"][i] = [],[],[]
     with open(cur_file,"rt") as f:
@@ -52,7 +52,7 @@ for i in delay_list:
             data_arima["E"][i].append(float(value[1]))
             data_arima["C"][i].append(float(value[2]))
 for i in delay_list:
-    cur_file = os.path.join(file_path_arima,"HK-{}-RAW-ACTIVE.txt".format(i))
+    cur_file = os.path.join(file_path_arima,"GER-{}-RAW-DAY.txt".format(i))
     if i not in data_raw.keys():
         data_raw["G"][i],data_raw["E"][i],data_raw["C"][i] = [],[],[]
     with open(cur_file,"rt") as f:

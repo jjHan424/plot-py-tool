@@ -134,6 +134,7 @@ path_I = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPN_GER-R-C-CROSS-R
 # site_list1 = ["WHDS","WHYJ","WHSP","N028","N047","N068","XGXN","WUDA","WHXZ"]
 site_list1 = ["IJMU","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
 data_site,data_site_S = {},{}
+site_list1 = ["EIJS"]
 for cur_site in site_list1:
     # path_S = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2\client-Aug-312-02" + "\\" + cur_site + "-GEC.aug"   # PPPAR算的改正数
     # path_I = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2\client-Aug-312-02" + "\\" + cur_site + "-GEC-I.aug"   # 内插改正数
@@ -144,8 +145,10 @@ for cur_site in site_list1:
     # path_I = r"E:\0Project\EXSUN_Data\20230909_Data_Test\BDS3\ppprtk\ES43_20230909_SGG_CLK06_K_GEC.aug"
     # path_I = r"E:\1Master_3\2_ZTD\2021310\ShortBaseLine_RND\SPT7-GEC-GRID-VIRTUAL.aug"
     # path_S = r"E:\1Master_3\2_ZTD\2021310\data\aug\SPT7-GEC.aug"
-    path_S = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPN_GER-R-C-CROSS/{}-GEC3-30.respoly".format(cur_site)   # PPPAR算的改正数
-    path_I = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPN_GER-R-C-CROSS-REC/{}-GEC3-30.respoly".format(cur_site)# 内插改正数    
+    # path_S = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPN_GER-R-C-CROSS/{}-GEC3-30.respoly".format(cur_site)   # PPPAR算的改正数
+    # path_I = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPN_GER-R-C-CROSS-REC/{}-GEC3-30.respoly".format(cur_site)# 内插改正数    
+    path_I = "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/2023001/CLIENT/EIJS-B1I_B3I.aug"
+    path_S = "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/2023001/AUG_UPD/B3I_E5a/EIJS-GEC3-FIXED-30.aug"
     # path = r"E:\1Master_2\3-IUGG\Pro_2021311_PPPRTK_GER\client\GOET-GEC-I-GRID-RE3600-TrpVIRTUAL.aug"
     # [head_I,data_I] = rf.open_aug_file_rtppp(path_I)
     # [head_S,data_S] = rf.open_aug_file_rtppp(path_S)
@@ -153,8 +156,8 @@ for cur_site in site_list1:
     [head_S,data_S] = rf.open_aug_file_new(path_S)
     # [head_I,data_site[cur_site]] = rf.open_aug_file_new(path)
 
-    # data_site[cur_site] = dp.pre_aug_new(head_I,data_I,data_S)
-    data_site[cur_site] = data_I
+    data_site[cur_site] = dp.pre_aug_new(head_I,data_I,data_S)
+    # data_site[cur_site] = data_I
     # data_site[cur_site] = data_I
     # data_site_S[cur_site4] = data_S
     print(cur_site)
@@ -163,7 +166,7 @@ for cur_site in site_list1:
     # dr.plot_aug_GEC_new(data_site,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=60/60,ylim=0.1,LastT=22,year = 2021,mon=10,day=30,site_list=site_list1)
     # dr.plot_aug_G_E_C(data_site,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=60/60,ylim=0.1,LastT=22,year = 2021,mon=11,day=6,site_list=site_list2)
 
-    dr.plot_aug_G_E_C(data_site[cur_site],head_I,type = "diffIon",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=2,ylim=1,LastT=22,year = 2021,mon=11,day=7,site_list=site_list1,data_S=data_I)
+    dr.plot_aug_G_E_C(data_site[cur_site],head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=2,ylim=1,LastT=22,year = 2023,mon=1,day=1,site_list=site_list1,data_S=data_I)
 # dr.plot_aug_G_E_C(data_site,head_I,type = "NSAT",freq = 1,starttime = 0,time = "UTC",show = True,deltaT=4,ylim=0.04,LastT=24,year = 2021,mon=11,day=6,site_list=site_list1,data_S=data_site_S)
 
 
