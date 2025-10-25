@@ -90,9 +90,9 @@ import draw as dr
 # path_S = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/server-ion/HKSC-GEC-S.aug"
 # path_I = "/Users/hjj/Documents/HJJ/Master_1/IonoGrid/2021305/Bias/334/client-aug/HKSC-GEC-I.aug"
 
-path_S = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2\WUDA-GEC.aug"   # PPPAR算的改正数
+path_S = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPN_GER-R-C-CROSS/BADH-GEC3-30.respoly"   # PPPAR算的改正数
 # path_I = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2\client-Aug-310-02\WUDA-GEC-I.aug"# 内插改正数
-path_I = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2\client-Grid_Ele-310-01\WUDA-GEC-I.aug"# 内插改正数
+path_I = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPN_GER-R-C-CROSS-REC/BADH-GEC3-30.respoly"# 内插改正数
 
 # path_S = r"G:\Project\data\aug\2021306\K057-GEC.aug"   # PPPAR算的改正数
 # path_I = r"D:\A-paper\Project\2021306\client-Grid_Ele_R\From_Server\K057-GEC-I.aug"# 内插改正数
@@ -132,8 +132,9 @@ path_I = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2\client-Gr
 # while (begTime < 31):
 # dr.plot_aug_G_E_C(data,head_I,type = "P",freq = 1,strttime = 17,time = "UTC",show = True,deltaT=2,ylim=1.5,LastT=7,year = 2022,mon=6,day=20)
 # site_list1 = ["WHDS","WHYJ","WHSP","N028","N047","N068","XGXN","WUDA","WHXZ"]
-site_list1 = ["WUDA"]
+site_list1 = ["IJMU","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
 data_site,data_site_S = {},{}
+site_list1 = ["EIJS"]
 for cur_site in site_list1:
     # path_S = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2\client-Aug-312-02" + "\\" + cur_site + "-GEC.aug"   # PPPAR算的改正数
     # path_I = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\Client_Dynamic-2\client-Aug-312-02" + "\\" + cur_site + "-GEC-I.aug"   # 内插改正数
@@ -144,12 +145,19 @@ for cur_site in site_list1:
     # path_I = r"E:\0Project\EXSUN_Data\20230909_Data_Test\BDS3\ppprtk\ES43_20230909_SGG_CLK06_K_GEC.aug"
     # path_I = r"E:\1Master_3\2_ZTD\2021310\ShortBaseLine_RND\SPT7-GEC-GRID-VIRTUAL.aug"
     # path_S = r"E:\1Master_3\2_ZTD\2021310\data\aug\SPT7-GEC.aug"
+<<<<<<< HEAD
     # path_I = r"E:\1Master_3\2_ZTD\Result_From_Server\CLIENT_COD\client_2023031\KOS1-GE-FIXED-30-3600.aug"
     path_S = r"E:\1Master_3\2_ZTD\Result_From_Server\SERVER_COD\server_2023031\BADH-GEC3-FIXED-30.aug"
     path_I = r"E:\1Master_3\2_ZTD\Result_From_Server\SERVER_COD\server_2023031\KLOP-GEC3-FIXED-30.aug"
     # path_I = r"E:\1Master_3\2_ZTD\Result_From_Server\CLIENT\client_2021311\KOS1-GE-FIXED-30.aug"
     # path_S = r"E:\1Master_3\2_ZTD\Result_From_Server\SERVER\server_2021311\BADH-GEC.aug"
     # path_I = r"E:\1Master_3\2_ZTD\Result_From_Server\SERVER\server_2021311\KLOP-GEC.aug"
+=======
+    # path_S = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPN_GER-R-C-CROSS/{}-GEC3-30.respoly".format(cur_site)   # PPPAR算的改正数
+    # path_I = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID/2021311/EPN_GER-R-C-CROSS-REC/{}-GEC3-30.respoly".format(cur_site)# 内插改正数    
+    path_I = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/2021/AUG_NOISE/BRUX-GEC3-FIXED-30-200.aug"
+    path_S = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/2021/AUG/BRUX-GEC3-FIXED-30.aug"
+>>>>>>> fed472eb8e6f4f892e4f6111e52851e4b931b0d4
     # path = r"E:\1Master_2\3-IUGG\Pro_2021311_PPPRTK_GER\client\GOET-GEC-I-GRID-RE3600-TrpVIRTUAL.aug"
     # [head_I,data_I] = rf.open_aug_file_rtppp(path_I)
     # [head_S,data_S] = rf.open_aug_file_rtppp(path_S)
@@ -158,7 +166,7 @@ for cur_site in site_list1:
     # [head_I,data_site[cur_site]] = rf.open_aug_file_new(path)
 
     data_site[cur_site] = dp.pre_aug_new(head_I,data_I,data_S)
-    # data_site[cur_site] = data_S
+    # data_site[cur_site] = data_I
     # data_site[cur_site] = data_I
     # data_site_S[cur_site4] = data_S
     print(cur_site)
@@ -167,7 +175,11 @@ for cur_site in site_list1:
     # dr.plot_aug_GEC_new(data_site,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=60/60,ylim=0.1,LastT=22,year = 2021,mon=10,day=30,site_list=site_list1)
     # dr.plot_aug_G_E_C(data_site,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=60/60,ylim=0.1,LastT=22,year = 2021,mon=11,day=6,site_list=site_list2)
 
+<<<<<<< HEAD
 dr.plot_aug_G_E_C(data_site[cur_site],head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=2,ylim=0.1,LastT=22,year = 2023,mon=1,day=31,site_list=site_list1,data_S=data_I)
+=======
+    dr.plot_aug_G_E_C(data_site[cur_site],head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=2,ylim=5,LastT=22,year = 2021,mon=11,day=11,site_list=site_list1,data_S=data_I)
+>>>>>>> fed472eb8e6f4f892e4f6111e52851e4b931b0d4
 # dr.plot_aug_G_E_C(data_site,head_I,type = "NSAT",freq = 1,starttime = 0,time = "UTC",show = True,deltaT=4,ylim=0.04,LastT=24,year = 2021,mon=11,day=6,site_list=site_list1,data_S=data_site_S)
 
 

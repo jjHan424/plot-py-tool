@@ -11,10 +11,10 @@ import webbrowser
 import trans as tr
 import glv
 import readfile as rf
-from shapely.ops import triangulate
-from shapely import wkt
-from shapely.geometry import MultiPoint
-import shapely.geometry
+# from shapely.ops import triangulate
+# from shapely import wkt
+# from shapely.geometry import MultiPoint
+# import shapely.geometry
 import math
 import matplotlib as mpl
 import numpy as np
@@ -27,8 +27,12 @@ def draw_grid(minLon,maxLat,maxLon,minLat,space,m):
     #----- Plot Grid -----#
     # print("Top Left Corner : ({:>.4f},{:>.4f})".format(minLon,maxLat))
     # print("Lower Right Corner : ({:>.4f},{:>.4f})".format(maxLon,minLat))
-    maxLat = maxLat + space/3
-    minLon = minLon - 0.07
+    delta_Lat = maxLat - minLat
+    num_lat = 1 - (delta_Lat / space - int(delta_Lat / space))
+    delta_Lon = maxLon - minLon
+    num_lon = 1 - (delta_Lon / space - int(delta_Lon / space))
+    maxLat = maxLat + num_lat * space / 2.0
+    minLon = minLon - num_lon * space / 2.0
     cur_Lat = maxLat
     cur_Lon = minLon
     print("Top Left Corner : ({:>.4f},{:>.4f})".format(minLon,maxLat))
@@ -185,7 +189,7 @@ def cal_dis_Grid(client_server,crd_data):
             continue
         all_dis = []
         for server_site in crd_data.keys():
-            if server_site == client_site:
+            if server_site in client_server:
                 continue
             delta_xyz = np.array(crd_data[client_site]["XYZ"]) - np.array(crd_data[server_site]["XYZ"])
             dis = math.sqrt(np.sum(delta_xyz*delta_xyz))/1000
@@ -193,7 +197,7 @@ def cal_dis_Grid(client_server,crd_data):
             # print("{}-{}: {:.2f} km".format(client_site,server_site,dis))
         all_site_dis[cur_site] = all_dis
         # print("{}: {:.2f} km".format(client_site,np.mean(np.array(all_dis))))
-    mean_length = 6
+    mean_length = 3
     dis_site = {}
     for cur_site in all_site_dis.keys():
         cur_dis = all_site_dis[cur_site]
@@ -206,6 +210,36 @@ def cal_dis_Grid(client_server,crd_data):
     for cur_dis in dis_sort:
         print("{}: {:.2f} km".format(dis_site[cur_dis],cur_dis))
     print("{}: {:.2f} km".format("MEAN",np.mean(dis_sort)))
+
+def cal_min_max_mean_Grid(crd_data,site_list = []):
+    crd_data_temp = crd_data
+    all_dis,site1_site2 = [],[]
+
+    for cur_site1 in crd_data.keys():
+        all_dis = []
+        if cur_site1 not in site_list and len(site_list) != 0:
+            continue
+        for cur_site2 in crd_data_temp.keys():
+            if cur_site1 == cur_site2:
+                continue
+            if cur_site2 not in site_list and len(site_list) != 0:
+                continue
+            crt_dis_site1 = "{}-{}".format(cur_site1,cur_site2)
+            crt_dis_site2 = "{}-{}".format(cur_site2,cur_site1)
+            if crt_dis_site1 not in site1_site2 and crt_dis_site2 not in site1_site2:
+                site1_site2.append(crt_dis_site1)
+            else:
+                continue
+            delta_xyz = np.array(crd_data[cur_site1]["XYZ"]) - np.array(crd_data_temp[cur_site2]["XYZ"])
+            dis = math.sqrt(np.sum(delta_xyz*delta_xyz))
+            print("{}-{}:{:.2f}".format(cur_site1,cur_site2,dis))
+            # if dis/1000 < 50:
+            #     print(crt_dis_site1)
+            all_dis.append(dis)
+        sort_dis = sorted(all_dis)
+        print("\"{}\":{:.2f}".format(cur_site1,np.mean(sort_dis[:5])))
+    print("GRID-DIS: max = {:.2f}km, min = {:.2f}km, mean = {:.2f}km".format(np.max(all_dis)/1000,np.min(all_dis)/1000,np.mean(all_dis)/1000))
+
 
 def rgb2hex(RGB):
     a = hex(int(int(RGB)/16))[-1]
@@ -292,6 +326,7 @@ while i < color_num:
     gradient_map[i/(2*18) + 0.5] = cur_hex
     hex_list.append(cur_hex)
     i = i + 1
+<<<<<<< HEAD
 crd_file = r"E:\1Master_3\1_Paper_GRID_IUGG\CRD_SITE\EPN_PPPRTK_CLIENT_B2a.crd"
 # crd_file = r"E:\1Master_2\3-IUGG\crd\AUG_HK_xml.crd"
 space = 1.5 # Grid space deg
@@ -352,15 +387,21 @@ client_server = ["EBRE","TLSE"]
 client_server = {
                  "EIJS2":["WARE","EUSK","TIT2"]
 }
+=======
+crd_file = r"/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/EPN_GER_21.crd"
+# crd_file = r"/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/CHN_HK_16.crd"
+client_server = ["WHYJ","WUDA"]
+space = 0.1 # Grid space deg
+>>>>>>> fed472eb8e6f4f892e4f6111e52851e4b931b0d4
 #read crd file
 crd_data,B,L,H = {},[],[],[]
 with open(crd_file,'rt') as f:
     for line in f:
         value = line.split()
+        if len(value) == 0:
+            continue
         if value[len(value)-1] == "False":
             continue
-        # if value[0] not in all_site_select:
-        #     continue
         crd_data[value[0]] = {}
         xyz = [float(value[1]),float(value[2]),float(value[3])]
         crd_data[value[0]]["XYZ"] = xyz
@@ -378,6 +419,7 @@ with open(crd_file,'rt') as f:
             if i >= 4:
                 crd_data[value[0]]["SYS"] = crd_data[value[0]]["SYS"] + value[i]
         crd_data[value[0]]["VALUE"] = value[len(value)-1]
+# cal_min_max_mean_Grid(crd_data)
 mean_bl = [np.mean(B),np.mean(L)]
 min_H,max_H = np.min(H),np.max(H)
 title='https://webrd02.is.autonavi.com/appmaptile?lang=en&size=1&scale=1&style=8&x={x}&y={y}&z={z}' #常规英文      
@@ -391,18 +433,27 @@ m = folium.Map(location=[mean_bl[0], mean_bl[1]], zoom_start=5, tiles=title, att
 #-----mark site-----#
 cmap4 = ['red','cyan','blue','purple','yellow','lime','magenta','orange','green','black','red','cyan','blue','purple','yellow','lime','magenta','orange','green','black']
 color_set = {}
-color_set["G"],color_set["GE"],color_set["GEC3"],color_set["GEC3C2"] = 'red','purple','green','green'
+color_set["G"],color_set["GE"],color_set["GEC3"],color_set["GEC3C2"],color_set["GEC2"] = 'red','purple','green','green',"yellow"
 # color_set["G"],color_set["GC2"],color_set["GEC3"],color_set["GEC3C2"],color_set["GC3C2"] = 'purple','green','blue','red','yellow'
 minLat = 90
 minLon = 180
 maxLat = -90
 maxLon = -180
+used_site = []
 for cur_site in crd_data:
     # Circle
+    # if (crd_data[cur_site]["BLH"][0] < 40.9 or crd_data[cur_site]["BLH"][0] > 55.9 or crd_data[cur_site]["BLH"][1] < 3.9 or crd_data[cur_site]["BLH"][1] > 18.9):
+    #     continue
+    # if "GE" not in crd_data[cur_site]["SYS"]:
+    #     continue
+    # if (crd_data[cur_site]["BLH"][0] < 48.9 or crd_data[cur_site]["BLH"][0] > 53.4 or crd_data[cur_site]["BLH"][1] < 3.2 or crd_data[cur_site]["BLH"][1] > 10.7):
+    #     continue
+    used_site.append(cur_site)
     cur_H = crd_data[cur_site]["BLH"][2]
     iNdexHeightColor = int((cur_H-min_H)/(max_H - min_H)*color_num)
     if iNdexHeightColor == 100:
         iNdexHeightColor = 99
+<<<<<<< HEAD
     # folium.CircleMarker(location=[crd_data[cur_site]["BLH"][0],crd_data[cur_site]["BLH"][1]],
     #                 radius=7,   # 圆的半径
     #                 popup="{}-{:.2f}".format(cur_site,cur_H),
@@ -435,6 +486,40 @@ for cur_site in crd_data:
                             fill_color='red',
                             fill_opacity=1
                     ).add_to(m)
+=======
+    folium.CircleMarker(location=[crd_data[cur_site]["BLH"][0],crd_data[cur_site]["BLH"][1]],
+                    radius=7,   # 圆的半径
+                    popup="{}-{:.2f}".format(cur_site,cur_H),
+                    # popup=crd_data[cur_site]["BLH"][2],
+                    color = color_set[crd_data[cur_site]["SYS"]],
+                    # color=hex_list[iNdexHeightColor],
+                    fill=True,
+                    fill_color=color_set[crd_data[cur_site]["SYS"]],
+                    # fill_color=hex_list[iNdexHeightColor],
+                    fill_opacity=1
+            ).add_to(m)
+    if cur_site in client_server:
+        folium.CircleMarker(location=[crd_data[cur_site]["BLH"][0],crd_data[cur_site]["BLH"][1]],
+                                radius=7,   # 圆的半径
+                                popup=cur_site,
+                                color='red',
+                                fill=True,
+                                # fill_color=color_set[crd_data[cur_site]["SYS"]],
+                                fill_color='red',
+                                fill_opacity=1
+                        ).add_to(m)
+    # else:
+    #     folium.CircleMarker(location=[crd_data[cur_site]["BLH"][0],crd_data[cur_site]["BLH"][1]],
+    #                         radius=7,   # 圆的半径
+    #                         popup=cur_site,
+    #                         color = color_set[crd_data[cur_site]["SYS"]],
+    #                         # color='blue',
+    #                         fill=True,
+    #                         fill_color=color_set[crd_data[cur_site]["SYS"]],
+    #                         # fill_color='blue',
+    #                         fill_opacity=1
+    #                 ).add_to(m)
+>>>>>>> fed472eb8e6f4f892e4f6111e52851e4b931b0d4
     # Name
     folium.Marker(location=[crd_data[cur_site]["BLH"][0]+space/10,crd_data[cur_site]["BLH"][1]],
                 icon=DivIcon(
@@ -451,12 +536,20 @@ for cur_site in crd_data:
         maxLat = crd_data[cur_site]["BLH"][0]
     if crd_data[cur_site]["BLH"][1] > maxLon:
         maxLon = crd_data[cur_site]["BLH"][1]
+<<<<<<< HEAD
 # draw_grid(minLon,maxLat,maxLon,minLat,space,m)
 draw_triangle(client_server,crd_data,m)
 m.add_child(folium.ClickForMarker(popup="marker"))
 m.save(r"E:\1Master_3\1_Paper_GRID_IUGG\CRD_SITE\EPN_PPPRTK_CLIENT_EIJS.html")
 
 
+=======
+draw_grid(minLon,maxLat,maxLon,minLat,space,m)
+m.add_child(folium.ClickForMarker(popup="marker"))
+m.save(r"/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/TEST.html")
+print(used_site)
+cal_min_max_mean_Grid(crd_data,used_site)
+>>>>>>> fed472eb8e6f4f892e4f6111e52851e4b931b0d4
 
 # out_xml_path = r"E:\1Master_2\3-IUGG\crd\AUG_GER_21.xml"
 # for cur_site in crd_data.keys():

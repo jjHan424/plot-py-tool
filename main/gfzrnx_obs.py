@@ -9,12 +9,21 @@ import matplotlib.pyplot as plt
 import dataprocess as dp
 import draw as dr
 
+<<<<<<< HEAD
 obs_path = r"E:\1Master_3\1_Paper_GRID_IUGG\Data\OBS_355Site"
 select_site_file = r"E:\1Master_3\1_Paper_GRID_IUGG\CRD_SITE\EPN_PPPRTK_CLIENT_B2a.txt"
 
 out_crd_path = r"E:\1Master_3\1_Paper_GRID_IUGG\CRD_SITE\EPN_PPPRTK_CLIENT_B2a.crd"
 is_crd_out = True
 out_xml_path = r"E:\1Master_3\1_Paper_GRID_IUGG\CRD_SITE\EPN_PPPRTK_CLIENT_B2a.xml"
+=======
+obs_path = r"/Users/hanjunjie/Master_3/Data/2021/OBS_EPN/311/"
+select_site_file = r"E:\1Master_2\2-UPD_Test\EPN_SITE\EPN_AUG_GER_SITE.txt"
+
+out_crd_path = r"/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/EPN_ALL_2021311.crd"
+is_crd_out = True
+out_xml_path = r"/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/EPN_ALL_2021311.xml"
+>>>>>>> fed472eb8e6f4f892e4f6111e52851e4b931b0d4
 is_xml_out = True
 obs_list = os.listdir(obs_path)
 
@@ -25,7 +34,7 @@ with open(select_site_file,'rt') as f:
 
 #readfile
 for cur_obs in obs_list:
-    cur_path = obs_path + "\\" + cur_obs
+    cur_path = os.path.join(obs_path, cur_obs)
     cur_marker = ""
     cur_obs_num = 0
     with open(cur_path,'rt') as f:

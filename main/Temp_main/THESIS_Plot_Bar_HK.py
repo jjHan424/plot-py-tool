@@ -13,18 +13,19 @@ import draw as dr
 import trans as tr
 plt.style.use(['science','grid','no-latex'])
 import math
-font_title = {'family' : 'Arial', 'weight' : 300, 'size' : 35}
-font_label = {'family' : 'Arial', 'weight' : 300, 'size' : 6}
-font_tick = {'family' : 'Arial', 'weight' : 300, 'size' : 6}
-font_legend = {'family' : 'Arial', 'weight' : 300, 'size' : 5}
+font_title = {'family' : 'Arial', 'weight' : 300, 'size' : 23}
+font_label = {'family' : 'Arial', 'weight' : 300, 'size' : 23}
+font_tick = {'family' : 'Arial', 'weight' : 300, 'size' : 23}
+font_legend = {'family' : 'Arial', 'weight' : 300, 'size' : 23}
 # font_legend = {'family' : 'Times New Roman', 'weight' : 600, 'size' : 15}
-font_text = {'family' : 'Arial','weight' : 300,'size'   : 28}
-xtick_size = 5
-
+font_text = {'family' : 'Arial','weight' : 300,'size'   : 23}
+xtick_size = 23
+color_list = ["#0099E5","#34BF49","#FF4C4C"]
 # site_list = ["KARL","TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","HOBU","PTBB","GOET"]
 # site_list = ["KARL","IJMU","DENT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","PTBB","GOET"]
 site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-site_list = ["KOS1"]
+# site_list = ["KOS1-312","KOS1-313","KOS1-314"]
+site_list = ["HKST"]
 # site_list = ["HKTK","T430","HKLT","HKKT","HKWS","HKST","HKKS","HKCL","HKSC","HKNP","HKLM"]
 # site_list_string = "EIJS WARE EUSK TIT2 BRUX REDU DOUR KOS1 BADH KLOP FFMJ DILL DENT IJMU DIEP GOET WSRT PTBB HOBU"
 # site_list = site_list_string.split(" ")
@@ -36,15 +37,16 @@ site_list = ["KOS1"]
 # site_list = site_list1
 # site_list = ["site_list1"]
 site_list_plot = site_list
-Mode_Plot = "Site"
+Mode_Plot = "Site_Thesis"
 Fix_mode = "FixRaw"
 com_mode = "CON"
 Site = "WUDA"
-mode_list = ["CON","COEF","GRID"]
+mode_list = ["No prediction","ARIMA","LSTM"]
+# mode_list = ["L","T"]
 # mode_list = ["1-1","2-1","3-1","4-1","5-1","6-1","7-1","8-1","5-5","Auto"]
 # mode_list = ["1-1","2-1","Auto"]
 # plot_list = ["E","N","U","3D","FixSig"]
-plot_list = ["3D","010-3","FixRaw"]
+plot_list = ["2D","U","010-3","FixRaw"]
 # plot_list = ["005-H","005-V","005-3","010-H","010-V","010-3","020-H","020-V","020-3"]
 # plot_list = ["3D","010-H","010-V","FixRaw"]
 # DirectAll = r"E:\1Master_2\3-IUGG\Result_Server\Client_20230704_5S\RES_30S_10"
@@ -61,7 +63,7 @@ for i in range(site_num):
         data_save[cur_site] = {}
     for i in range(len(mode_list)):
         # data_save[cur_site][mode_list[i]] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-1-10.txt",i+1,len(mode_list))
-        data_save[cur_site][mode_list[i]] = rf.H_open_rms(os.path.join(DirectAll , cur_site + "-Sigma-0-08.txt"),i+1,len(mode_list))
+        data_save[cur_site][mode_list[i]] = rf.H_open_rms(os.path.join(DirectAll , cur_site + "-Sigma-1-12.txt"),i+1,len(mode_list))
 
 
 W=0.8/len(mode_list)
@@ -111,6 +113,86 @@ if Mode_Plot == "Site":
         axP[len(axP)-1].set_xticks(X_all)
         axP[len(axP)-1].set_xticklabels(bar_plot[cur_site]["DOY"])
         plt.show()
+
+if Mode_Plot == "Site_Thesis":
+    for cur_site in data_save.keys():
+        figP,axP = plt.subplots(2,2,figsize=(12,8),sharey=False,sharex=True)
+        i_mode = 0
+        for cur_mode in data_save[cur_site].keys():
+            X_all = list(range(1,len(data_save[cur_site][cur_mode].keys())+1))
+            for i in range(len(X_all)):
+                X_all[i] = X_all[i] + W*i_mode - W*(len(mode_list)-1)/2
+            for i in range(len(plot_list)):
+                if plot_list[i] == "2D":
+                    axP[0][0].bar(X_all,bar_plot[cur_site][cur_mode][plot_list[i]],width = W,label='value',color = color_list[i_mode%3])
+                if plot_list[i] == "U":
+                    axP[0][1].bar(X_all,bar_plot[cur_site][cur_mode][plot_list[i]],width = W,label='value',color = color_list[i_mode%3])
+                if plot_list[i] == "010-3":
+                    axP[1][0].bar(X_all,bar_plot[cur_site][cur_mode][plot_list[i]],width = W,label='value',color = color_list[i_mode%3])
+                if plot_list[i] == "FixRaw":
+                    axP[1][1].bar(X_all,bar_plot[cur_site][cur_mode][plot_list[i]],width = W,label='value',color = color_list[i_mode%3])
+            i_mode = i_mode + 1
+        # X_all = list(range(len(bar_plot[cur_site]["DOY"])))
+        # axP[len(axP)-1].set_xticks(X_all)
+        # axP[len(axP)-1].set_xticklabels(bar_plot[cur_site]["DOY"])
+        axP[0][0].set_ylim(0,8)
+        axP[0][1].set_ylim(0,8)
+        axP[1][0].set_ylim(0,800)
+        axP[1][1].set_ylim(85,100)
+        axP[0][0].set_yticks([0,2,4,6,8])
+        axP[0][1].set_yticks([0,2,4,6,8])
+        axP[1][0].set_yticks([0,200,400,600,800])
+        axP[1][1].set_yticks([85,90,95,100])
+        axP[0][0].set_ylabel("Position errors (cm)",font_label)
+        axP[1][0].set_xlabel("Prediction duration (min)",font_label,x=1)
+        axP[1][0].set_ylabel("Convergence Time (s)",font_label)
+        axP[1][1].set_ylabel("Fixing Rate (%)",font_label)
+        ax_range = axP[0][0].axis()
+        axP[0][0].text(ax_range[0],ax_range[3]-1,"Horizontal",font_title)
+        ax_range = axP[0][1].axis()
+        axP[0][1].text(ax_range[0],ax_range[3]-1,"Vertical",font_title)
+        labels = axP[0][0].get_yticklabels() + axP[0][0].get_xticklabels()
+        axP[0][0].set_xticks([0,2,4,6,8,10,12,14,16,18,20])
+        axP[0][0].set_xticklabels([0,1,2,3,4,5,6,7,8,9,10])
+        for i in range(2):
+            for j in range(2):
+                labels = labels + axP[i][j].get_yticklabels() + axP[i][j].get_xticklabels()
+        axP[1][1].legend(mode_list,prop=font_legend,
+            framealpha=0,facecolor='none',ncol=3,numpoints=5,markerscale=4, 
+            borderaxespad=0,bbox_to_anchor=(1,1.19),loc=1)
+        box = axP[1][0].get_position()
+        axP[1][0].set_position([box.x0 - 0.03, box.y0, box.width, box.height]) 
+        box = axP[0][0].get_position()
+        axP[0][0].set_position([box.x0 - 0.03, box.y0, box.width, box.height]) 
+        [label.set_fontsize(xtick_size) for label in labels]
+        [label.set_fontname('Arial') for label in labels]
+        axP[0][0].axhline(y=0.91,color = 'k',linestyle = "--",linewidth = 3)
+        axP[0][1].axhline(y=3.44,color = 'k',linestyle = "--",linewidth = 3)
+        # axP[1][0].axhline(y=3,color = 'k',linestyle = "--",linewidth = 3)
+        legend_list = [plt.Line2D([0,20],[0,20],color = 'k',linestyle = "--",linewidth = 3)]
+        # axP[1][0].legend(legend_list,["Auto"],prop = font_legend,frameon=False,bbox_to_anchor=(0.4,1.25),loc=1)
+        plt.savefig("/Users/hanjunjie/Desktop/Image-1/HKST_2021279_delay1_20.jpg",dpi=300)
+        plt.show()
+
+if Mode_Plot == "Site_Mean":
+    # for cur_site in data_save.keys():
+    figP,axP = plt.subplots(len(plot_list),1,figsize=(12,12),sharey=False,sharex=True)
+    i_mode = 0
+    for cur_mode in data_save["KOS1-312"].keys():
+        X_all = list(range(len(data_save["KOS1-312"][cur_mode].keys())))
+        for i in range(len(X_all)):
+            X_all[i] = X_all[i] + W*i_mode - W*(len(mode_list)-1)/2
+        for i in range(len(plot_list)):
+            y = []
+            for cur_site in data_save.keys():
+                y.append(bar_plot[cur_site][cur_mode][plot_list[i]])
+            y = np.mean(np.array(y),0)
+            axP[i].bar(X_all,y,width = W,label='value')
+        i_mode = i_mode + 1
+    X_all = list(range(len(bar_plot[cur_site]["DOY"])))
+    axP[len(axP)-1].set_xticks(X_all)
+    axP[len(axP)-1].set_xticklabels(bar_plot[cur_site]["DOY"])
+    plt.show()
 
 
 

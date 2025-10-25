@@ -66,7 +66,7 @@ def open_aug_file(filename,sys="G"):
     all_time = np.array([ref_w,ref_sow]).T
     return (S_time,aug,all_time)
 
-def open_aug_file_new(filename):
+def open_aug_file_new(filename,time_delay = 0):
     all_data={}
     head_info={}
     soweek_last = 0
@@ -91,6 +91,12 @@ def open_aug_file_new(filename):
                     if (len(cur_value) != 1):
                         if line[0] not in head_info.keys():
                             head_info[line[0]]={}
+                        if line[0] == "C" and cur_value == "RION2":
+                            cur_value = "RION1"
+                        if line[0] == "C" and cur_value == "dION2":
+                            cur_value = "dION1"
+                        if line[0] == "C" and cur_value == "ION2":
+                            cur_value = "ION1"
                         head_info[line[0]][cur_value] = head_index
                         head_index = head_index + 1                   
             if ">" in line:
@@ -101,12 +107,15 @@ def open_aug_file_new(filename):
                 hour=(float(value[4]))
                 minute=(float(value[5]))
                 second=(float(value[6]))
+                # if hour == 15:
+                #     print("HJJ")
                 [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
                 if (not epoch_flag):
                     min_sow = soweek
                 if (soweek < min_sow):
                     soweek = soweek + 604800
                 epoch_flag = True
+                soweek = soweek + time_delay
                 if soweek not in all_data.keys():
                     all_data[soweek]={}
             if ((value[0][0] == "C" or value[0][0] == "E" or value[0][0] == "G") and epoch_flag):
@@ -115,14 +124,22 @@ def open_aug_file_new(filename):
                 sat = value[0]
                 if (sat not in all_data[soweek].keys()):
                     all_data[soweek][sat] = {}
+                if (sat[0] not in all_data[soweek].keys()):
+                    all_data[soweek][sat[0]] = {}
                 i = 1
                 for type in head_info[sat[0]].keys():
                     if 12*i-9 > len(line) - 1 or 12*i+3 > len(line) - 1:
                         break
                     # cur_value = line[12*i-9:12*i+3].strip()
                     cur_value = line[12*i-8:12*i+4].strip()
-                    if (len(cur_value) > 1):
-                        all_data[soweek][sat][type] = float(cur_value)
+                    # if float(cur_value) == 0.0:
+                    #     continue
+                    if type == "RTRP":
+                        if (len(cur_value) >= 1):
+                            all_data[soweek][sat[0]][type] = float(cur_value)
+                    else:
+                        if (len(cur_value) >= 1):
+                            all_data[soweek][sat][type] = float(cur_value)
                     i = i+1
 
 
@@ -277,6 +294,60 @@ def open_flt_ppplsq_file(filename):
                 
     return all_data
 
+def get_gridhead(filename):
+    head_str = ""
+    with open(filename,"rt") as f:
+        for line in f:
+            if line[0] == ">":
+                return head_str,resnumber
+            head_str = head_str + line
+            if "OBS TYPES" in line:
+                value = line.split()
+                for cur_value in value:
+                    if "Res" in cur_value:
+                        resnumber = int(cur_value[-3:])
+
+def open_grid_file(filename,time_delay = 0):
+    all_data = {}
+    soweek_last = 0
+    w_last = 0
+    head_end = False
+    epoch_flag = False
+    with open(filename,"rt") as f:
+        for line in f:
+            value = line.split()
+            if "REFERENCE" in line:
+                ref_lat,ref_lon =  float(value[0]),float(value[2])
+            if "OBS TYPES" in line:
+                for cur_value in value:
+                    if "Res" in cur_value:
+                        resnumber = int(cur_value[-3:])
+            if (value[0] == ">"):
+                year,month,day,hour,minute,second=(float(value[1])),(float(value[2])),(float(value[3])),(float(value[4])),(float(value[5])),(float(value[6]))
+                [w,soweek] = tr.ymd2gpst(year,month,day,hour,minute,second)
+                if (not epoch_flag):
+                    min_sow = soweek
+                if (soweek < min_sow):
+                    soweek = soweek + 604800
+                epoch_flag = True
+                soweek = soweek + time_delay
+                if soweek not in all_data.keys():
+                    all_data[soweek]={}
+            if (value[0][0] == "C" or value[0][0] == "E" or value[0][0] == "G" or value[0] == "TRP") and epoch_flag:
+                if value[0] not in all_data[soweek].keys():
+                    all_data[soweek][value[0]] = []
+                all_data[soweek][value[0]].append(float(value[1]))
+                all_data[soweek][value[0]].append(float(value[2]))
+                all_data[soweek][value[0]].append(float(value[3]))
+                all_data[soweek][value[0]].append(float(value[4]))
+                all_data[soweek][value[0]].append(float(value[5]))
+                all_data[soweek][value[0]].append(float(value[6]))
+                if value[0] == "TRP":
+                    for i in range(resnumber):
+                        all_data[soweek][value[0]].append(float(value[6+i+1]))
+    return all_data,ref_lat,ref_lon
+
+
 def open_flt_pvtflt_file(filename):
     all_data={}
     soweek_last = 0
@@ -288,7 +359,11 @@ def open_flt_pvtflt_file(filename):
             value = line.split()
             if line[0] == " ":
                 soweek = float(value[0])
+<<<<<<< HEAD
                 if (soweek + w_last*604800 < soweek_last ):
+=======
+                if (soweek + w_last*604800 < soweek_last):
+>>>>>>> fed472eb8e6f4f892e4f6111e52851e4b931b0d4
                     w_last = w_last + 1
                 soweek = soweek + w_last*604800
                 soweek_last = soweek
@@ -973,8 +1048,8 @@ def open_ismr(filename):
     with open(filename,'rt') as f:
         for line in f:
             value = line.split()
-            if len(value) != 10:
-                continue
+            # if len(value) != 11:
+            #     continue
             if line[0] != "%":
                 soweek = float(value[1])
                 if (soweek < soweek_last):
@@ -1169,36 +1244,61 @@ def open_diff_file_new(filename):
 def H_open_rms(filename,index=1,all_num = 1):
     all_data={}
     file_exist = os.path.exists(filename)
+    recover_list = []
     if (not file_exist):
         return all_data
     with open(filename,'rt') as f:
         for line in f:
             value = line.split()
-            if value[0] == "Doy":
+            if value[0] == "DOY":
                 Total = int((len(value) - 1)/5)
+                Total = all_num
                 if index > Total:
                     return all_data
-                
+                if len(value) > (1+5*all_num):
+                    reconver_num = int((len(value)-1-all_num*5) / all_num / 3)
+                    for i in range(int(reconver_num)):
+                        cur_recover_string = value[0+Total*5+i*3+1]
+                        cur_recover_value = cur_recover_string.split("-")
+                        recover_list.append(cur_recover_value[1])
                 continue
-            doy = int(value[0])
-            if doy not in all_data.keys():
-                all_data[doy]={}
-            Fix = value[Total+index][0:len(value[Total+index])-1]
-            all_data[doy]["FixSig"] = float(Fix)
-            Fix = value[index][0:len(value[index])-1]
-            all_data[doy]["FixRaw"] = float(Fix)
-            all_data[doy]["E"] = float(value[Total*2+index])
-            all_data[doy]["N"] = float(value[Total*3+index])
-            all_data[doy]["U"] = float(value[Total*4+index])
-            all_data[doy]["3D"] = math.sqrt(all_data[doy]["E"]*all_data[doy]["E"]+all_data[doy]["N"]*all_data[doy]["N"]+all_data[doy]["U"]*all_data[doy]["U"])
-            if len(value) > (1+5*all_num):
-                reconver_num = int((len(value)-1-all_num*5-4*all_num) / all_num / 6)
-                for i in range(int(reconver_num)):
-                    # print(Total*5+2*index-1+i*Total*2)
-                    cur_acc = int(value[Total*5+2*index-1+i*Total*2][0:3])
-                    all_data[doy]["{:0>3}-3".format(cur_acc)] = float(value[Total*5+2*index-1+i*Total*2+1])
-                    all_data[doy]["{:0>3}-V".format(cur_acc)] = float(value[Total*5+2*index-1+i*Total*2+1+2*reconver_num*Total])
-                    all_data[doy]["{:0>3}-H".format(cur_acc)] = float(value[Total*5+2*index-1+i*Total*2+1+2*reconver_num*Total+2*reconver_num*Total])
+            if "*" in value[0] and index == 2:
+                continue
+            if "*" in value[0]:
+                doy = int(value[0][1:])
+            else:
+                doy = int(value[0])
+            # if doy == 2 or doy == 8 or doy == 14 or doy == 20:
+            if 1:
+                # continue
+            # if doy != 8:
+            #     continue
+            # if doy != 14:
+            #     continue
+            # if doy != 20:
+            #     continue
+                if doy not in all_data.keys():
+                    all_data[doy]={}
+                Fix = value[Total+index]
+                all_data[doy]["FixSig"] = float(Fix)
+                Fix = value[index]
+                all_data[doy]["FixRaw"] = float(Fix)
+                all_data[doy]["E"] = float(value[Total*2+index])
+                all_data[doy]["N"] = float(value[Total*3+index])
+                all_data[doy]["U"] = float(value[Total*4+index])
+                all_data[doy]["3D"] = math.sqrt(all_data[doy]["E"]*all_data[doy]["E"]+all_data[doy]["N"]*all_data[doy]["N"]+all_data[doy]["U"]*all_data[doy]["U"])
+                all_data[doy]["2D"] = math.sqrt(all_data[doy]["E"]*all_data[doy]["E"]+all_data[doy]["N"]*all_data[doy]["N"])
+                if len(value) > (1+5*all_num):
+                    # reconver_num = int((len(value)-1-all_num*5) / all_num / 3)
+                    for i in range(int(reconver_num)):
+                        # print(Total*5+2*index-1+i*Total*2)
+                        # print(float(value[0+Total*5+i*3+index]))
+                        # print(float(value[0+Total*5+i*3+index+reconver_num*Total]))
+                        # print(float(value[0+Total*5+i*3+index+2*reconver_num*Total]))
+                        cur_acc = recover_list[i]
+                        all_data[doy]["{:0>3}-3".format(cur_acc)] = float(value[0+Total*5+i*3+index])
+                        all_data[doy]["{:0>3}-V".format(cur_acc)] = float(value[0+Total*5+i*3+index+reconver_num*Total])
+                        all_data[doy]["{:0>3}-H".format(cur_acc)] = float(value[0+Total*5+i*3+index+2*reconver_num*Total])
     
     return all_data
 
@@ -1434,7 +1534,7 @@ def H_open_grid_file_for_heat(filename,year,mon,day,hour,min,sec,s_length):
                         head_info[line[0]][cur_value] = head_index
                         head_index = head_index + 1
             if "OBS TYPES" in line:
-                grid_node = int(value[5][10:13])
+                grid_node = int(value[7][10:13])
                 data_all = [[] for i in range(grid_node)]
                 all_data_new = []                  
             if ">" in line:
@@ -1466,7 +1566,7 @@ def H_open_grid_file_for_heat(filename,year,mon,day,hour,min,sec,s_length):
             if ((value[0][0] == "C" or value[0][0] == "E" or value[0][0] == "G") and epoch_flag):
             # if ((value[0][0] == "T") and epoch_flag):
                 for i in range(grid_node):
-                    cur_node_diff = float(value[grid_node+5+i])  # Diff
+                    cur_node_diff = float(value[grid_node+7+i])  # Diff
                     # cur_node_diff = float(value[grid_node+grid_node+5+i])  # Dis
                     if cur_node_diff == 9.9999:
                         continue

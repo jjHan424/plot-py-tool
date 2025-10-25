@@ -1,0 +1,40 @@
+import os
+
+year,doy,count = 2021,272,100
+file_path1 = "/Users/hanjunjie/Master_3/1-IUGG/CSV_for_Pre"
+sat_list = []
+while count > 0:
+    file_path2 = os.path.join(file_path1,"{}{:0>3}".format(year,doy),"HK_4Poly_6Site_LSTM_{}{:0>3}".format(year,doy))
+    doy = doy + 1
+    count = count - 1
+    if not os.path.exists(file_path2):
+        continue
+    sat_file_list = os.listdir(file_path2)
+    for cur_sat in sat_file_list:
+        if len(cur_sat) > 5:
+            if cur_sat[0:3] not in sat_list:
+                sat_list.append(cur_sat[0:3])
+                # print(cur_sat[0:3])
+
+year,doy,count = 2022,60,100
+file_path1 = "/Users/hanjunjie/Master_3/1-IUGG/CSV_for_Pre"
+# sat_list = []
+while count > 0:
+    file_path2 = os.path.join(file_path1,"{}{:0>3}".format(year,doy),"HK_4Poly_6Site_LSTM_{}{:0>3}".format(year,doy))
+    doy = doy + 1
+    count = count - 1
+    if not os.path.exists(file_path2):
+        continue
+    sat_file_list = os.listdir(file_path2)
+    for cur_sat in sat_file_list:
+        if len(cur_sat) > 5:
+            if cur_sat[0:3] not in sat_list:
+                sat_list.append(cur_sat[0:3])
+                # print(cur_sat[0:3])
+
+sat_list.sort()
+str_sat = "["
+for cur_sat in sat_list:
+    print(cur_sat)
+    str_sat = str_sat + "\"{}\";".format(cur_sat)
+print(str_sat)

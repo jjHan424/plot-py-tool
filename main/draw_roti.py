@@ -18,7 +18,7 @@ import readfile as rf
 import matplotlib as mpl
 mpl.use("TkAgg")
 import matplotlib.pyplot as plt
-plt.style.use(['science','no-latex'])
+# plt.style.use(['science','no-latex'])
 import dataprocess as dp
 import draw as dr
 import seaborn as sns
@@ -66,13 +66,22 @@ r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\XGXN2021339_GEC.ismr",]
 # path_list = [r"E:\1Master_2\Paper_Grid\Pro_20211205-339\roti\WHYJ2021339_GEC.ismr"]
 path_list = [r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI\2021305\HKSC2021305_GEC.ismr"]
 # site_list = ["HKKS","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
+<<<<<<< HEAD
 site_list = ["HKSC"]
+=======
+site_list = ["BRMF"]
+>>>>>>> fed472eb8e6f4f892e4f6111e52851e4b931b0d4
 # site_list = ["TERS","IJMU","DELF","VLIS","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
 # sitestring = "TRO1 VARS HETT OVE6 ROM2 OST6 OLK2 PYHA LEK6 METG LOV6 IRBE NOR7 SPT7 VAIN HAS6 RANT REDZ LAMA HELG GELL LDB2 GOML GOET BRTS LEIJ WARE INVR ARIS TLL1 SNEO WTZZ AUBG BUTE BACA MIKL POLV COMO EGLT SWAS MARS ZADA AJAC SCOA ACOR ALME MMET ORID IZMI NICO SAVU SUN6 MNSK TER2 SMLA IJMU DYNG DEVA MALL MAH1 LODZ ZYWI AUTN ENTZ VILL"
 # site_list = sitestring.split()
 # site_list = ["TERS","IJMU","DELF","VLIS","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
 count = 1
+<<<<<<< HEAD
 Year,Mon,Day,Hour,LastT,deltaT = 2022,3,13,0,24,2
+=======
+Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,0,24,1
+# site_list = ["MAS1","NABG","LPAL","IZAN","NICO","ALME","ALME","RAEG","ANK2","SONS","ELBA","ESCO","BRMF","COMO","BBYS","MLVL","LODZ","VLN1","RANT","SAS2","JON6","SPT0","LEK6","QAQ1","UME6","OST6","ARJ6","OVE6","KEV2","TRO1","SCOR","VARS","WUTH","NYA1","NYA1","NYAL"]
+>>>>>>> fed472eb8e6f4f892e4f6111e52851e4b931b0d4
 while count > 0:
     doy = tr.ymd2doy(Year,Mon,Day,0,00,00)
     cdoy = "{:0>3}".format(doy)
@@ -80,7 +89,11 @@ while count > 0:
         cur_site = site_list[i]
         
         path_roti = r"E:\0Project\LX\ROTI_HK" + "\\" +"{:0>4}".format(Year) + cdoy +"\\roti\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
+<<<<<<< HEAD
         # path_roti = r"E:\1Master_3\2_ZTD\2023029\roti\KOS12023031_GEC.ismr"
+=======
+        path_roti = r"/Users/hanjunjie/Gap1/LCX/{}2021308_GEC.ismr".format(site_list[i])
+>>>>>>> fed472eb8e6f4f892e4f6111e52851e4b931b0d4
         # save_dir = r"E:\1Master_2\3-IUGG\Result_Server\ROTI\Fig" + "\\" + "{:0>4}".format(Year) + cdoy
         save_dir = r"E:\0Project\LX\ROTI_HK_Fig"
         # path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI-30\2021305"+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
@@ -135,6 +148,7 @@ while count > 0:
         data_R = [[] for i in range(100)]
         data_E = [[] for i in range(100)]
         data_C = [[] for i in range(100)]
+        all = True
         for time in data.keys():
             plot_time = (time - cov_Time) / 3600
             if (plot_time > begT and plot_time < begT + LastT) or all:
@@ -189,18 +203,18 @@ while count > 0:
         axP[1].set_title('GAL',font_label)
         axP[2].set_title('BDS',font_label)
 
-        axP[0].set_xticks(XTick)
-        axP[1].set_xticks(XTick)
-        axP[2].set_xticks(XTick)
-        axP[2].set_xticklabels(XLabel)
+        # axP[0].set_xticks(XTick)
+        # axP[1].set_xticks(XTick)
+        # axP[2].set_xticks(XTick)
+        # axP[2].set_xticklabels(XLabel)
 
         axP[0].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
         axP[1].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
         axP[2].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
 
-        axP[0].set_ylim(0,1)
-        axP[1].set_ylim(0,1)
-        axP[2].set_ylim(0,1)
+        # axP[0].set_ylim(0,1)
+        # axP[1].set_ylim(0,1)
+        # axP[2].set_ylim(0,1)
 
         axP[0].grid(False)
         axP[1].grid(False)

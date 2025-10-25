@@ -15,14 +15,19 @@ plt.style.use(['science','grid','no-latex'])
 import math
 
 site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
-site_list = ["TERS"]
+# site_list = ["TERS"]
+site_list1 = ["BRUX","DOUR","WARE","REDU","EIJS","BADH","FFMJ","KLOP"]
+site_list2 = ["KOS1","DENT","WSRT","TIT2","DIEP","EUSK"]
+site_list3 = ["IJMU","DILL","PTBB","GOET","TERS","HOBU","KARL"] #HOBU TERS KARL
+site_list = site_list3
+site_list = ["DOUR"]
 site_list_plot = site_list
 Mode_Plot = "Site"
 Fix_mode = "FixRaw"
-com_mode = "Auto"
+com_mode = "CON"
 Site = "WUDA"
-mode_list = ["1-1","5-5","5-1","Auto"]
-DirectAll = r"E:\1Master_2\3-IUGG\Result_Server\Client_20230629\RES_RE300"
+mode_list = ["CON","COEF","GRID"]
+DirectAll = "/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/Statistic"
 DirectSave = r"E:\1Master_2\3-IUGG\Result_Server\Client_20230629\RES_RE600"
 site_num = len(site_list)
 show = True
@@ -33,7 +38,7 @@ for i in range(site_num):
     if cur_site not in data_save.keys():
         data_save[cur_site] = {}
     for i in range(len(mode_list)):
-        data_save[cur_site][mode_list[i]] = rf.H_open_rms(DirectAll + "\\" + cur_site + "-Sigma-0-02.txt",i+1,len(mode_list))
+        data_save[cur_site][mode_list[i]] = rf.H_open_rms(os.path.join(DirectAll , cur_site + "-Sigma-0-08.txt"),i+1,len(mode_list))
 
 #===========Day============#
 if Mode_Plot=="Site":

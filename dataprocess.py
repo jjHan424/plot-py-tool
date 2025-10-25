@@ -87,6 +87,8 @@ def pre_aug_new(head_I = {}, data_I = {}, data_S = {}):
             ref_data[time] = {}
         Ele_index,Ele_cur,Ele_sort,ref_sat = {},{},{},{}
         for sat in data_I[time].keys():
+            if len(sat) <= 1:
+                continue
             if sat not in data_S[time].keys():
                 continue
             if sat[0] not in Ele_index.keys():
@@ -106,7 +108,7 @@ def pre_aug_new(head_I = {}, data_I = {}, data_S = {}):
                     for type in data_I[time][sat].keys():
                         sys_type = ref_sat[sys_cur][0] + "_" + type
                         if type not in data_S[time][ref_sat[sys_cur]].keys():
-                            continue                
+                            continue    
                         ref_data[time][sys_cur] = 0                
                         ref_data[time][sys_type] = data_I[time][ref_sat[sys_cur]][type] - data_S[time][ref_sat[sys_cur]][type]
                     break
@@ -125,9 +127,13 @@ def pre_aug_new(head_I = {}, data_I = {}, data_S = {}):
                     ref_data[time][sys_type] = data_I[time][ref_sat[sat[0]]][type] - data_S[time][ref_sat[sat[0]]][type]
                     ref_data[time][sys_type] = data_I[time][sat][type] - data_S[time][sat][type]
                 else:
+                    if "ELE" in data_S[time][sat].keys():
+                        all_data[time][sat]["ELE"] = data_S[time][sat]["ELE"]
                     if type == "TRP1":
                         all_data[time][sat][type] = (data_I[time][sat][type] - data_S[time][sat][type])
                     else:
+                        # if data_I[time][sat][type] == 0.0 or data_S[time][sat][type] == 0.0:
+                        #     continue
                         all_data[time][sat][type] = (data_I[time][sat][type] - data_S[time][sat][type]) - ref_data[time][sys_type]
         for sat in data_I[time].keys():
             if sat not in all_data[time].keys():
@@ -160,12 +166,13 @@ def pre_Bias(data = {},INT = 30):
             for site in data[soweek][sys].keys():
                 if (site not in data[nextsec][sys].keys()):
                     continue
-                if ref_G == "NONE":
-                    ref_G = site
-                    ref = data[nextsec][sys][site] - data[soweek][sys][site]
-                    continue
-                else:
-                    all_data[soweek][sys][site] = data[nextsec][sys][site] - data[soweek][sys][site] - ref
+                all_data[soweek][sys][site] = data[nextsec][sys][site] - data[soweek][sys][site]
+                # if ref_G == "NONE":
+                #     ref_G = site
+                #     ref = data[nextsec][sys][site] - data[soweek][sys][site]
+                #     continue
+                # else:
+                #     all_data[soweek][sys][site] = data[nextsec][sys][site] - data[soweek][sys][site] - ref
     
     return all_data
 
@@ -217,12 +224,25 @@ def rms(data = []):
         return 0
     return math.sqrt(sum / size)
 
+<<<<<<< HEAD
 def rms_3sigma(data = [],time_p = [],data_mean = 0.0,data_sigma = 0.0):
     size = 0
     sum = 0
     time_out,data_out = [],[]
     for i in range(len(data)):
         if abs(data[i]-data_mean) < -1*data_sigma:
+=======
+def rms_3sigma(data = [],time_p = [],sig_num = 0,max_data = 0):
+    size = 0
+    sum = 0
+    time_out,data_out = [],[]
+    data_mean = np.mean(data)
+    data_sigma = np.std(data)
+    for i in range(len(data)):
+        if abs(data[i]) > max_data and max_data != 0:
+            continue
+        if abs(data[i]-data_mean) > sig_num*data_sigma and sig_num != 0:
+>>>>>>> fed472eb8e6f4f892e4f6111e52851e4b931b0d4
             continue
         sum = sum + data[i] * data[i]
         data_out.append(data[i])
@@ -372,15 +392,15 @@ def XYZ2ENU_dynamic(XYZ = {},REF_XYZ = {}):
 
     for time in XYZ.keys():
         if time not in all_data and time in REF_XYZ.keys():
-            # if REF_XYZ[time]["AMB"] != 1:
-            #     continue
+            if REF_XYZ[time]["AMB"] != 1:
+                continue
             all_data[time] = {}
             xyz.append(XYZ[time]["X"])
             xyz.append(XYZ[time]["Y"])
             xyz.append(XYZ[time]["Z"])
-            ref_xyz.append(REF_XYZ[time]["X"])
-            ref_xyz.append(REF_XYZ[time]["Y"])
-            ref_xyz.append(REF_XYZ[time]["Z"])
+            ref_xyz.append(REF_XYZ[time]["X"]+2277250.2161075305-2277245.4769)
+            ref_xyz.append(REF_XYZ[time]["Y"]-5009241.71584191+5009229.4820)
+            ref_xyz.append(REF_XYZ[time]["Z"]-3214545.640824735+3214533.0131)
             enu = tr.xyz2enu(xyz,ref_xyz)
             xyz.clear()
             ref_xyz.clear()
@@ -412,3 +432,60 @@ def get_H_sun(year,month,day,hour,length,step,lon,lat):
         time_plot.append(cur_hour-2)
         cur_hour = cur_hour + step/3600
     return H_sun_list,time_plot
+
+def pre_grid(data_I,data_S,data_ref):
+    all_data = {}
+    for cur_time in data_ref.keys():
+        if cur_time not in data_S.keys():
+            continue
+        if cur_time not in data_I.keys():
+            continue
+        if cur_time not in all_data.keys():
+            all_data[cur_time] = {}
+        for cur_sat in data_ref[cur_time].keys():
+            if cur_sat not in data_S[cur_time].keys():
+                continue
+            if cur_sat not in data_I[cur_time].keys():
+                continue
+            all_data[cur_time][cur_sat] = []
+            for i in range(len(data_I[cur_time][cur_sat])):
+                all_data[cur_time][cur_sat].append(data_S[cur_time][cur_sat][i] - data_I[cur_time][cur_sat][i])
+    return all_data
+
+def find_common_sat_aug(data={},ref_site = "NONE"):
+    all_data = {}
+    for cur_time in data[ref_site].keys():
+        if cur_time not in all_data.keys():
+            all_data[cur_time] = {}
+        for cur_sat in data[ref_site][cur_time].keys():
+            number = 0
+            for cur_site in data.keys():
+                if cur_time in data[cur_site].keys():
+                    if cur_sat in data[cur_site][cur_time].keys():
+                        number = number+1
+            if number == len(data):
+                all_data[cur_time][cur_sat] = 1
+    return all_data
+def ele_of_sun(lat,lon,year,mon,day,hour,lastT,step):
+    doy = tr.ymd2doy(year,mon,day,0,0,0)
+    N0 = 79.6764+0.2422*(year-1985) - int((year-1985)/4)
+    t = doy-N0
+    theta = 2*math.pi*t/365.2422
+    ED = 0.3723+23.2567*math.sin(theta)+0.1149*math.sin(2*theta) - 0.1712*math.sin(3*theta) - 0.758*math.cos(theta) + 0.3656*math.cos(2*theta) + 0.0201*math.cos(3*theta)
+    cur_hour = hour
+    hour_int = hour
+    second,minute = 0,0
+    [w,soweek] = tr.ymd2gpst(year,mon,day,hour_int,minute,second)
+    all_data = {}
+    while cur_hour < hour + lastT:
+        sin_h = math.sin(lat*glv.deg) * math.sin(ED*glv.deg) + math.cos(lat*glv.deg) * math.cos(ED*glv.deg) * math.cos((-180+15*(cur_hour+lon/15))*glv.deg)
+        H_sun = math.asin(sin_h)
+        if H_sun < 0:
+            # cur_hour = cur_hour + step/3600
+            H_sun = 0
+            # continue
+        
+        all_data[soweek] = H_sun/glv.deg
+        cur_hour = cur_hour + step/3600
+        soweek = soweek + step
+    return all_data

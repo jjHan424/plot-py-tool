@@ -14,8 +14,8 @@ import trans as tr
 import math
 import glv
 
-year,month,day = 2021,11,6
-hour,length,step = 2,22,30
+year,month,day = 2021,11,7
+hour,length,step = 21,2,30
 # lon,lat = 9.67,59.19
 lon,lat = 114,30 #WUHAN
 lon,lat = 114,22 #HONGKONG
@@ -64,7 +64,7 @@ while cur_hour < hour + length:
     time_plot.append(cur_hour)
     cur_hour = cur_hour + step/3600
 # figP,axP = plt.subplots(1,1,figsize=(18,9.5),sharey=False,sharex=True)
-axP.plot(time_plot,H_sun_list)
+# axP.plot(time_plot,H_sun_list)
 
 plt.show()
 
