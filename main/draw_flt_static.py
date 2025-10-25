@@ -73,14 +73,15 @@ REF_XYZ = {
             "TERS":[3798580.3478,346994.3368,5094781.1586],
             "TIT2":[3993787.0349,450204.1864,4936131.8507],
             "WARE":[4031946.9452,370151.3253,4911906.1508],
-            "WSRT":[3828735.5991,443305.2281,5064884.8827]
+            "WSRT":[3828735.5991,443305.2281,5064884.8827],
+            "H107":[-2267761.1483,5009370.8176,3220970.5522]
            }
 ENU_ALL = {}
 # site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
 # site_list = ["HKTK","T430","HKLT","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
 # site_list = ["EIJS","WSRT","BADH","KLOP","FFMJ"]
 # site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL"]
-site_list = ["EIJS"]
+site_list = ["H107"]
 # site_list = ["HKLT","HKST"]
 # site_list = ["REDU","BRUX","KOS1","WSRT"]
 # mode_list = ["Grid-1-1","Grid-5-5","Grid-5-1","Grid-Auto"]
@@ -92,13 +93,13 @@ site_list = ["EIJS"]
 mode_list = ["BEST","RAW","ARIMA","LSTM"]
 mode_list = ["No prediction","ARIMA","LSTM"]
 # mode_list = ["NO","ARIM"]
-mode_list = ["B3I","B2a","E5a","E5b","G+E"]
+mode_list = ["B3I"]
 Sig = 0
 # SavePath=r"D:\1Master_2\Paper_Grid\Res_FromServer_New\Fig\Pos-Trp\Aug"
 SavePath=r"/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT/Statistic_Prediction"
-S=2
-if (not os.path.exists(SavePath)):
-    os.mkdir(SavePath)
+S=0
+# if (not os.path.exists(SavePath)):
+#     os.mkdir(SavePath)
 # for jj in range(len(site_list)):
 #     SavePathSite = os.path.join(SavePath , site_list[jj] + "-Sigma-"+"{:0>1}".format(Sig) + "-{:0>2}".format(S)+".txt")
 #     SHOW = False
@@ -130,13 +131,13 @@ if (not os.path.exists(SavePath)):
 
 for j in range(len(site_list)):
     Site = site_list[j]
-    Y=2023
-    M=1
-    D=1
+    Y=2021
+    M=12
+    D=11-2
     # D = 19
-    L=6
+    L=24
     # S=14
-    DDD = 1
+    DDD = 4
     count = 1
     # Direct = r"E:\1Master_2\3-IUGG\Result_Server\Client_20230629"
     Direct = r"/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/CLIENT"
@@ -194,29 +195,23 @@ for j in range(len(site_list)):
             #     # os.path.join(Direct,"FLT_LSTM_EPN_NEW",  "{}{:0>3}".format(Y,doy),"{}-GEC3-FIXED-{}-30-3600.flt".format(Site,cur_delay)),
             #                 ]
             filename_list = [
-                "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/{}{:0>3}/CLIENT/EIJS-B1I_B3I.flt".format(Y,doy),
-                "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/{}{:0>3}/CLIENT/EIJS-B1I_B2a.flt".format(Y,doy),
-                "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/{}{:0>3}/CLIENT/EIJS-E1_E5a.flt".format(Y,doy),
-                "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/{}{:0>3}/CLIENT/EIJS-E1_E5b.flt".format(Y,doy),
-                # "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/{}{:0>3}/CLIENT/EIJS-B3I_E5a_15.flt".format(Y,doy),
-                "/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/{}{:0>3}/CLIENT/EIJS-B3I_E5a.flt".format(Y,doy),
-                # r"/Users/hanjunjie/Master_3/1-IUGG/PPPRTK/2021310/TEST/HKLT-VIR-CHK.flt"
+                "/Users/hanjunjie/Gap1/WUDA_20211209_epo_K_GE.ppprtk"
                             ]
             for i in range(len(mode_list)):
                 # Site = site_list[0]
                 if i <= -1:
                     data_Raw = rf.open_flt_ppplsq_file(filename_list[i])
                 else:
-                    data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
+                    # data_Raw = rf.open_flt_pvtflt_file(filename_list[i])
                     # data_Raw = rf.open_flt_pos_rtpppfile(filename_list[i])
-                    # data_Raw = rf.open_ppprtk_rtpppfile(filename_list[i])
+                    data_Raw = rf.open_ppprtk_rtpppfile(filename_list[i])
                     # data_Raw = rf.open_flt_ppp_rtpppfile(filename_list[i])
                 
                 data_ENU = dp.XYZ2ENU_const(XYZ = data_Raw,REF_XYZ = REF_XYZ,site = Site)
                 ENU_ALL[mode_list[i]] = data_ENU
             # if doy != 305: 
             print(Site)   
-            [ConP[doy],ConV[doy],ConH[doy]] = dr.plot_e_n_u(site = Site, data = ENU_ALL,type = ["E","N","U","NSAT"],mode = mode_list,ylim = 0.2,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 30,year = Y,mon=M,day=D,Sigma=5,Sigma_num=Sig,save=SavePath,show=SHOW,recovergence=3600,recon_list = [2,5,10,15,20],MEAN = False,augdelay = cur_delay)
+            [ConP[doy],ConV[doy],ConH[doy]] = dr.plot_e_n_u(site = Site, data = ENU_ALL,type = ["E","N","U","NSAT"],mode = mode_list,ylim = 0.5,starttime=S,LastT=L,deltaT=DDD,time = "UTC",all=False,Fixed=True,delta_data = 30,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=SHOW,recovergence=3600,recon_list = [2,5,10,15,20],MEAN = False,augdelay = cur_delay)
         
         # dr.plot_en_u_thesis(site =Site, data = ENU_ALL,type = ["EN","U"],mode = mode_list,ylim = 1,starttime=S,LastT=L,deltaT=DDD,time = "GPST",all=False,Fixed=True,delta_data = 5,year = Y,mon=M,day=D,Sigma=3,Sigma_num=Sig,save=SavePath,show=True,recovergence=3600)
         D = D + 1

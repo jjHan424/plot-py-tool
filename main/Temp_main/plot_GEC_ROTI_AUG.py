@@ -31,8 +31,8 @@ color_list = sns.color_palette("Set1")
 site_list = ["HKLM"]
 count = 1
 # Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,5,16,4
-Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,2,21,3
-time="UTC"
+Year,Mon,Day,Hour,LastT,deltaT = 2021,11,1,2,22,4
+time="UTC+8"
 
 plot_type = "ALL"
 
@@ -89,15 +89,15 @@ while count > 0:
         Num_G,Num_E,Num_C=[],[],[]
         for time in data.keys():
             plot_time = (time - cov_Time) / 3600
-            # if time not in Diff_Data.keys():
-            #     continue
+            if time not in Diff_Data.keys():
+                continue
             if (plot_time > begT and plot_time < begT + LastT) or all:
                 temp_mean_G,temp_mean_E,temp_mean_C=[],[],[]
-                # if time not in Diff_Data.keys():
-                #         continue
+                if time not in Diff_Data.keys():
+                        continue
                 for sat in data[time].keys():
-                    # if sat not in Diff_Data[time].keys():
-                    #     continue
+                    if sat not in Diff_Data[time].keys():
+                        continue
                     if data[time][sat] == 0:
                         continue
                     prn = int(sat[1:3])
@@ -188,7 +188,7 @@ while count > 0:
         # print("GPS:{:.4f}".format(np.max(np.array(mean_G))))
         # print("GAL:{:.4f}".format(np.max(np.array(mean_E))))
         # print("BDS:{:.4f}".format(np.max(np.array(mean_C))))
-        figP,axP = plt.subplots(2,3,figsize=(11,6),sharey=False,sharex=True)
+        figP,axP = plt.subplots(2,1,figsize=(8,6),sharey=False,sharex=True)
         # axP[0].scatter(meanT_G, mean_G,s=1)
         # axP[1].scatter(meanT_E, mean_E,s=1)
         # axP[2].scatter(meanT_C, mean_C,s=1)
@@ -253,13 +253,13 @@ while count > 0:
                     C = False
                 if G:
                     # axP.scatter(time_G[i],data_G[i],s=1,color=colormap[i])
-                    axP[0][0].scatter(time_G[i], data_G[i], s=1,color = color_list[i%9])
+                    axP[0].scatter(time_G[i], data_G[i], s=1,color = color_list[i%9])
                 if E:
                     # axP.scatter(time_E[i],data_E[i],s=1,color=colormap[i])
-                    axP[0][1].scatter(time_E[i], data_E[i], s=1,color = color_list[i%9])
+                    axP[0].scatter(time_E[i], data_E[i], s=1,color = color_list[i%9])
                 if C:
                     # axP.scatter(time_C[i],data_C[i],s=1,color=colormap[i])
-                    axP[0][2].scatter(time_C[i], data_C[i], s=1,color = color_list[i%9])
+                    axP[0].scatter(time_C[i], data_C[i], s=1,color = color_list[i%9])
 
         # font2 = {'family' : 'Arial',
         #             'weight' : 600,
@@ -275,20 +275,18 @@ while count > 0:
         # axP[1].set_title('E',font3)
         # axP[2].set_title('C',font3)
 
-        axP[1][0].set_xticks(XTick)
+        axP[1].set_xticks(XTick)
         # axP[2][0].set_xticks(XTick)
         # axP[2][0].set_xticks(XTick)
         # axP[1].set_xticks(XTick)
         # axP[2].set_xticks(XTick)
-        axP[1][0].set_xticklabels(XLabel)
+        axP[1].set_xticklabels(XLabel)
 
         # axP[0].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
         # axP[1].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
         # axP[2].tick_params(axis='both', colors='black', direction='in', labelsize=15, width=1, length=3, pad=5)
 
-        axP[0][0].set_ylim(0,2)
-        axP[0][1].set_ylim(0,2)
-        axP[0][2].set_ylim(0,2)
+        axP[0].set_ylim(0,1.5)
 
         # axP[0].grid(False)
         # axP[1].grid(False)
@@ -399,49 +397,50 @@ while count > 0:
                     C = False
                 if G:
                     # axP.scatter(time_G[i],data_G[i],s=1,color=colormap[i])
-                    axP[1][0].scatter(time_G[i], data_G[i], s=1,color = color_list[i%9])
+                    axP[1].scatter(time_G[i], data_G[i], s=1,color = color_list[i%9])
                 if E:
                     # axP.scatter(time_E[i],data_E[i],s=1,color=colormap[i])
-                    axP[1][1].scatter(time_E[i], data_E[i], s=1,color = color_list[i%9])
+                    axP[1].scatter(time_E[i], data_E[i], s=1,color = color_list[i%9])
                 if C:
                     # axP.scatter(time_C[i],data_C[i],s=1,color=colormap[i])
-                    axP[1][2].scatter(time_C[i], data_C[i], s=1,color = color_list[i%9])
+                    axP[1].scatter(time_C[i], data_C[i], s=1,color = color_list[i%9])
         
-        axP[1][0].set_xticks(XTick)
-        axP[1][0].set_xticklabels(XLabel)
-        labels = axP[1][0].get_xticklabels() + axP[1][1].get_xticklabels() + axP[1][2].get_xticklabels()
+        axP[1].set_xticks(XTick)
+        axP[1].set_xticklabels(XLabel)
+        labels = axP[1].get_xticklabels() + axP[1].get_xticklabels() + axP[1].get_xticklabels()
         [label.set_fontsize(xtick_size) for label in labels]
-        # [label.set_rotation(30) for label in labels]
+        [label.set_fontname('Arial') for label in labels]
+        [label.set_rotation(30) for label in labels]
         font = {'family': 'Times new roman','weight': 600,'size': 20}
-        axP[1][1].set_xlabel("Time (GPST)",font_label)
-        axP[1][0].set_ylim(0,0.3)
-        axP[1][1].set_ylim(0,0.3)
-        axP[1][2].set_ylim(0,0.3)
-        y_labels = axP[0][0].get_yticklabels() + axP[1][0].get_yticklabels() + axP[0][1].get_yticklabels() + axP[1][1].get_yticklabels() + axP[0][2].get_yticklabels() + axP[1][2].get_yticklabels()
+        axP[1].set_xlabel("Local Time (hour)",font_label)
+        axP[1].set_ylim(0,0.3)
+        axP[1].set_xlim(XTick[0],XTick[-1])
+        y_labels = axP[0].get_yticklabels() + axP[1].get_yticklabels() + axP[0].get_yticklabels() + axP[1].get_yticklabels() + axP[0].get_yticklabels() + axP[1].get_yticklabels()
         [label.set_fontsize(xtick_size) for label in y_labels]
+        [label.set_fontname('Arial') for label in y_labels]
         # axP[0][0].set_ylabel("Num of sat",font_label)
-        axP[0][0].set_ylabel("ROTI(TECU/min)",font_label)
-        axP[1][0].set_ylabel("IONO errors(m)",font_label)
+        axP[0].set_ylabel("ROTI(TECU/min)",font_label)
+        axP[1].set_ylabel("Ion_Diff(m)",font_label)
         font = {'family': 'Times new roman','weight': 600,'size': 23}
-        axP[0][0].set_title("GPS",font_title)
-        axP[0][1].set_title("GAL",font_title)
-        axP[0][2].set_title("BDS",font_title)
+        # axP[0][0].set_title("GPS",font_title)
+        # axP[0][1].set_title("GAL",font_title)
+        # axP[0][2].set_title("BDS",font_title)
 
-        box = axP[0][1].get_position()
-        axP[0][1].set_position([box.x0,box.y0 + box.y0*0.08, box.width, box.height])
-        box = axP[0][0].get_position()
-        axP[0][0].set_position([box.x0,box.y0 + box.y0*0.08, box.width, box.height])
-        box = axP[0][2].get_position()
-        axP[0][2].set_position([box.x0,box.y0 + box.y0*0.08, box.width, box.height])
+        # box = axP[0][1].get_position()
+        # axP[0][1].set_position([box.x0,box.y0 + box.y0*0.08, box.width, box.height])
+        # box = axP[0][0].get_position()
+        # axP[0][0].set_position([box.x0,box.y0 + box.y0*0.08, box.width, box.height])
+        # box = axP[0][2].get_position()
+        # axP[0][2].set_position([box.x0,box.y0 + box.y0*0.08, box.width, box.height])
 
-        box = axP[1][1].get_position()
-        axP[1][1].set_position([box.x0,box.y0 + box.y0*0.5, box.width, box.height])
-        box = axP[1][0].get_position()
-        axP[1][0].set_position([box.x0,box.y0 + box.y0*0.5, box.width, box.height])
-        box = axP[1][2].get_position()
-        axP[1][2].set_position([box.x0,box.y0 + box.y0*0.5, box.width, box.height])
+        # box = axP[1][1].get_position()
+        # axP[1][1].set_position([box.x0,box.y0 + box.y0*0.5, box.width, box.height])
+        # box = axP[1][0].get_position()
+        # axP[1][0].set_position([box.x0,box.y0 + box.y0*0.5, box.width, box.height])
+        # box = axP[1][2].get_position()
+        # axP[1][2].set_position([box.x0,box.y0 + box.y0*0.5, box.width, box.height])
 
-        plt.savefig(r"/Users/hanjunjie/Downloads/HKMW2021305_G_E_C_ALL.png",dpi=600)
+        plt.savefig(r"/Users/hanjunjie/Downloads/HKMW2021305_GEC_WithAUG.png",dpi=600)
         # plt.savefig(r"E:\1Master_2\Paper_Grid\1-Paper_word\Image-3\HKMW-ROTI-ROTI.svg")
         plt.show()
         Day = Day + 1

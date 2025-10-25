@@ -221,17 +221,15 @@ def rgb2hex(RGB):
     a = hex(int(int(RGB)/16))[-1]
     b = hex(int(int(RGB)%16))[-1]
     return (a+b)
+
 fig = plt.figure(figsize=(5.5,4))
 # ax = fig.add_subplot(121)
 # box = ax.get_position()
 # ax.set_position([box.x0, box.y0 + box.y0*0.9, box.width, box.height])
-crd_file = "/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/CHN_HK_16.crd"
+crd_file = "/Users/hanjunjie/Gap1/ZWD_Retrieval_PPPRTK/CRDSITE/CHN_HK_16.crd"
 space = 1.5 # Grid space deg
 client_server = ["IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","HOBU","PTBB","GOET"]
-site_list1 = ["BRUX","DOUR","WARE","REDU","EIJS","BADH","FFMJ","KLOP"]
-site_list2 = ["KOS1","DENT","WSRT","TIT2","DIEP","EUSK"]
-site_list3 = ["KARL","TERS","IJMU","HOBU","DILL","PTBB","GOET"]
-site_list = ["IJMU","DENT","DOUR","WARE","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","TERS","KARL","HOBU","PTBB","GOET"]
+site_list=["HKKT","HKLM","HKST","HKKS","HKCL","HKOH","HKMW","HKNP","HKLT","HKSS"]
 #read crd file
 crd_data,B,L = {},[],[]
 with open(crd_file,'rt') as f:
@@ -264,10 +262,10 @@ map = Basemap(llcrnrlon=113.85, llcrnrlat=22.2, urcrnrlon=114.35, urcrnrlat=22.6
 texts=[]
 lat_list,long_list = [],[]
 for cur_site in crd_data:
-    if cur_site in site_list1:
+    if cur_site in site_list:
         map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=100,facecolor='#0099E5',edgecolor='k', linewidth=0.3)
-    elif cur_site in site_list2:
-        map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=100,facecolor='#FF4C4C',edgecolor='k', linewidth=0.3)
+    # elif cur_site in site_list2:
+    #     map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=100,facecolor='#FF4C4C',edgecolor='k', linewidth=0.3)
     else:
         map.scatter(crd_data[cur_site]["BLH"][1],crd_data[cur_site]["BLH"][0],marker='v',s=100,facecolor='#34BF49',edgecolor='k', linewidth=0.3)
     lat_list.append(crd_data[cur_site]["BLH"][1])
@@ -280,13 +278,13 @@ map.drawmeridians(meridians=np.linspace(113.85, 114.35, 6),labels=[0, 0, 0, 0], 
 xlabellon = [113.95,114.15,114.35]
 xlabeltext = []
 for i in xlabellon:
-    xlabeltext.append('%.2f$^\circ$E'%(i))
+    xlabeltext.append('%.2f$^\circ$'%(i))
 plt.xticks(xlabellon,xlabeltext,size = tick_size)
-map.readshapefile('/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/shp/gadm36_CHN_shp/gadm36_CHN_0','states',drawbounds=True)
-map.readshapefile('/Users/hanjunjie/Master_3/1-IUGG/CRDSITE/shp/gadm36_HKG_shp/gadm36_HKG_0','states',drawbounds=True)
+map.readshapefile('/Users/hanjunjie/tools/GREAT_H_Plot_Py/SysFile/Shp_File/gadm36_CHN_shp/gadm36_CHN_0','states',drawbounds=True)
+map.readshapefile('/Users/hanjunjie/tools/GREAT_H_Plot_Py/SysFile/Shp_File/gadm36_HKG_shp/gadm36_HKG_0','states',drawbounds=True)
 
 
-# plt.savefig("/Users/hanjunjie/Desktop/Image-1/HK_SITE_STOCASTIC.jpg",dpi=300)
+# plt.savefig("/Users/hanjunjie/Desktop/HK_10SITES.jpg",dpi=300)
 plt.show()
 # plt.clf()
 plt.close()

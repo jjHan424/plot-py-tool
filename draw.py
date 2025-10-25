@@ -7,7 +7,7 @@ Description: In User Settings Edit
 FilePath: /plot-toolkit-master/jjHan_py_plot/draw.py
 '''
 
-from asyncore import write
+# from asyncore import write
 from matplotlib.markers import MarkerStyle
 import numpy as np
 import matplotlib as mpl
@@ -106,13 +106,13 @@ def xtick(time,year,mon,day,starttime,LastT,deltaT):
     while starttime < end_Time:
         starttime = starttime + deltaT
         if (starttime >= end_Time):
-            # cur_Str_X = '%02d' % (end_Time % 24) + ":{:0>2}".format(round((end_Time-int(end_Time))*60))
-            cur_Str_X = '%d' % (end_Time % 24)
+            cur_Str_X = '%02d' % (end_Time % 24) + ":{:0>2}".format(round((end_Time-int(end_Time))*60))
+            # cur_Str_X = '%d' % (end_Time % 24)
             XLabel.append(cur_Str_X)
             XTick.append((end_Time))
             break
-        # cur_Str_X = '%02d' % (starttime % 24) + ":{:0>2}".format(round((starttime-int(starttime))*60))
-        cur_Str_X = '%d' % (starttime % 24)
+        cur_Str_X = '%02d' % (starttime % 24) + ":{:0>2}".format(round((starttime-int(starttime))*60))
+        # cur_Str_X = '%d' % (starttime % 24)
         XLabel.append(cur_Str_X)
         XTick.append((starttime))
     
@@ -487,7 +487,7 @@ def plot_aug_G_E_C(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime 
                 # axP[i].set_yticklabels(["-0.04","-0.02","0.00","0.02","0.04"])
                 # axP[i].set_position([box.x0 + box.width*0.15, box.y0, box.width, box.height])
         if freq==1:
-            sys_type["C"] = "ION2"
+            sys_type["C"] = "ION1"
             sys_type["G"] = "ION1"
             sys_type["E"] = "ION1"  
         else:
@@ -618,7 +618,7 @@ def plot_aug_G_E_C(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime 
                     if abs(data[time][sat][sys_type[sat[0]]]) == 0:
                         continue
                     sys_type_Diff = {}
-                    sys_type_Diff["C"] = "dION2"
+                    sys_type_Diff["C"] = "dION1"
                     sys_type_Diff["G"] = "dION1"
                     sys_type_Diff["E"] = "dION1"
                     # if sys_type_Diff[sat[0]] not in data[time][sat].keys():
@@ -649,7 +649,7 @@ def plot_aug_G_E_C(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime 
                             cur_E.append(cur_value)
                             data_E[prn-1].append(cur_value)
                             time_E[prn-1].append(plot_time)
-                        aug_str = aug_str + "{:<8}{:>7.4f}{:>12.4f}\n".format(sat,data_S[time][sat][sys_type[sat[0]]],data_S[time][sat]["RTRP"])
+                        # aug_str = aug_str + "{:<8}{:>7.4f}{:>12.4f}\n".format(sat,data_S[time][sat][sys_type[sat[0]]],data_S[time][sat]["RTRP"])
                 if len(cur_G) > 0:
                     data_rms_G.append(dp.rms(cur_G))
                     time_rms_G.append(plot_time)
@@ -2134,7 +2134,7 @@ def plot_e_n_u(site = "Default",data = {},type = ["E","N","U"],mode = ["DEFAULT"
                     num_10_en = num_10_en + 1
                 if abs(data_plot[cur_mode]["U"][i]) < 0.10:
                     num_10_u = num_10_u + 1
-                if abs(data_plot[cur_mode]["U"][i]) < 0.15:
+                if abs(data_plot[cur_mode]["U"][i]) < 0.2:
                     num_15_u = num_15_u + 1
             print(cur_mode)
             Horizon5[cur_mode] = num_5_en/after_sig*100

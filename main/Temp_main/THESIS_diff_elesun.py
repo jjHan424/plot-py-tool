@@ -166,5 +166,5 @@ for legobj in leg.legendHandles:
     # legobj.set_linelength(10)
     legobj.set_color("black")
     legobj.set_linestyle("--")
-plt.savefig("/Users/hanjunjie/Desktop/Image-1/Diff_VS_EleSun.jpg",dpi=300)
+# plt.savefig("/Users/hanjunjie/Desktop/Image-1/Diff_VS_EleSun.jpg",dpi=300)
 plt.show()

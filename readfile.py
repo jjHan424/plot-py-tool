@@ -1044,8 +1044,8 @@ def open_ismr(filename):
     with open(filename,'rt') as f:
         for line in f:
             value = line.split()
-            if len(value) != 10:
-                continue
+            # if len(value) != 11:
+            #     continue
             if line[0] != "%":
                 soweek = float(value[1])
                 if (soweek < soweek_last):
@@ -1530,7 +1530,7 @@ def H_open_grid_file_for_heat(filename,year,mon,day,hour,min,sec,s_length):
                         head_info[line[0]][cur_value] = head_index
                         head_index = head_index + 1
             if "OBS TYPES" in line:
-                grid_node = int(value[5][10:13])
+                grid_node = int(value[7][10:13])
                 data_all = [[] for i in range(grid_node)]
                 all_data_new = []                  
             if ">" in line:
@@ -1562,7 +1562,7 @@ def H_open_grid_file_for_heat(filename,year,mon,day,hour,min,sec,s_length):
             if ((value[0][0] == "C" or value[0][0] == "E" or value[0][0] == "G") and epoch_flag):
             # if ((value[0][0] == "T") and epoch_flag):
                 for i in range(grid_node):
-                    cur_node_diff = float(value[grid_node+5+i])  # Diff
+                    cur_node_diff = float(value[grid_node+7+i])  # Diff
                     # cur_node_diff = float(value[grid_node+grid_node+5+i])  # Dis
                     if cur_node_diff == 9.9999:
                         continue

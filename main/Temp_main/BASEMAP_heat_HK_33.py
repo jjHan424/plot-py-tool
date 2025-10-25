@@ -148,7 +148,8 @@ plt.subplot(3,3,1)
 # ax.set_position([box.x0, box.y0 + box.y0*0.9, box.width, box.height])
 year,mon,day,hour,min,sec,Delta = 2021,10,31,6,25,0,300
 doy = tr.ymd2doy(year,mon,day,0,0,00)
-grid_diff_file = os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/GRID_ForHeat","{}{:0>3}".format(year,doy),"GREAT-GEC-30.grid")
+grid_diff_file = "/Users/hanjunjie/Master_3/LX/GREAT-GEC2-30.grid"
+grid_diff_file = "/Users/hanjunjie/Master_3/LX/GREAT-GEC2-30.grid"
 sec = sec + Delta
 if sec >= 60:
     min = min + sec/60
@@ -206,7 +207,7 @@ plt.title("{:0>4}-{:0>2}-{:0>2} {:0>2}:{:0>2}:{:0>2} (GPST)".format(int(year),in
 plt.subplot(3,3,4)
 year,mon,day,hour,min,sec,Delta = 2021,11,1,6,25,0,300
 doy = tr.ymd2doy(year,mon,day,0,0,00)
-grid_diff_file = os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/GRID_ForHeat","{}{:0>3}".format(year,doy),"GREAT-GEC-30.grid")
+grid_diff_file = "/Users/hanjunjie/Master_3/LX/GREAT-GEC2-30.grid"
 sec = sec + Delta
 if sec >= 60:
     min = min + sec/60
@@ -269,7 +270,7 @@ plt.title("{:0>4}-{:0>2}-{:0>2} {:0>2}:{:0>2}:{:0>2} (GPST)".format(int(year),in
 plt.subplot(3,3,7)
 year,mon,day,hour,min,sec,Delta = 2021,11,2,6,25,0,300
 doy = tr.ymd2doy(year,mon,day,0,0,00)
-grid_diff_file = os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/GRID_ForHeat","{}{:0>3}".format(year,doy),"GREAT-GEC-30.grid")
+grid_diff_file = "/Users/hanjunjie/Master_3/LX/GREAT-GEC2-30.grid"
 sec = sec + Delta
 if sec >= 60:
     min = min + sec/60
@@ -332,7 +333,7 @@ plt.title("{:0>4}-{:0>2}-{:0>2} {:0>2}:{:0>2}:{:0>2} (GPST)".format(int(year),in
 plt.subplot(3,3,2)
 year,mon,day,hour,min,sec,Delta = 2021,10,31,13,25,0,300
 doy = tr.ymd2doy(year,mon,day,0,0,00)
-grid_diff_file = os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/GRID_ForHeat","{}{:0>3}".format(year,doy),"GREAT-GEC-30.grid")
+grid_diff_file = "/Users/hanjunjie/Master_3/LX/GREAT-GEC2-30.grid"
 sec = sec + Delta
 if sec >= 60:
     min = min + sec/60
@@ -390,7 +391,7 @@ plt.title("{:0>4}-{:0>2}-{:0>2} {:0>2}:{:0>2}:{:0>2} (GPST)".format(int(year),in
 plt.subplot(3,3,5)
 year,mon,day,hour,min,sec,Delta = 2021,11,1,13,25,0,300
 doy = tr.ymd2doy(year,mon,day,0,0,00)
-grid_diff_file = os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/GRID_ForHeat","{}{:0>3}".format(year,doy),"GREAT-GEC-30.grid")
+grid_diff_file = "/Users/hanjunjie/Master_3/LX/GREAT-GEC2-30.grid"
 sec = sec + Delta
 if sec >= 60:
     min = min + sec/60
@@ -448,7 +449,7 @@ plt.title("{:0>4}-{:0>2}-{:0>2} {:0>2}:{:0>2}:{:0>2} (GPST)".format(int(year),in
 plt.subplot(3,3,8)
 year,mon,day,hour,min,sec,Delta = 2021,11,2,13,25,0,300
 doy = tr.ymd2doy(year,mon,day,0,0,00)
-grid_diff_file = os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/GRID_ForHeat","{}{:0>3}".format(year,doy),"GREAT-GEC-30.grid")
+grid_diff_file = "/Users/hanjunjie/Master_3/LX/GREAT-GEC2-30.grid"
 sec = sec + Delta
 if sec >= 60:
     min = min + sec/60
@@ -511,7 +512,7 @@ plt.title("{:0>4}-{:0>2}-{:0>2} {:0>2}:{:0>2}:{:0>2} (GPST)".format(int(year),in
 plt.subplot(3,3,3)
 year,mon,day,hour,min,sec,Delta = 2021,10,31,20,25,0,300
 doy = tr.ymd2doy(year,mon,day,0,0,00)
-grid_diff_file = os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/GRID_ForHeat","{}{:0>3}".format(year,doy),"GREAT-GEC-30.grid")
+grid_diff_file = "/Users/hanjunjie/Master_3/LX/GREAT-GEC2-30.grid"
 sec = sec + Delta
 if sec >= 60:
     min = min + sec/60
@@ -569,7 +570,7 @@ plt.title("{:0>4}-{:0>2}-{:0>2} {:0>2}:{:0>2}:{:0>2} (GPST)".format(int(year),in
 plt.subplot(3,3,6)
 year,mon,day,hour,min,sec,Delta = 2021,11,1,20,25,0,300
 doy = tr.ymd2doy(year,mon,day,0,0,00)
-grid_diff_file = os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/GRID_ForHeat","{}{:0>3}".format(year,doy),"GREAT-GEC-30.grid")
+grid_diff_file = "/Users/hanjunjie/Master_3/LX/GREAT-GEC2-30.grid"
 sec = sec + Delta
 if sec >= 60:
     min = min + sec/60
@@ -627,7 +628,7 @@ plt.title("{:0>4}-{:0>2}-{:0>2} {:0>2}:{:0>2}:{:0>2} (GPST)".format(int(year),in
 plt.subplot(3,3,9)
 year,mon,day,hour,min,sec,Delta = 2021,11,2,20,25,0,300
 doy = tr.ymd2doy(year,mon,day,0,0,00)
-grid_diff_file = os.path.join("/Users/hanjunjie/Master_3/1-IUGG/ResFromServer/GRID_ForHeat","{}{:0>3}".format(year,doy),"GREAT-GEC-30.grid")
+grid_diff_file = "/Users/hanjunjie/Master_3/LX/GREAT-GEC2-30.grid"
 sec = sec + Delta
 if sec >= 60:
     min = min + sec/60
@@ -689,7 +690,7 @@ cp.set_label('IONO errors (cm)',fontdict = font_label)
 cp.set_ticklabels((0,1,2,3),fontsize = 25)
 # plt.tight_layout()
 # save_path = "E:\\1Master_2\\3-IUGG\\Result_Server\\Heat_Save\\{:0>4}{:0>3}_GEC\\{:0>2}{:0>2}{:0>2}.jpg".format(int(year),int(doy),int(hour),int(min),int(sec))
-plt.savefig("/Users/hanjunjie/Desktop/Image-1/HK_DIFF_HEAT_NEW.jpg",dpi=300)
+plt.savefig("/Users/hanjunjie/Desktop/HK_DIFF_HEAT_NEW.jpg",dpi=300)
 
 # plt.show()
 # plt.clf()
