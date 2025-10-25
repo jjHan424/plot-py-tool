@@ -66,13 +66,13 @@ r"E:\1Master_2\Paper_Grid\Res_FromServer\ROTI\2021339\XGXN2021339_GEC.ismr",]
 # path_list = [r"E:\1Master_2\Paper_Grid\Pro_20211205-339\roti\WHYJ2021339_GEC.ismr"]
 path_list = [r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI\2021305\HKSC2021305_GEC.ismr"]
 # site_list = ["HKKS","HKKT","HKSS","HKWS","HKSL","HKST","HKKS","HKCL","HKSC","HKPC","HKNP","HKMW","HKLM","HKOH"]
-site_list = ["SPT7"]
+site_list = ["HKSC"]
 # site_list = ["TERS","IJMU","DELF","VLIS","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
 # sitestring = "TRO1 VARS HETT OVE6 ROM2 OST6 OLK2 PYHA LEK6 METG LOV6 IRBE NOR7 SPT7 VAIN HAS6 RANT REDZ LAMA HELG GELL LDB2 GOML GOET BRTS LEIJ WARE INVR ARIS TLL1 SNEO WTZZ AUBG BUTE BACA MIKL POLV COMO EGLT SWAS MARS ZADA AJAC SCOA ACOR ALME MMET ORID IZMI NICO SAVU SUN6 MNSK TER2 SMLA IJMU DYNG DEVA MALL MAH1 LODZ ZYWI AUTN ENTZ VILL"
 # site_list = sitestring.split()
 # site_list = ["TERS","IJMU","DELF","VLIS","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
 count = 1
-Year,Mon,Day,Hour,LastT,deltaT = 2021,11,6,6,24,1
+Year,Mon,Day,Hour,LastT,deltaT = 2022,3,13,0,24,2
 while count > 0:
     doy = tr.ymd2doy(Year,Mon,Day,0,00,00)
     cdoy = "{:0>3}".format(doy)
@@ -80,7 +80,7 @@ while count > 0:
         cur_site = site_list[i]
         
         path_roti = r"E:\0Project\LX\ROTI_HK" + "\\" +"{:0>4}".format(Year) + cdoy +"\\roti\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
-        path_roti = r"E:\1Master_3\2_ZTD\2021310\data\SPT72021310_GEC.ismr"
+        # path_roti = r"E:\1Master_3\2_ZTD\2023029\roti\KOS12023031_GEC.ismr"
         # save_dir = r"E:\1Master_2\3-IUGG\Result_Server\ROTI\Fig" + "\\" + "{:0>4}".format(Year) + cdoy
         save_dir = r"E:\0Project\LX\ROTI_HK_Fig"
         # path_roti = r"E:\1Master_2\Paper_Grid\Res_FromServer_New\ROTI-30\2021305"+"\\"+ cur_site + "{:0>4}".format(Year) + cdoy + "_GEC.ismr"
@@ -210,8 +210,8 @@ while count > 0:
         [label.set_fontsize(xtick_size) for label in labels]
         [label.set_fontname('Arial') for label in labels]
 
-        # plt.savefig(save_dir+"\\"+cur_site+"{:0>4}".format(Year) + cdoy+'.png')
-        plt.show()
+        plt.savefig(save_dir+"\\"+cur_site+"{:0>4}".format(Year) + cdoy+'.png')
+        # plt.show()
     Day = Day + 1
     count = count - 1
     if (Day > 31):

@@ -212,6 +212,70 @@ def rgb2hex(RGB):
     b = hex(int(int(RGB)%16))[-1]
     return (a+b)
 
+def draw_triangle(client_server,crd_data,m):
+    for cur_client in client_server:
+        cur_server_1,cur_server_2,cur_server_3 = client_server[cur_client][0],client_server[cur_client][1],client_server[cur_client][2]
+        cur_client = cur_client[0:4]
+        folium.PolyLine(locations=[[crd_data[cur_client]["BLH"][0],crd_data[cur_client]["BLH"][1]],[crd_data[cur_server_1]["BLH"][0],crd_data[cur_server_1]["BLH"][1]]],color="blue",weight=2).add_to(m)
+        delta_xyz = np.array(crd_data[cur_client]["XYZ"]) - np.array(crd_data[cur_server_1]["XYZ"])
+        dis = math.sqrt(np.sum(delta_xyz*delta_xyz))/1000
+        b = (crd_data[cur_client]["BLH"][0] + crd_data[cur_server_1]["BLH"][0])/2
+        l = (crd_data[cur_client]["BLH"][1] + crd_data[cur_server_1]["BLH"][1])/2
+        folium.Marker(location=[b,l], icon=DivIcon(
+            icon_size=(150,36),
+            icon_anchor=(7,20),
+            html='<div style="font-size: 20pt; color : blue">'+"{:.2f}km".format(dis)+'</div>',
+            )).add_to(m)
+        folium.PolyLine(locations=[[crd_data[cur_client]["BLH"][0],crd_data[cur_client]["BLH"][1]],[crd_data[cur_server_2]["BLH"][0],crd_data[cur_server_2]["BLH"][1]]],color="blue",weight=2).add_to(m)
+        delta_xyz = np.array(crd_data[cur_client]["XYZ"]) - np.array(crd_data[cur_server_2]["XYZ"])
+        dis = math.sqrt(np.sum(delta_xyz*delta_xyz))/1000
+        b = (crd_data[cur_client]["BLH"][0] + crd_data[cur_server_2]["BLH"][0])/2
+        l = (crd_data[cur_client]["BLH"][1] + crd_data[cur_server_2]["BLH"][1])/2
+        folium.Marker(location=[b,l], icon=DivIcon(
+            icon_size=(150,36),
+            icon_anchor=(7,20),
+            html='<div style="font-size: 20pt; color : blue">'+"{:.2f}km".format(dis)+'</div>',
+            )).add_to(m)
+        folium.PolyLine(locations=[[crd_data[cur_client]["BLH"][0],crd_data[cur_client]["BLH"][1]],[crd_data[cur_server_3]["BLH"][0],crd_data[cur_server_3]["BLH"][1]]],color="blue",weight=2).add_to(m)
+        delta_xyz = np.array(crd_data[cur_client]["XYZ"]) - np.array(crd_data[cur_server_3]["XYZ"])
+        dis = math.sqrt(np.sum(delta_xyz*delta_xyz))/1000
+        b = (crd_data[cur_client]["BLH"][0] + crd_data[cur_server_3]["BLH"][0])/2
+        l = (crd_data[cur_client]["BLH"][1] + crd_data[cur_server_3]["BLH"][1])/2
+        folium.Marker(location=[b,l], icon=DivIcon(
+            icon_size=(150,36),
+            icon_anchor=(7,20),
+            html='<div style="font-size: 20pt; color : blue">'+"{:.2f}km".format(dis)+'</div>',
+            )).add_to(m)
+        folium.PolyLine(locations=[[crd_data[cur_server_2]["BLH"][0],crd_data[cur_server_2]["BLH"][1]],[crd_data[cur_server_1]["BLH"][0],crd_data[cur_server_1]["BLH"][1]]],color="gray",weight=2).add_to(m)
+        delta_xyz = np.array(crd_data[cur_server_2]["XYZ"]) - np.array(crd_data[cur_server_1]["XYZ"])
+        dis = math.sqrt(np.sum(delta_xyz*delta_xyz))/1000
+        b = (crd_data[cur_server_2]["BLH"][0] + crd_data[cur_server_1]["BLH"][0])/2
+        l = (crd_data[cur_server_2]["BLH"][1] + crd_data[cur_server_1]["BLH"][1])/2
+        folium.Marker(location=[b,l], icon=DivIcon(
+            icon_size=(150,36),
+            icon_anchor=(7,20),
+            html='<div style="font-size: 20pt; color : red">'+"{:.2f}km".format(dis)+'</div>',
+            )).add_to(m)
+        folium.PolyLine(locations=[[crd_data[cur_server_3]["BLH"][0],crd_data[cur_server_3]["BLH"][1]],[crd_data[cur_server_1]["BLH"][0],crd_data[cur_server_1]["BLH"][1]]],color="gray",weight=2).add_to(m)
+        delta_xyz = np.array(crd_data[cur_server_3]["XYZ"]) - np.array(crd_data[cur_server_1]["XYZ"])
+        dis = math.sqrt(np.sum(delta_xyz*delta_xyz))/1000
+        b = (crd_data[cur_server_3]["BLH"][0] + crd_data[cur_server_1]["BLH"][0])/2
+        l = (crd_data[cur_server_3]["BLH"][1] + crd_data[cur_server_1]["BLH"][1])/2
+        folium.Marker(location=[b,l], icon=DivIcon(
+            icon_size=(150,36),
+            icon_anchor=(7,20),
+            html='<div style="font-size: 20pt; color : red">'+"{:.2f}km".format(dis)+'</div>',
+            )).add_to(m)
+        folium.PolyLine(locations=[[crd_data[cur_server_2]["BLH"][0],crd_data[cur_server_2]["BLH"][1]],[crd_data[cur_server_3]["BLH"][0],crd_data[cur_server_3]["BLH"][1]]],color="gray",weight=2).add_to(m)
+        delta_xyz = np.array(crd_data[cur_server_2]["XYZ"]) - np.array(crd_data[cur_server_3]["XYZ"])
+        dis = math.sqrt(np.sum(delta_xyz*delta_xyz))/1000
+        b = (crd_data[cur_server_2]["BLH"][0] + crd_data[cur_server_3]["BLH"][0])/2
+        l = (crd_data[cur_server_2]["BLH"][1] + crd_data[cur_server_3]["BLH"][1])/2
+        folium.Marker(location=[b,l], icon=DivIcon(
+            icon_size=(150,36),
+            icon_anchor=(7,20),
+            html='<div style="font-size: 20pt; color : red">'+"{:.2f}km".format(dis)+'</div>',
+            )).add_to(m)
 color_num = 100
 color_map = sns.color_palette("Spectral_r", color_num)
 # sns.palplot(color_map)
@@ -228,7 +292,7 @@ while i < color_num:
     gradient_map[i/(2*18) + 0.5] = cur_hex
     hex_list.append(cur_hex)
     i = i + 1
-crd_file = r"E:\1Master_3\2_ZTD\EPN_SITE\EPN_UPD_65.crd"
+crd_file = r"E:\1Master_3\1_Paper_GRID_IUGG\CRD_SITE\EPN_PPPRTK_CLIENT_B2a.crd"
 # crd_file = r"E:\1Master_2\3-IUGG\crd\AUG_HK_xml.crd"
 space = 1.5 # Grid space deg
 # client_server = ["TERS","KARL","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","HOBU","PTBB","GOET"]
@@ -280,6 +344,14 @@ all_site_select = "PASA SCOA TLMF TLSG TLSE ESCO LLIV BELL EBRE CREU CASE" # EPN
 # client_server = {"METS":["MET3"]}
 # all_site_select = all_site_select.split()
 client_server = ["EBRE","TLSE"]
+# client_server = {"EIJS1":["BRUX","REDU","TIT2"],
+#                  "EIJS2":["WARE","EUSK","TIT2"],
+#                  "LEIJ":["LDB2","GOET","HOFJ"],
+#                  "WARE":["EIJS","BRUX","REDU"],
+#                  "OBE4":["AUBG","PFA3","SBG2"]}
+client_server = {
+                 "EIJS2":["WARE","EUSK","TIT2"]
+}
 #read crd file
 crd_data,B,L,H = {},[],[],[]
 with open(crd_file,'rt') as f:
@@ -331,45 +403,45 @@ for cur_site in crd_data:
     iNdexHeightColor = int((cur_H-min_H)/(max_H - min_H)*color_num)
     if iNdexHeightColor == 100:
         iNdexHeightColor = 99
-    folium.CircleMarker(location=[crd_data[cur_site]["BLH"][0],crd_data[cur_site]["BLH"][1]],
-                    radius=7,   # 圆的半径
-                    popup="{}-{:.2f}".format(cur_site,cur_H),
-                    # popup=crd_data[cur_site]["BLH"][2],
-                    color = color_set[crd_data[cur_site]["SYS"]],
-                    # color=hex_list[iNdexHeightColor],
-                    fill=True,
-                    fill_color=color_set[crd_data[cur_site]["SYS"]],
-                    # fill_color=hex_list[iNdexHeightColor],
-                    fill_opacity=1
-            ).add_to(m)
-    # elif cur_site == "SPT0" or cur_site == "SPT7":
-    #     folium.CircleMarker(location=[crd_data[cur_site]["BLH"][0],crd_data[cur_site]["BLH"][1]],
-    #                             radius=7,   # 圆的半径
-    #                             popup=cur_site,
-    #                             color='blue',
-    #                             fill=True,
-    #                             # fill_color=color_set[crd_data[cur_site]["SYS"]],
-    #                             fill_color='blue',
-    #                             fill_opacity=1
-    #                     ).add_to(m)
-    # else:
-    #     folium.CircleMarker(location=[crd_data[cur_site]["BLH"][0],crd_data[cur_site]["BLH"][1]],
-    #                         radius=7,   # 圆的半径
-    #                         popup=cur_site,
-    #                         color = color_set[crd_data[cur_site]["SYS"]],
-    #                         # color='blue',
-    #                         fill=True,
-    #                         fill_color=color_set[crd_data[cur_site]["SYS"]],
-    #                         # fill_color='blue',
-    #                         fill_opacity=1
-    #                 ).add_to(m)
+    # folium.CircleMarker(location=[crd_data[cur_site]["BLH"][0],crd_data[cur_site]["BLH"][1]],
+    #                 radius=7,   # 圆的半径
+    #                 popup="{}-{:.2f}".format(cur_site,cur_H),
+    #                 # popup=crd_data[cur_site]["BLH"][2],
+    #                 color = color_set[crd_data[cur_site]["SYS"]],
+    #                 # color=hex_list[iNdexHeightColor],
+    #                 fill=True,
+    #                 fill_color=color_set[crd_data[cur_site]["SYS"]],
+    #                 # fill_color=hex_list[iNdexHeightColor],
+    #                 fill_opacity=1
+    #         ).add_to(m)
+    if cur_site in client_server.keys():
+        folium.CircleMarker(location=[crd_data[cur_site]["BLH"][0],crd_data[cur_site]["BLH"][1]],
+                                radius=7,   # 圆的半径
+                                popup=cur_site,
+                                color='blue',
+                                fill=True,
+                                # fill_color=color_set[crd_data[cur_site]["SYS"]],
+                                fill_color='blue',
+                                fill_opacity=1
+                        ).add_to(m)
+    else:
+        folium.CircleMarker(location=[crd_data[cur_site]["BLH"][0],crd_data[cur_site]["BLH"][1]],
+                            radius=7,   # 圆的半径
+                            popup=cur_site,
+                            # color = color_set[crd_data[cur_site]["SYS"]],
+                            color='red',
+                            fill=True,
+                            # fill_color=color_set[crd_data[cur_site]["SYS"]],
+                            fill_color='red',
+                            fill_opacity=1
+                    ).add_to(m)
     # Name
-    # folium.Marker(location=[crd_data[cur_site]["BLH"][0]+space/10,crd_data[cur_site]["BLH"][1]],
-    #             icon=DivIcon(
-    #             icon_size=(150,36),
-    #             icon_anchor=(7,20),
-    #             html='<div style="font-size: 18pt; color : black">'+"{:}".format(cur_site)+'</div>',
-    #             )).add_to(m)
+    folium.Marker(location=[crd_data[cur_site]["BLH"][0]+space/10,crd_data[cur_site]["BLH"][1]],
+                icon=DivIcon(
+                icon_size=(150,36),
+                icon_anchor=(7,20),
+                html='<div style="font-size: 18pt; color : black">'+"{:}".format(cur_site)+'</div>',
+                )).add_to(m)
     # Find Max and Min
     if crd_data[cur_site]["BLH"][0] < minLat:
         minLat = crd_data[cur_site]["BLH"][0]
@@ -380,8 +452,9 @@ for cur_site in crd_data:
     if crd_data[cur_site]["BLH"][1] > maxLon:
         maxLon = crd_data[cur_site]["BLH"][1]
 # draw_grid(minLon,maxLat,maxLon,minLat,space,m)
+draw_triangle(client_server,crd_data,m)
 m.add_child(folium.ClickForMarker(popup="marker"))
-m.save(r"E:\1Master_3\2_ZTD\EPN_SITE\EPN_UPD_65.html")
+m.save(r"E:\1Master_3\1_Paper_GRID_IUGG\CRD_SITE\EPN_PPPRTK_CLIENT_EIJS.html")
 
 
 

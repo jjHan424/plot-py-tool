@@ -561,6 +561,10 @@ def plot_aug_G_E_C(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime 
                     # if sat == "C13" and plot_time > 6 and plot_time < 10:
                     #     continue
                     if abs(data[time][sat][sys_type[sat[0]]]) > 0:
+                    # if abs(data[time][sat][sys_type[sat[0]]]) > 0 and (time+30) in data.keys():
+                        # if sat not in data[time+30].keys():
+                        #     continue
+                        # cur_value = ((data[time][sat][sys_type[sat[0]]]) - (data[time+30][sat][sys_type[sat[0]]]))
                         if sat[0] == "C" and sys_type[sat[0]] in data[time][sat].keys():
                             cur_C.append(cur_value)
                             data_C[prn-1].append(cur_value)
@@ -573,7 +577,7 @@ def plot_aug_G_E_C(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime 
                             cur_E.append(cur_value)
                             data_E[prn-1].append(cur_value)
                             time_E[prn-1].append(plot_time)
-                        aug_str = aug_str + "{:<8}{:>7.4f}{:>12.4f}\n".format(sat,data_S[time][sat][sys_type[sat[0]]],data_S[time][sat]["TRP1"])
+                        # aug_str = aug_str + "{:<8}{:>7.4f}{:>12.4f}\n".format(sat,data_S[time][sat][sys_type[sat[0]]],data_S[time][sat]["TRP1"])
                 if len(cur_G) > 0:
                     data_rms_G.append(dp.rms(cur_G))
                     time_rms_G.append(plot_time)
@@ -822,34 +826,40 @@ def plot_aug_G_E_C(data = {},head = {},type = "ION",freq = 1,ylim = 1,starttime 
                 if num < 1:
                     C = False
                 if G:
-                    axP[0].scatter(time_G[i],data_G[i],s=3)
+                    [time_plot,data_plot] = dp.rms_3sigma(data_G[i],time_G[i],np.mean(data_G[i]),np.std(data_G[i]))
+                    axP[0].scatter(time_plot,data_plot,s=3)
                     prn = '%02d' % (i + 1)
                     G_L.append('G'+prn)
-                    temp = dp.rms(data_G[i])
+                    temp = dp.rms(data_plot)
                     RMS_G[0].append(temp)
-                    temp = np.std(data_G[i])
+                    temp = np.std(data_plot)
                     STD_G[0].append(temp)
-                    temp = np.mean(data_G[i])
+                    temp = np.mean(data_plot)
                     MEAN_G[0].append(temp)
+                    # RMS_G[0].append(dp.rms_3sigma(data_G[i],np.mean(data_G[i]),np.mean(data_G[i])))
                 if E:
-                    axP[1].scatter(time_E[i],data_E[i],s=3)
+                    [time_plot,data_plot] = dp.rms_3sigma(data_E[i],time_E[i],np.mean(data_E[i]),np.std(data_E[i]))
+                    axP[1].scatter(time_plot,data_plot,s=3)
                     prn = '%02d' % (i + 1)
                     E_L.append('E'+prn)
-                    temp = dp.rms(data_E[i])
+                    temp = dp.rms(data_plot)
                     RMS_E[0].append(temp)
-                    temp = np.std(data_E[i])
+                    # RMS_E[0].append(dp.rms_3sigma(data_E[i],np.mean(data_E[i]),np.mean(data_E[i])))
+                    temp = np.std(data_plot)
                     STD_E[0].append(temp)
-                    temp = np.mean(data_E[i])
+                    temp = np.mean(data_plot)
                     MEAN_E[0].append(temp)
                 if C:
-                    axP[2].scatter(time_C[i],data_C[i],s=3)
+                    [time_plot,data_plot] = dp.rms_3sigma(data_C[i],time_C[i],np.mean(data_C[i]),np.std(data_C[i]))
+                    axP[2].scatter(time_plot,data_plot,s=3)
                     prn = '%02d' % (i + 1)
                     C_L.append('C'+prn)
-                    temp = dp.rms(data_C[i])
+                    temp = dp.rms(data_plot)
                     RMS_C[0].append(temp)
-                    temp = np.std(data_C[i])
+                    # RMS_C[0].append(dp.rms_3sigma(data_C[i],np.mean(data_C[i]),np.mean(data_C[i])))
+                    temp = np.std(data_plot)
                     STD_C[0].append(temp)
-                    temp = np.mean(data_C[i])
+                    temp = np.mean(data_plot)
                     MEAN_C[0].append(temp)
         
         ax_range = axP[0].axis()

@@ -216,7 +216,22 @@ def rms(data = []):
     if size == 0:
         return 0
     return math.sqrt(sum / size)
-    
+
+def rms_3sigma(data = [],time_p = [],data_mean = 0.0,data_sigma = 0.0):
+    size = 0
+    sum = 0
+    time_out,data_out = [],[]
+    for i in range(len(data)):
+        if abs(data[i]-data_mean) < -1*data_sigma:
+            continue
+        sum = sum + data[i] * data[i]
+        data_out.append(data[i])
+        time_out.append(time_p[i])
+        size = size + 1
+    if size == 0:
+        return 0
+    return (time_out,data_out)
+
 def std_stec(IPP_data1 = {},IPP_data2 = {}):
     predata = pre_tec(IPP_data1,IPP_data2)
 
@@ -342,7 +357,7 @@ def XYZ2ENU_const(XYZ = {},REF_XYZ = {},site = "HKLM"):
             xyz.clear()
             all_data[time]["E"] = enu[0]
             all_data[time]["N"] = enu[1]
-            all_data[time]["U"] = enu[2] + 0.0710
+            all_data[time]["U"] = enu[2]
             all_data[time]["NSAT"] = XYZ[time]["NSAT"]
             all_data[time]["PDOP"] = XYZ[time]["PDOP"]
             all_data[time]["AMB"] = XYZ[time]["AMB"]

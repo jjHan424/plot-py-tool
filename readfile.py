@@ -288,7 +288,7 @@ def open_flt_pvtflt_file(filename):
             value = line.split()
             if line[0] == " ":
                 soweek = float(value[0])
-                if (soweek < soweek_last):
+                if (soweek + w_last*604800 < soweek_last ):
                     w_last = w_last + 1
                 soweek = soweek + w_last*604800
                 soweek_last = soweek

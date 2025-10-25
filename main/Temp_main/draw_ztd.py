@@ -14,7 +14,7 @@ import trans as tr
 import seaborn as sns
 plt.style.use(['science','grid','no-latex'])
 import math
-time,year,mon,day,starttime,LastT,deltaT = "UTC",2021,11,6,3,22,2
+time,year,mon,day,starttime,LastT,deltaT = "UTC",2023,1,26,16,132,8
 
 
 font_title = {'family' : 'Arial', 'weight' : 500, 'size' : 35}
@@ -33,18 +33,20 @@ Site = "SPT0"
 #                 ]
 filename_list = [
             # os.path.join(r"E:\1Master_3\2_ZTD\2021310\ShortBaseLine_RND","SPT0"+"-GEC-FLOAT.flt"),
-            os.path.join(r"E:\1Master_3\2_ZTD\2021310\ShortBaseLine_RND","SPT0"+"-GEC-FIXED.flt"),
+            # os.path.join(r"E:\1Master_3\2_ZTD\2021310\ShortBaseLine_RND","SPT0"+"-GEC-FIXED.flt"),
             # os.path.join(r"E:\1Master_3\2_ZTD\2021310\ShortBaseLine_RND","SPT0"+"-GEC-FIXED.flt"),
             # os.path.join(r"E:\1Master_3\2_ZTD\2021310\ShortBaseLine_RND","SPT0"+"-GEC-GRID-VIRTUAL.flt"),
             # os.path.join(r"E:\1Master_3\2_ZTD\2021310\Test","SPT0"+"-GEC-PPPRTK-CROSS-PART-RE-1000-REFAMB.flt"),
             # os.path.join(r"E:\1Master_3\2_ZTD\2021310\Test","SPT0"+"-GEC-PPPRTK-CROSS-PART-RE-AUTO-REFAMB.flt"),
-            os.path.join(r"E:\1Master_3\2_ZTD\2021310\Test","SPT0"+"-GEC-PPPRTK-CROSS-ALL-01-500-REFAMB.flt"),
-            os.path.join(r"E:\1Master_3\2_ZTD\2021310\Test","SPT0"+"-GEC-PPPRTK-CROSS-ALL-EQUAL-500-REFAMB.flt"),
+            # os.path.join(r"E:\1Master_3\2_ZTD\2021310\Test","SPT0"+"-GEC-PPPRTK-CROSS-ALL-01-500-REFAMB.flt"),
+            # os.path.join(r"E:\1Master_3\2_ZTD\2021310\Test","SPT0"+"-GEC-PPPRTK-CROSS-ALL-EQUAL-500-REFAMB.flt"),
             # os.path.join(r"E:\1Master_3\2_ZTD\2021310\FLT","FFMJ"+"-GEC-GRID-VIRTUAL.flt")
+            r"E:\1Master_3\2_ZTD\Result_From_Server\Days_Test\PTBB-GFZ-KIN-86400.flt",
+            r"E:\1Master_3\2_ZTD\Result_From_Server\Days_Test\PTBB-GFZ-KIN.flt",
                 ]
 # mode_list = ["FLOAT","FIXED","IONO_ALL","IONO_PART"]
-mode_list = ["KLOP","BADH","FFMJ"]
-# mode_list = ["FIXED","PPPRTK"]
+# mode_list = ["PTBB","TRO1","VARS","WSRT"]
+mode_list = ["FIXED","PPPRTK"]
 site = Site
 #---readfiles for .tro---#
 all_data_ref = {}
@@ -77,12 +79,12 @@ for i in range(len(mode_list)):
             if "#" not in line:
                 value=line.split()
                 soweek = float(value[0])
-                if (soweek < soweek_last):
+                if (soweek + w_last*604800 < soweek_last):
                     w_last = w_last + 1
                 soweek = soweek + w_last*604800
                 soweek_last = soweek
                 if soweek not in all_data.keys():
-                    all_data[mode_list[i]][soweek]=float(value[len(value)-1]) * 1000
+                    all_data[mode_list[i]][soweek]=float(value[len(value)-2])
                     all_amb[mode_list[i]][soweek] = value[8]
 
 #---readfiles for .ztd---#
@@ -132,8 +134,8 @@ for cur_mode in all_data.keys():
 #plot
 figP,axP = plt.subplots(1,1,figsize=(17,8),sharey=True,sharex=True)
 for i in range(len(mode_list)):
-    # axP.scatter(time_plot[mode_list[i]],data_plot[mode_list[i]],color = color_list[i%9],s=8)
-     axP.plot(time_plot[mode_list[i]],data_plot[mode_list[i]],color = color_list[i%9],linewidth = 3)
+    axP.scatter(time_plot[mode_list[i]],data_plot[mode_list[i]],color = color_list[i%9],s=8)
+    #  axP.plot(time_plot[mode_list[i]],data_plot[mode_list[i]],color = color_list[i%9],linewidth = 3)
 # for i in range(len(mode_list)):
 #     axP.scatter(time_float[mode_list[i]],data_float[mode_list[i]],color = color_list[1],s=5)
 axP.set_xticks(XTick)
@@ -151,5 +153,5 @@ axP.set_ylabel("Zenith Troposphere Delay (mm)",font_label)
 labels = axP.get_yticklabels() + axP.get_xticklabels()
 [label.set_fontsize(xtick_size) for label in labels]
 [label.set_fontname('Arial') for label in labels]
-axP.scatter(plot_data_ref,all_data_ref[site],marker = "*",color = color_list[4],s=150)
+# axP.scatter(plot_data_ref,all_data_ref[site],marker = "*",color = color_list[4],s=150)
 plt.show()

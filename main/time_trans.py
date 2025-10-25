@@ -13,9 +13,9 @@ sys.path.insert(0,os.path.dirname(__file__)+'/..')
 import trans as tr
 import matplotlib.pyplot as plt
 
-year=2023
+year=2022
 mon=4
-day=30
+day=20
 
 print("GPST(Week Sow): ",tr.ymd2gpst(year,mon,day,0,0,0))
 print("Day of Year: ",tr.ymd2doy(year,mon,day,0,0,00))

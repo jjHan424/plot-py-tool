@@ -9,19 +9,19 @@ import matplotlib.pyplot as plt
 import dataprocess as dp
 import draw as dr
 
-obs_path = r"E:\1Master_3\2_ZTD\Obs_UPD_2023126"
-select_site_file = r"E:\1Master_2\2-UPD_Test\EPN_SITE\EPN_AUG_GER_SITE.txt"
+obs_path = r"E:\1Master_3\1_Paper_GRID_IUGG\Data\OBS_355Site"
+select_site_file = r"E:\1Master_3\1_Paper_GRID_IUGG\CRD_SITE\EPN_PPPRTK_CLIENT_B2a.txt"
 
-out_crd_path = r"E:\1Master_3\2_ZTD\EPN_SITE\EPN_UPD_65.crd"
+out_crd_path = r"E:\1Master_3\1_Paper_GRID_IUGG\CRD_SITE\EPN_PPPRTK_CLIENT_B2a.crd"
 is_crd_out = True
-out_xml_path = r"E:\1Master_3\2_ZTD\EPN_SITE\EPN_UPD_65.xml"
+out_xml_path = r"E:\1Master_3\1_Paper_GRID_IUGG\CRD_SITE\EPN_PPPRTK_CLIENT_B2a.xml"
 is_xml_out = True
 obs_list = os.listdir(obs_path)
 
 all_data,select_site = {},[]
-# with open(select_site_file,'rt') as f:
-#     for line in f:
-#         select_site.append(line[0:4])
+with open(select_site_file,'rt') as f:
+    for line in f:
+        select_site.append(line[0:4])
 
 #readfile
 for cur_obs in obs_list:
@@ -36,7 +36,7 @@ for cur_obs in obs_list:
                 value = line.split(" ")
                 cur_marker = value[0][0:4]
                 all_data[value[0][0:4]] = {}
-                select_site.append(value[0][0:4])
+                # select_site.append(value[0][0:4])
             if "APPROX POSITION XYZ" in line and cur_marker != "" and "COMMENT" not in line:
                 value = line.split()
                 all_data[cur_marker]["X"] = float(value[0])
@@ -79,7 +79,7 @@ if is_crd_out:
                 # file.write("      ")
                 str_write = str_write + "      "
             if "E" in all_data[cur_site].keys():
-                if "L1" in all_data[cur_site]["E"] and "L5" in all_data[cur_site]["E"]:
+                if "L1" in all_data[cur_site]["E"] and "L5" in all_data[cur_site]["E"] and "L7" in all_data[cur_site]["E"]:
                     # file.write("    {} ".format("E"))
                     str_write = str_write + "    {} ".format("E")
                     E = True
@@ -90,7 +90,7 @@ if is_crd_out:
                 # file.write("      ")
                 str_write = str_write + "      "
             if "C" in all_data[cur_site].keys():
-                if "L2" in all_data[cur_site]["C"] and "L6" in all_data[cur_site]["C"]:
+                if "L2" in all_data[cur_site]["C"] and "L6" in all_data[cur_site]["C"] and "L5" in all_data[cur_site]["C"]:
                     # file.write("    {}".format("C3"))
                     str_write = str_write + "    {}".format("C3")
                     C3 = True
@@ -112,13 +112,15 @@ if is_crd_out:
             else:
                 # file.write("      ")
                 str_write = str_write + "      "
-            # if (G and E and C2 and C3):
-            if True:
-                file.write(str_write)
+            if (G and E and C2 and C3):
+            # if True:
+                # file.write(str_write)
                 if cur_site in select_site:
+                    file.write(str_write)
                     file.write("  True\n")
-                else:
-                    file.write("  False\n")
+                # else:
+                    # print(str_write)
+                    # file.write("  False\n")
 #write xml file
 if is_xml_out:
     for cur_site in all_data.keys():

@@ -144,8 +144,12 @@ for cur_site in site_list1:
     # path_I = r"E:\0Project\EXSUN_Data\20230909_Data_Test\BDS3\ppprtk\ES43_20230909_SGG_CLK06_K_GEC.aug"
     # path_I = r"E:\1Master_3\2_ZTD\2021310\ShortBaseLine_RND\SPT7-GEC-GRID-VIRTUAL.aug"
     # path_S = r"E:\1Master_3\2_ZTD\2021310\data\aug\SPT7-GEC.aug"
-    path_I = r"C:\Users\GREAT_PPPRTK\Desktop\WUDA-GEC-I.aug"
-    path_S = r"C:\Users\GREAT_PPPRTK\Desktop\WUDA-GEC.aug"
+    # path_I = r"E:\1Master_3\2_ZTD\Result_From_Server\CLIENT_COD\client_2023031\KOS1-GE-FIXED-30-3600.aug"
+    path_S = r"E:\1Master_3\2_ZTD\Result_From_Server\SERVER_COD\server_2023031\BADH-GEC3-FIXED-30.aug"
+    path_I = r"E:\1Master_3\2_ZTD\Result_From_Server\SERVER_COD\server_2023031\KLOP-GEC3-FIXED-30.aug"
+    # path_I = r"E:\1Master_3\2_ZTD\Result_From_Server\CLIENT\client_2021311\KOS1-GE-FIXED-30.aug"
+    # path_S = r"E:\1Master_3\2_ZTD\Result_From_Server\SERVER\server_2021311\BADH-GEC.aug"
+    # path_I = r"E:\1Master_3\2_ZTD\Result_From_Server\SERVER\server_2021311\KLOP-GEC.aug"
     # path = r"E:\1Master_2\3-IUGG\Pro_2021311_PPPRTK_GER\client\GOET-GEC-I-GRID-RE3600-TrpVIRTUAL.aug"
     # [head_I,data_I] = rf.open_aug_file_rtppp(path_I)
     # [head_S,data_S] = rf.open_aug_file_rtppp(path_S)
@@ -163,7 +167,7 @@ for cur_site in site_list1:
     # dr.plot_aug_GEC_new(data_site,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=60/60,ylim=0.1,LastT=22,year = 2021,mon=10,day=30,site_list=site_list1)
     # dr.plot_aug_G_E_C(data_site,head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=60/60,ylim=0.1,LastT=22,year = 2021,mon=11,day=6,site_list=site_list2)
 
-dr.plot_aug_G_E_C(data_site[cur_site],head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=2,ylim=0.1,LastT=22,year = 2021,mon=11,day=6,site_list=site_list1,data_S=data_I)
+dr.plot_aug_G_E_C(data_site[cur_site],head_I,type = "ION",freq = 1,starttime = 2,time = "UTC",show = True,deltaT=2,ylim=0.1,LastT=22,year = 2023,mon=1,day=31,site_list=site_list1,data_S=data_I)
 # dr.plot_aug_G_E_C(data_site,head_I,type = "NSAT",freq = 1,starttime = 0,time = "UTC",show = True,deltaT=4,ylim=0.04,LastT=24,year = 2021,mon=11,day=6,site_list=site_list1,data_S=data_site_S)
 
 
